@@ -1,0 +1,22 @@
+{
+  "name": "pharma-connect",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev:admin-api": "npm run start:dev -w apps/admin-api",
+    "dev:website": "npm run dev -w apps/website",
+    "build:admin-api": "npm run build -w apps/admin-api",
+    "build:website": "npm run build -w apps/website",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present"
+  },
+  "allowScripts": {
+    "@prisma/client@6.19.3": true,
+    "@prisma/engines@6.19.3": true,
+    "prisma@6.19.3": true
+  }
+}

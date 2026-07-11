@@ -1,0 +1,60 @@
+# dependencies
+node_modules/
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# builds
+dist/
+build/
+.next/
+out/
+
+# testing / coverage
+coverage/
+.nyc_output/
+
+# env files
+.env
+.env.*.local
+!.env.example
+
+# logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS
+.DS_Store
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+*.pem
+.vercel
+*.tsbuildinfo
+next-env.d.ts
+
+# runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+.temp
+.tmp

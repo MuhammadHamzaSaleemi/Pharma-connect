@@ -1,0 +1,133 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                       String       @id @default(cuid())
+  email                    String       @unique
+  name                     String
+  password                 String
+  role                     UserRole     @default(ADMIN)
+  status                   UserStatus   @default(ACTIVE)
+  provider                 AuthProvider @default(LOCAL)
+  refreshTokenHash         String?
+  resetPasswordToken       String?
+  resetPasswordTokenExpiry DateTime?
+  tokenValidFrom           DateTime     @default(now())
+  createdAt                DateTime     @default(now())
+  updatedAt                DateTime     @updatedAt
+
+  @@map("users")
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  PHARMACIST
+  MANAGER
+  VIEWER
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  PENDING_VERIFICATION
+}
+
+enum AuthProvider {
+  LOCAL
+  GOOGLE
+}
+
+model Job {
+  id             String      @id @default(cuid())
+  title          String
+  company        String
+  city           String
+  qualification  String
+  jobDescription String      @db.Text
+  experience     String
+  workType       JobWorkType
+  jobFunction    String
+  status         JobStatus   @default(DRAFT)
+  sector         JobSector
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@index([status])
+  @@index([sector])
+  @@index([workType])
+  @@index([city])
+  @@map("jobs")
+}
+
+enum JobWorkType {
+  ON_SITE
+  HYBRID
+  REMOTE
+  FIELD_BASED
+}
+
+enum JobSector {
+  PRODUCTION
+  QUALITY_ASSURANCE
+  QUALITY_CONTROL
+  REGULATORY_AFFAIRS
+  PHARMACOVIGILANCE
+  CLINICAL_RESEARCH
+  MEDICAL_AFFAIRS
+  SALES_MARKETING
+  WAREHOUSE
+  SUPPLY_CHAIN
+  COMMUNITY_PHARMACY
+  HOSPITAL_PHARMACY
+  ACADEMIA
+  MANUFACTURING
+  FORMULATION_DEVELOPMENT
+  VALIDATION
+  MICROBIOLOGY
+  BIOTECHNOLOGY
+  HOSPITALITY
+  GOVERNMENT
+  NGO
+}
+
+enum JobStatus {
+  DRAFT
+  ACTIVE
+  INACTIVE
+  CLOSED
+}
+
+model Scholarship {
+  id                  String            @id @default(cuid())
+  image               String
+  country             String
+  startDate           DateTime
+  endDate             DateTime
+  financialBenefits   String            @db.Text
+  eligibilityCriteria String            @db.Text
+  howToApply          String            @db.Text
+  status              ScholarshipStatus @default(DRAFT)
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  @@index([status])
+  @@index([country])
+  @@index([startDate])
+  @@index([endDate])
+  @@map("scholarships")
+}
+
+enum ScholarshipStatus {
+  DRAFT
+  ACTIVE
+  INACTIVE
+  EXPIRED
+}
