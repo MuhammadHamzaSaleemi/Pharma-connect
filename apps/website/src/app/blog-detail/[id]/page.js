@@ -1,17 +1,29 @@
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { notFound } from "next/navigation";
 
 import Navbar from "../../componants/navbar";
 import BlogsSidebars from "../../componants/blogsSidebars";
 import Footer from "../../componants/footer";
 import ScrollTop from "../../componants/scrollTop";
 
-import { blogData, commentsData } from "../../data/data";
+import { commentsData } from "../../data/data";
+import { blogsApi } from "../../../services/blogs/blogs.api";
 
-export default function BlogDetail(props){
+function formatDate(dateString) {
+    return new Date(dateString).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })
+}
 
-    let data = blogData.find((blog)=>blog.id === parseInt(props.params.id))
+export default async function BlogDetail({ params }){
+    const { id } = params;
+
+    let data;
+    try {
+        data = await blogsApi.getOne(id);
+    } catch {
+        notFound();
+    }
+
     return(
         <>
         <Navbar navClass="defaultscroll sticky" navLight={true}/>
@@ -21,23 +33,13 @@ export default function BlogDetail(props){
                 <div className="row mt-5 justify-content-center">
                     <div className="col-12">
                         <div className="title-heading text-center">
-                            <span className="badge bg-primary">{data?.tag }</span>
+                            <span className="badge bg-primary">{data?.category || 'Blog'}</span>
                             <h5 className="heading fw-semibold mb-0 sub-heading text-white title-dark mt-4">{data?.title}</h5>
 
                             <ul className="list-inline text-center mb-0">
                                 <li className="list-inline-item mx-4 mt-4">
-                                    <span className="text-white-50 d-block">Author</span>
-                                    <Link href="#" className="text-white title-dark">{data?.company}</Link>
-                                </li>
-
-                                <li className="list-inline-item mx-4 mt-4">
                                     <span className="text-white-50 d-block">Date</span>
-                                    <span className="text-white title-dark">{data?.date}</span>
-                                </li>
-
-                                <li className="list-inline-item mx-4 mt-4">
-                                    <span className="text-white-50 d-block">Read Time</span>
-                                    <span className="text-white title-dark">{data?.time}</span>
+                                    <span className="text-white title-dark">{data?.publishedAt ? formatDate(data.publishedAt) : formatDate(data.createdAt)}</span>
                                 </li>
                             </ul>
                         </div>
@@ -68,19 +70,15 @@ export default function BlogDetail(props){
                 <div className="row g-4">
                     <div className="col-lg-8 col-md-7">
                         <div className="card border-0 shadow rounded overflow-hidden">
-                            <Image src={data?.image} width={0} height={0} sizes="100vw" style={{width:'100%', height:'auto'}}  className="img-fluid" alt=""/>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={data?.featuredImage || '/images/blog/01.jpg'} className="img-fluid" style={{width:'100%', height:'auto'}} alt={data?.title}/>
 
                             <div className="card-body">
-                                <p className="text-muted">The most well-known dummy text is the Lorem Ipsum, which is said to have originated in the 16th century. Lorem Ipsum is composed in a pseudo-Latin language which more or less corresponds to proper Latin. It contains a series of real Latin words. This ancient dummy text is also incomprehensible, but it imitates the rhythm of most European languages in Latin script. The advantage of its Latin origin and the relative meaninglessness of Lorum Ipsum is that the text does not attract attention to itself or distract the viewers attention from the layout.</p>
-                                <p className="text-muted">Thus, Lorem Ipsum has only limited suitability as a visual filler for German texts. If the fill text is intended to illustrate the characteristics of different typefaces, it sometimes makes sense to select texts containing the various letters and symbols specific to the output language.</p>
-                            
-                                <blockquote className="text-center mx-auto blockquote"><i className="mdi mdi-format-quote-open mdi-48px text-muted opacity-2 d-block"></i> The man who comes back through the door in the wall will never be quite the same as the man who went out. <small className="d-block text-muted mt-2">- Jobnova Template</small></blockquote>
-                            
-                                <p className="text-muted">There is now an abundance of readable dummy texts. These are usually used when a text is required purely to fill a space. These alternatives to the classic Lorem Ipsum texts are often amusing and tell short, funny or nonsensical stories.</p>
-                            
-                                <Link href="#" className="badge badge-link bg-primary">Minimal</Link>
-                                <Link href="#" className="badge badge-link bg-primary">Interior</Link>
-                                <Link href="#" className="badge badge-link bg-primary">Furniture</Link>
+                                <div className="text-muted" dangerouslySetInnerHTML={{ __html: data?.content ?? '' }}/>
+
+                                {(data?.tags ?? []).map((tag) => (
+                                    <Link key={tag} href="#" className="badge badge-link bg-primary">{tag}</Link>
+                                ))}
                             </div>
                         </div>
 
@@ -95,7 +93,8 @@ export default function BlogDetail(props){
                                             <div className="d-flex justify-content-between">
                                                 <div className="d-flex align-items-center">
                                                     <Link className="pe-3" href="#">
-                                                        <Image src={item.image} width={45} height={45} className="img-fluid avatar avatar-md-sm rounded-circle shadow" alt="img"/>
+                                                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                        <img src={item.image} width={45} height={45} className="img-fluid avatar avatar-md-sm rounded-circle shadow" alt="img"/>
                                                     </Link>
                                                     <div className="commentor-detail">
                                                         <h6 className="mb-0"><Link href="#" className="text-dark media-heading">{item.name}</Link></h6>
@@ -126,21 +125,21 @@ export default function BlogDetail(props){
                                                 <textarea id="message" placeholder="Your Comment" rows="5" name="message" className="form-control" required=""></textarea>
                                             </div>
                                         </div>
-    
+
                                         <div className="col-lg-6">
                                             <div className="mb-3">
                                                 <label className="form-label">Name <span className="text-danger">*</span></label>
                                                 <input id="name" name="name" type="text" placeholder="Name" className="form-control" required=""/>
                                             </div>
                                         </div>
-    
+
                                         <div className="col-lg-6">
                                             <div className="mb-3">
                                                 <label className="form-label">Your Email <span className="text-danger">*</span></label>
                                                 <input id="email" type="email" placeholder="Email" name="email" className="form-control" required=""/>
                                             </div>
                                         </div>
-    
+
                                         <div className="col-md-12">
                                             <div className="send d-grid">
                                                 <button type="submit" className="btn btn-primary">Send Message</button>

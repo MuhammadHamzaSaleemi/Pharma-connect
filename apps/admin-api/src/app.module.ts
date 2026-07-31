@@ -6,6 +6,7 @@ import * as Joi from 'joi';
 import configuration from './config/configuration';
 import { PrismaModule } from './database/prisma.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { BlogsModule } from './modules/blogs/blogs.module';
 import { HealthModule } from './modules/health/health.module';
 import { JobsModule } from './modules/jobs/jobs.module';
 import { ScholarshipsModule } from './modules/scholarships/scholarships.module';
@@ -19,6 +20,7 @@ import { ScholarshipsModule } from './modules/scholarships/scholarships.module';
       validationSchema: Joi.object({
         NODE_ENV: Joi.string().valid('development', 'production', 'test').default('development'),
         PORT: Joi.number().default(3000),
+        APP_URL: Joi.string().uri().optional(),
         CORS_ORIGIN: Joi.string().default('*'),
         CORS_ALLOW_CREDENTIALS: Joi.string().valid('true', 'false').default('true'),
         DATABASE_URL: Joi.string().required(),
@@ -41,6 +43,7 @@ import { ScholarshipsModule } from './modules/scholarships/scholarships.module';
     }),
     PrismaModule,
     AuthModule,
+    BlogsModule,
     HealthModule,
     JobsModule,
     ScholarshipsModule,

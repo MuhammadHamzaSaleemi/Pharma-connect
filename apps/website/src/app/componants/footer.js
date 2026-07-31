@@ -39,7 +39,7 @@ export default function Footer({top}){
                             <div className="row align-items-center">
                                 <div className="col-sm-3">
                                     <div className="text-center text-sm-start">
-                                        <Link href=""><Image src='/images/logo-light.png' width={120} height={18} alt=""/></Link>
+                                        <Link href=""><Image src='/images/logo.png' height={50} width={150} alt=""/></Link>
                                     </div>
                                 </div>
         
@@ -49,7 +49,8 @@ export default function Footer({top}){
                                         <li className="list-inline-item my-2"><Link href="/services" className="text-foot fs-6 fw-medium me-2"><i className="mdi mdi-circle-small"></i> How it works</Link></li>
                                         <li className="list-inline-item my-2"><Link href="/job-post" className="text-foot fs-6 fw-medium me-2"><i className="mdi mdi-circle-small"></i> Create a job</Link></li>
                                         <li className="list-inline-item my-2"><Link href="/aboutus" className="text-foot fs-6 fw-medium me-2"><i className="mdi mdi-circle-small"></i> About us</Link></li>
-                                        <li className="list-inline-item my-2"><Link href="/pricing" className="text-foot fs-6 fw-medium"><i className="mdi mdi-circle-small"></i> Plans</Link></li>
+                                        <li className="list-inline-item my-2"><Link href="/pricing" className="text-foot fs-6 fw-medium me-2"><i className="mdi mdi-circle-small"></i> Plans</Link></li>
+                                        <li className="list-inline-item my-2"><Link href="/privacy" className="text-foot fs-6 fw-medium"><i className="mdi mdi-circle-small"></i> Privacy Policy</Link></li>
                                     </ul>
                                 </div>
                             </div>

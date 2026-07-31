@@ -1,19 +1,37 @@
+'use client'
 import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import Navbar from './componants/navbar'
 
-import {FiSearch, FiClock, FiMapPin} from "./assets/icons/vander"
+import {FiSearch, FiClock, FiMapPin, FiCalendar} from "./assets/icons/vander"
 import AboutUs from './componants/aboutUs'
 import Categories from './componants/categories'
-import { jobData } from './data/data'
 import AboutTwo from './componants/aboutTwo'
 import Companies from './componants/companies'
-import Blog from './componants/blog'
 import Footer from './componants/footer'
 import ScrollTop from './componants/scrollTop'
+import { usePublicJobsQuery } from '../services/jobs/jobs.queries'
+import { usePublicBlogsQuery } from '../services/blogs/blogs.queries'
+import { formatEnumLabel } from '../lib/enumOptions'
+
+function daysAgo(dateString) {
+    const diff = Date.now() - new Date(dateString).getTime()
+    const days = Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)))
+    return days === 0 ? 'Today' : `${days} day${days === 1 ? '' : 's'} ago`
+}
+
+function formatDate(dateString) {
+    return new Date(dateString).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })
+}
 
 export default function Home() {
+  const jobsQuery = usePublicJobsQuery({ page: 1, limit: 6, status: 'ACTIVE' })
+  const blogsQuery = usePublicBlogsQuery({ page: 1, limit: 3, status: 'PUBLISHED' })
+
+  const jobs = jobsQuery.data?.data ?? []
+  const blogs = blogsQuery.data?.data ?? []
+
   return (
     <>
     <Navbar/>
@@ -96,34 +114,42 @@ export default function Home() {
             </div>
 
             <div className="row g-4 mt-0">
-                {jobData.slice(0,6).map((item,index)=>{
+                {jobsQuery.isLoading && (
+                    <div className="col-12 text-center text-muted">Loading jobs...</div>
+                )}
+
+                {jobsQuery.isError && (
+                    <div className="col-12 text-center text-muted">Unable to load jobs right now.</div>
+                )}
+
+                {!jobsQuery.isLoading && !jobsQuery.isError && jobs.length === 0 && (
+                    <div className="col-12 text-center text-muted">No open positions at the moment.</div>
+                )}
+
+                {jobs.map((item)=>{
                     return(
-                        <div className="col-lg-4 col-md-6 col-12" key={index}>
+                        <div className="col-lg-4 col-md-6 col-12" key={item.id}>
                             <div className="job-post rounded shadow p-4">
                                 <div className="d-flex align-items-center justify-content-between">
                                     <div className="d-flex align-items-center">
-                                        <Image src={item.image} width={45} height={45} className="avatar avatar-small rounded shadow p-3 bg-white" alt=""/>
-        
+                                        <Image src='/images/company/circle-logo.png' width={45} height={45} className="avatar avatar-small rounded shadow p-3 bg-white" alt=""/>
+
                                         <div className="ms-3">
-                                            <Link href="/employer-profile" className="h5 company text-dark">{item.name}</Link>
-                                            <span className="text-muted d-flex align-items-center small mt-2"><FiClock  className="fea icon-sm me-1"/> {item.posted} days ago</span>
+                                            <span className="h5 company text-dark">{item.company}</span>
+                                            <span className="text-muted d-flex align-items-center small mt-2"><FiClock  className="fea icon-sm me-1"/> {daysAgo(item.createdAt)}</span>
                                         </div>
                                     </div>
 
-                                    <span className="badge bg-soft-primary">{item.jobTime}</span>
+                                    <span className="badge bg-soft-primary">{formatEnumLabel(item.workType)}</span>
                                 </div>
 
                                 <div className="mt-4">
                                     <Link href={`/job-detail-one/${item.id}`} className="text-dark title h5">{item.title}</Link>
 
-                                    <span className="text-muted d-flex align-items-center mt-2"><FiMapPin className="fea icon-sm me-1"/>{item.country}</span>
+                                    <span className="text-muted d-flex align-items-center mt-2"><FiMapPin className="fea icon-sm me-1"/>{item.city}</span>
 
                                     <div className="progress-box mt-3">
-                                        <div className="progress mb-2">
-                                            <div className="progress-bar position-relative bg-primary" style={{width:'50%'}}></div>
-                                        </div>
-
-                                        <span className="text-dark">{item.applied} applied of <span className="text-muted">{item.vacancy} vacancy</span></span>
+                                        <span className="text-dark">{item.qualification} <span className="text-muted">&middot; {item.experience}</span></span>
                                     </div>
                                 </div>
                             </div>
@@ -155,7 +181,52 @@ export default function Home() {
                 </div>
             </div>
 
-            <Blog/>
+            <div className="row g-4 mt-0">
+                {blogsQuery.isLoading && (
+                    <div className="col-12 text-center text-muted">Loading blog posts...</div>
+                )}
+
+                {blogsQuery.isError && (
+                    <div className="col-12 text-center text-muted">Unable to load blog posts right now.</div>
+                )}
+
+                {!blogsQuery.isLoading && !blogsQuery.isError && blogs.length === 0 && (
+                    <div className="col-12 text-center text-muted">No blog posts published yet.</div>
+                )}
+
+                {blogs.map((item)=>{
+                    return(
+                        <div className="col-lg-4 col-md-6" key={item.id}>
+                            <div className="card blog blog-primary shadow rounded overflow-hidden border-0">
+                                <div className="card-img blog-image position-relative overflow-hidden rounded-0">
+                                    <div className="position-relative overflow-hidden">
+                                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                                        <img src={item.featuredImage || '/images/blog/01.jpg'} className="img-fluid" style={{width:'100%', height:'220px', objectFit:'cover'}} alt={item.title}/>
+                                        <div className="card-overlay"></div>
+                                    </div>
+                                </div>
+
+                                <div className="card-body blog-content position-relative p-0">
+                                    <div className="blog-tag px-4">
+                                        <span className="badge bg-primary rounded-pill">{item.category || 'Blog'}</span>
+                                    </div>
+                                    <div className="p-4">
+                                        <ul className="list-unstyled text-muted small mb-2">
+                                            <li className="d-inline-flex align-items-center me-2"><FiCalendar className="fea icon-ex-sm me-1 text-dark"/>{formatDate(item.publishedAt || item.createdAt)}</li>
+                                        </ul>
+
+                                        <Link href={`/blog-detail/${item.id}`} className="title fw-semibold fs-5 text-dark">{item.title}</Link>
+
+                                        <ul className="list-unstyled d-flex justify-content-between align-items-center text-muted mb-0 mt-3">
+                                            <li className="list-inline-item"><Link href={`/blog-detail/${item.id}`} className="btn btn-link primary text-dark">Read Now <i className="mdi mdi-arrow-right"></i></Link></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                })}
+            </div>
         </div>
     </section>
     <Footer/>

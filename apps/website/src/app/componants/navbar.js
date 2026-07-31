@@ -1,252 +1,407 @@
-'use client'
-import React,{useEffect, useState} from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from "next/navigation";
 
-import { LuSearch,FiUser,FiSettings,FiLock,FiLogOut } from "../assets/icons/vander";
+import {
+  LuSearch,
+  FiUser,
+  FiSettings,
+  FiLock,
+  FiLogOut,
+} from "../assets/icons/vander";
+import { useAuth } from "../../context/AuthContext";
 
-export default function Navbar({navClass, navLight}){
-    let [isOpen, setMenu] = useState(true);
-    let [scroll, setScroll] = useState(false);
-    let [search, setSearch] = useState(false);
-    let [cartitem, setCartitem] = useState(false);
+// Menu is data-driven so links can be added/removed without touching JSX.
+// `roles` restricts an item to signed-in users whose role is in the list;
+// `requiresAuth` restricts to any signed-in user; omit both for a public item.
+const NAV_MENU = [
+  {
+    label: "Home",
+    href: "/",
+    matches: ["/"],
+  },
+  {
+    label: "Jobs",
+    href: "/jobs",
+    matches:["/jobs"]
+    // matches: ['/job-categories', '/job-grid-one', '/job-grid-two', '/job-grid-three', '/job-grid-four', '/job-list-one', '/job-list-two', '/job-detail-one', '/job-detail-two', '/job-detail-three', '/job-apply', '/job-post', '/career'],
+    // submenu: [
+    //     { label: 'Job Categories', href: '/job-categories' },
+    //     {
+    //         label: 'Job Grids', href: '#', matches: ['/job-grid-one', '/job-grid-two', '/job-grid-three', '/job-grid-four'],
+    //         submenu: [
+    //             { label: 'Job Grid One', href: '/job-grid-one' },
+    //             { label: 'Job Grid Two', href: '/job-grid-two' },
+    //             { label: 'Job Grid Three', href: '/job-grid-three' },
+    //             { label: 'Job Grid Four', href: '/job-grid-four' },
+    //         ],
+    //     },
+    //     {
+    //         label: 'Job Lists', href: '#', matches: ['/job-list-one', '/job-list-two'],
+    //         submenu: [
+    //             { label: 'Job List One', href: '/job-list-one' },
+    //             { label: 'Job List Two', href: '/job-list-two' },
+    //         ],
+    //     },
+    //     {
+    //         label: 'Job Detail', href: '#', matches: ['/job-detail-one', '/job-detail-two', '/job-detail-three'],
+    //         submenu: [
+    //             { label: 'Job Detail One', href: '/job-detail-one' },
+    //             { label: 'Job Detail Two', href: '/job-detail-two' },
+    //             { label: 'Job Detail Three', href: '/job-detail-three' },
+    //         ],
+    //     },
+    //     { label: 'Job Apply', href: '/job-apply' },
+    //     // Posting a job is limited to staff-side roles, not ordinary self-registered viewers.
+    //     { label: 'Job Post', href: '/job-post', roles: ['SUPER_ADMIN', 'ADMIN', 'MANAGER', 'PHARMACIST'] },
+    //     { label: 'Career', href: '/career' },
+    // ],
+  },
+  // {
+  //     label: 'Employers', href: '#', matches: ['/employers', '/employer-profile'],
+  //     submenu: [
+  //         { label: 'Employers', href: '/employers' },
+  //         { label: 'Employer Profile', href: '/employer-profile', requiresAuth: true },
+  //     ],
+  // },
+  // {
+  //     label: 'Candidates', href: '#', matches: ['/candidates', '/candidate-profile', '/candidate-profile-setting'],
+  //     submenu: [
+  //         { label: 'Candidates', href: '/candidates' },
+  //         { label: 'Candidate Profile', href: '/candidate-profile', requiresAuth: true },
+  //         { label: 'Profile Setting', href: '/candidate-profile-setting', requiresAuth: true },
+  //     ],
+  // },
+  {
+    label: "About Us",
+    href: "/aboutus",
+    matches: ["/aboutus"],
+  },
+    {
+    label: "Blogs",
+    href: "/blogs",
+    matches: ["/blogs"],
+  },
+//   {
+//     label: "Pages",
+//     href: "#",
+//     matches: [
+//       "/aboutus",
+//       "/services",
+//       "/pricing",
+//       "/helpcenter-overview",
+//       "/helpcenter-faqs",
+//       "/helpcenter-guides",
+//       "/helpcenter-support",
+//       "/blogs",
+//       "/blog-sidebar",
+//       "/blog-detail",
+//       "/login",
+//       "/signup",
+//       "/reset-password",
+//       "/lock-screen",
+//       "/terms",
+//       "/privacy",
+//     ],
+//     submenu: [
+//       { label: "About Us", href: "/aboutus" },
+//       { label: "Services", href: "/services" },
+//       { label: "Pricing", href: "/pricing" },
+//       {
+//         label: "Helpcenter",
+//         href: "#",
+//         matches: [
+//           "/helpcenter-overview",
+//           "/helpcenter-faqs",
+//           "/helpcenter-guides",
+//           "/helpcenter-support",
+//         ],
+//         submenu: [
+//           { label: "Overview", href: "/helpcenter-overview" },
+//           { label: "FAQs", href: "/helpcenter-faqs" },
+//           { label: "Guides", href: "/helpcenter-guides" },
+//           { label: "Support", href: "/helpcenter-support" },
+//         ],
+//       },
+//       {
+//         label: "Blog",
+//         href: "#",
+//         matches: ["/blogs", "/blog-sidebar", "/blog-detail"],
+//         submenu: [
+//           { label: " Blogs", href: "/blogs" },
+//           { label: " Blog Sidebar", href: "/blog-sidebar" },
+//           { label: " Blog Detail", href: "/blog-detail" },
+//         ],
+//       },
+//       {
+//         label: "Auth Pages",
+//         href: "#",
+//         matches: ["/login", "/signup", "/reset-password", "/lock-screen"],
+//         submenu: [
+//           { label: " Login", href: "/login", hideWhenAuthed: true },
+//           { label: " Signup", href: "/signup", hideWhenAuthed: true },
+//           { label: " Forgot Password", href: "/reset-password" },
+//           { label: " Lock Screen", href: "/lock-screen" },
+//         ],
+//       },
+//       {
+//         label: "Utility",
+//         href: "#",
+//         matches: ["/terms", "/privacy"],
+//         submenu: [
+//           { label: "Terms of Services", href: "/terms" },
+//           { label: "Privacy Policy", href: "/privacy" },
+//         ],
+//       },
+//       {
+//         label: "Special",
+//         href: "#",
+//         matches: ["/comingsoon", "/maintenance", "/error"],
+//         submenu: [
+//           { label: " Coming Soon", href: "/comingsoon" },
+//           { label: " Maintenance", href: "/maintenance" },
+//           { label: " 404! Error", href: "/error" },
+//         ],
+//       },
+//     ],
+//   },
+  { label: "Contact Us", href: "/contactus" },
+];
 
-    let [manu , setManu] = useState('');
-    let pathname = usePathname();
+function canShowMenuItem(item, { isAuthenticated, role }) {
+  if (item.hideWhenAuthed && isAuthenticated) return false;
+  if (item.roles) return isAuthenticated && item.roles.includes(role);
+  if (item.requiresAuth) return isAuthenticated;
+  return true;
+}
 
-    useEffect(() => {
-        setManu(pathname)
-        function scrollHandler() {
-            setScroll(window.scrollY > 50)
-          }
-          if (typeof window !== "undefined") {
-            window.addEventListener('scroll', scrollHandler);
-            window.scrollTo(0, 0);
-          }
+function isItemActive(item, pathname) {
+  if (item.matches) return item.matches.includes(pathname);
+  return item.href === pathname;
+}
 
-        let searchModal = () => {setSearch(false)}
-        document.addEventListener('mousedown',searchModal);
+function MenuItem({ item, pathname, authState, depth }) {
+  if (!canShowMenuItem(item, authState)) return null;
 
-        let cartModal = () => {setCartitem(false)}
-        document.addEventListener('mousedown',cartModal);
+  const active = isItemActive(item, pathname);
 
-        return () => {
-            window.removeEventListener('scroll', scrollHandler);
-            document.removeEventListener('mousedown',searchModal);
-            document.removeEventListener('mousedown',cartModal);
-        };
+  if (item.submenu) {
+    const arrowClass = depth === 0 ? "menu-arrow" : "submenu-arrow";
+    const visibleChildren = item.submenu.filter((child) =>
+      canShowMenuItem(child, authState),
+    );
+    if (visibleChildren.length === 0) return null;
 
-    }, [setManu]);
-    const toggleMenu = () => {
-        setMenu(!isOpen)
-        if (document.getElementById("navigation")) {
-            const anchorArray = Array.from(document.getElementById("navigation").getElementsByTagName("a"));
-            anchorArray.forEach(element => {
-                element.addEventListener('click', (elem) => {
-                    const target = elem.target.getAttribute("href")
-                    if (target !== "") {
-                        if (elem.target.nextElementSibling) {
-                            var submenu = elem.target.nextElementSibling.nextElementSibling;
-                            submenu.classList.toggle('open');
-                        }
-                    }
-                })
-            });
-        }
+    return (
+      <li className={`${active ? "active" : ""} has-submenu parent-menu-item`}>
+        <Link href={item.href}>{item.label}</Link>
+        <span className={arrowClass}></span>
+        <ul className="submenu">
+          {visibleChildren.map((child) => (
+            <MenuItem
+              key={child.label}
+              item={child}
+              pathname={pathname}
+              authState={authState}
+              depth={depth + 1}
+            />
+          ))}
+        </ul>
+      </li>
+    );
+  }
+
+  return (
+    <li className={active ? "active" : ""}>
+      <Link href={item.href} className="sub-menu-item">
+        {item.label}
+      </Link>
+    </li>
+  );
+}
+
+export default function Navbar({ navClass, navLight }) {
+  let [isOpen, setMenu] = useState(true);
+  let [scroll, setScroll] = useState(false);
+  let [search, setSearch] = useState(false);
+  let [cartitem, setCartitem] = useState(false);
+
+  let pathname = usePathname();
+  const router = useRouter();
+  const { user, isAuthenticated, isLoading, logout } = useAuth();
+  const authState = { isAuthenticated, role: user?.role };
+
+  useEffect(() => {
+    function scrollHandler() {
+      setScroll(window.scrollY > 50);
     }
-    return(
-    <header id="topnav" className={ `${scroll ? 'nav-sticky' :''} ${navClass}`}>
-        <div className="container">
-            {navLight === true ? 
-                <Link className="logo" href="/">
-                    <span className="logo-light-mode">
-                        <Image src='/images/logo-dark.png' width={120} height={18} className="l-dark" alt=""/>
-                        <Image src='/images/logo-light.png' width={120} height={18} className="l-light" alt=""/>
-                    </span>
-                    <Image src='/images/logo-light.png' width={120} height={18} className="logo-dark-mode" alt=""/>
-                </Link> : 
-                <Link className="logo" href="/">
-                    <span className="logo-light-mode">
-                        <Image src='/images/logo-dark.png' width={120} height={18} className="l-dark" alt=""/>
-                        <Image src='/images/logo-white.png' width={120} height={18} className="l-light" alt=""/>
-                    </span>
-                    <Image src='/images/logo-white.png' width={120} height={18} className="logo-dark-mode" alt=""/>
-                </Link>
-            }
-            <div className="menu-extras">
-                <div className="menu-item">
-                    <Link href='#' className="navbar-toggle" id="isToggle" onClick={toggleMenu}>
-                        <div className="lines">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                    </Link>
-                </div>
-            </div>
+    if (typeof window !== "undefined") {
+      window.addEventListener("scroll", scrollHandler);
+      window.scrollTo(0, 0);
+    }
 
-            <ul className="buy-button list-inline mb-0">
-                <li className="list-inline-item ps-1 mb-0">
-                    <div className="dropdown">
-                        <button type="button" onClick={() => setSearch(!search)} className="dropdown-toggle btn btn-sm btn-icon btn-pills btn-primary">
-                            <LuSearch className="icons"/>
-                        </button>
-                        <div style={{display: search === true ? 'block' : 'none'}}>
-                            <div className={`dropdown-menu dd-menu dropdown-menu-end bg-white rounded border-0 mt-3 p-0 show`} style={{width:'240px', position:'absolute',right:'0'}}>
-                                <div className="search-bar">
-                                    <div id="itemSearch" className="menu-search mb-0">
-                                        <form role="search" method="get" id="searchItemform" className="searchform">
-                                            <input type="text" className="form-control rounded border" name="s" id="searchItem" placeholder="Search..."/>
-                                            <input type="submit" id="searchItemsubmit" value="Search"/>
-                                        </form>
-                                    </div>
+    let searchModal = () => {
+      setSearch(false);
+    };
+    document.addEventListener("mousedown", searchModal);
+
+    let cartModal = () => {
+      setCartitem(false);
+    };
+    document.addEventListener("mousedown", cartModal);
+
+    return () => {
+      window.removeEventListener("scroll", scrollHandler);
+      document.removeEventListener("mousedown", searchModal);
+      document.removeEventListener("mousedown", cartModal);
+    };
+  }, []);
+  const toggleMenu = () => {
+    setMenu(!isOpen);
+    if (document.getElementById("navigation")) {
+      const anchorArray = Array.from(
+        document.getElementById("navigation").getElementsByTagName("a"),
+      );
+      anchorArray.forEach((element) => {
+        element.addEventListener("click", (elem) => {
+          const target = elem.target.getAttribute("href");
+          if (target !== "") {
+            if (elem.target.nextElementSibling) {
+              var submenu = elem.target.nextElementSibling.nextElementSibling;
+              submenu.classList.toggle("open");
+            }
+          }
+        });
+      });
+    }
+  };
+
+  const handleLogout = async () => {
+    setCartitem(false);
+    await logout();
+    router.push("/");
+  };
+
+  return (
+    <header id="topnav" className={`${scroll ? "nav-sticky" : ""} ${navClass}`}>
+      <div className="container">
+        {navLight === true ? (
+          <Link className="logo" href="/">
+            <span className="logo-light-mode">
+              <Image
+                src="/images/logo.png"
+                width={130}
+                height={50}
+                className="l-dark"
+                alt=""
+              />
+              <Image
+                src="/images/logo.png"
+                width={130}
+                height={50}
+                className="l-light"
+                alt=""
+              />
+            </span>
+            <Image
+              src="/images/logo.png"
+              width={130}
+              height={50}
+              className="logo-dark-mode"
+              alt=""
+            />
+          </Link>
+        ) : (
+          <Link className="logo" href="/">
+            <span className="logo-light-mode">
+              <Image
+                src="/images/logo.png"
+                width={130}
+                height={50}
+                className="l-dark"
+                alt=""
+              />
+              <Image
+                src="/images/logo.png"
+                width={130}
+                height={50}
+                className="l-light"
+                alt=""
+              />
+            </span>
+            <Image
+              src="/images/logo.png"
+              width={130}
+              height={50}
+              className="logo-dark-mode"
+              alt=""
+            />
+          </Link>
+        )}
+        <div className="menu-extras">
+          <div className="menu-item">
+            <Link
+              href="#"
+              className="navbar-toggle"
+              id="isToggle"
+              onClick={toggleMenu}
+            >
+              <div className="lines">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </Link>
+          </div>
+        </div>
+
+        <ul className="buy-button list-inline mb-0">
+          {/* {!isLoading && !isAuthenticated && (
+                    <li className="list-inline-item ps-1 mb-0">
+                        <Link href="/login" className="btn btn-sm btn-primary me-1">Login</Link>
+                        <Link href="/signup" className="btn btn-sm btn-primary">Signup</Link>
+                    </li>
+                )} */}
+
+          {/* {!isLoading && isAuthenticated && (
+                    <li className="list-inline-item ps-1 mb-0">
+                        <div className="dropdown dropdown-primary">
+                            <button type="button" onClick={()=>setCartitem(!cartitem)} className="dropdown-toggle btn btn-sm btn-icon btn-pills btn-primary">
+                                <Image src="/images/team/01.jpg" height={32} width={32} className="img-fluid rounded-pill" alt=""/>
+                            </button>
+                            <div style={{display: cartitem === true ? 'block' : 'none'}}>
+                                <div className={` dropdown-menu dd-menu dropdown-menu-end bg-white rounded shadow border-0 mt-3 show`}>
+                                    <span className="dropdown-item fw-semibold fs-6 text-truncate d-block" style={{cursor:'default'}}>{user?.name}</span>
+                                    <span className="dropdown-item small text-muted d-block" style={{cursor:'default'}}>{user?.role}</span>
+                                    <div className="dropdown-divider border-top"></div>
+                                    <Link href="candidate-profile" className="dropdown-item fw-medium fs-6"><FiUser className="fea icon-sm me-2 align-middle" />Profile</Link>
+                                    <Link href="candidate-profile-setting" className="dropdown-item fw-medium fs-6"><FiSettings className="fea icon-sm me-2 align-middle"/>Settings</Link>
+                                    <div className="dropdown-divider border-top"></div>
+                                    <Link href="lock-screen" className="dropdown-item fw-medium fs-6"><FiLock className="fea icon-sm me-2 align-middle"/>Lockscreen</Link>
+                                    <button type="button" onClick={handleLogout} className="dropdown-item fw-medium fs-6 border-0 bg-transparent w-100 text-start"><FiLogOut className="fea icon-sm me-2 align-middle"/>Logout</button>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </li>
-
-                <li className="list-inline-item ps-1 mb-0">
-                    <div className="dropdown dropdown-primary">
-                        <button type="button" onClick={()=>setCartitem(!cartitem)} className="dropdown-toggle btn btn-sm btn-icon btn-pills btn-primary">
-                            <Image src="/images/team/01.jpg" height={32} width={32} className="img-fluid rounded-pill" alt=""/>
-                        </button>
-                        <div style={{display: cartitem === true ? 'block' : 'none'}}>
-                            <div className={` dropdown-menu dd-menu dropdown-menu-end bg-white rounded shadow border-0 mt-3 show`}>
-                                <Link href="candidate-profile" className="dropdown-item fw-medium fs-6"><FiUser className="fea icon-sm me-2 align-middle" />Profile</Link>
-                                <Link href="candidate-profile-setting" className="dropdown-item fw-medium fs-6"><FiSettings className="fea icon-sm me-2 align-middle"/>Settings</Link>
-                                <div className="dropdown-divider border-top"></div>
-                                <Link href="lock-screen" className="dropdown-item fw-medium fs-6"><FiLock className="fea icon-sm me-2 align-middle"/>Lockscreen</Link>
-                                <Link href="login" className="dropdown-item fw-medium fs-6"><FiLogOut className="fea icon-sm me-2 align-middle"/>Logout</Link>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-    
-            <div id="navigation">  
-                <ul className="navigation-menu nav-right nav-light">
-                    <li className={`${["/","/index-two", "/index-three"].includes(manu)? "active" : ""} has-submenu parent-menu-item`}>
-                        <Link href="/index">Home</Link><span className="menu-arrow"></span>
-                        <ul className="submenu">
-                            <li className={manu === "/" || "" ? "active" : ""}><Link href="/" className="sub-menu-item">Hero One</Link></li>
-                            <li className={manu === "/index-two" ? "active" : ""}><Link href="/index-two" className="sub-menu-item">Hero Two</Link></li>
-                            <li className={manu === "/index-three" ? "active" : ""}><Link href="/index-three" className="sub-menu-item">Hero Three</Link></li>
-                        </ul>
                     </li>
+                )} */}
+        </ul>
 
-                    <li className={`${["/job-categories", "/job-grid-one","/job-grid-two", "/job-grid-three","/job-grid-four","/job-list-one", "/job-list-two","/job-detail-one", "/job-detail-two","/job-detail-three","/job-apply","/job-post","/career" ].includes(manu)? "active" : ""} has-submenu parent-menu-item`}><Link href="#"> Jobs </Link><span className="menu-arrow"></span>
-                        <ul className="submenu">
-                            <li className={manu === "/job-categories"  ? "active" : ""}><Link href="/job-categories" className="sub-menu-item">Job Categories</Link></li>
-                    
-                            <li className={`${["/job-grid-one","/job-grid-two", "/job-grid-three","/job-grid-four"].includes(manu)? "active" : ""} has-submenu parent-menu-item`}>
-                                <Link href="#"> Job Grids </Link><span className="submenu-arrow"></span>
-                                <ul className="submenu">
-                                    <li className={manu === "/job-grid-one"  ? "active" : ""}><Link href="/job-grid-one" className="sub-menu-item">Job Grid One</Link></li>
-                                    <li className={manu === "/job-grid-two"  ? "active" : ""}><Link href="/job-grid-two" className="sub-menu-item">Job Grid Two</Link></li>
-                                    <li className={manu === "/job-grid-three"  ? "active" : ""}><Link href="/job-grid-three" className="sub-menu-item">Job Grid Three</Link></li>
-                                    <li className={manu === "/job-grid-four"  ? "active" : ""}><Link href="/job-grid-four" className="sub-menu-item">Job Grid Four </Link></li>
-                                </ul>  
-                            </li>
-
-                            <li className={`${["/job-list-one", "/job-list-two"].includes(manu)? "active" : ""} has-submenu parent-menu-item`}>
-                                <Link href="#"> Job Lists </Link><span className="submenu-arrow"></span>
-                                <ul className="submenu">
-                                    <li className={manu === "/job-list-one"  ? "active" : ""}><Link href="/job-list-one" className="sub-menu-item">Job List One</Link></li>
-                                    <li className={manu === "/job-list-two"  ? "active" : ""}><Link href="/job-list-two" className="sub-menu-item">Job List Two</Link></li>
-                                </ul>  
-                            </li>
-
-                            <li className={`${["/job-detail-one", "/job-detail-two","/job-detail-three"].includes(manu)? "active" : ""} has-submenu parent-menu-item`}>
-                                <Link href="#"> Job Detail </Link><span className="submenu-arrow"></span>
-                                <ul className="submenu">
-                                    <li className={manu === "/job-detail-one"  ? "active" : ""}><Link href="/job-detail-one" className="sub-menu-item">Job Detail One</Link></li>
-                                    <li className={manu === "/job-detail-two"  ? "active" : ""}><Link href="/job-detail-two" className="sub-menu-item">Job Detail Two</Link></li>
-                                    <li className={manu === "/job-detail-three"  ? "active" : ""}><Link href="/job-detail-three" className="sub-menu-item">Job Detail Three</Link></li>
-                                </ul>  
-                            </li>
-            
-                            <li className={manu === "/job-apply"  ? "active" : ""}><Link href="/job-apply" className="sub-menu-item">Job Apply</Link></li>
-            
-                            <li className={manu === "/job-post"  ? "active" : ""}><Link href="/job-post" className="sub-menu-item">Job Post </Link></li>
-            
-                            <li className={manu === "/career"  ? "active" : ""}><Link href="/career" className="sub-menu-item">Career </Link></li>
-                        </ul>  
-                    </li>
-            
-                    <li className={`${["/employers", "/employer-profile"].includes(manu)? "active" : ""} has-submenu parent-menu-item`}>
-                        <Link href="#">Employers</Link><span className="menu-arrow"></span>
-                        <ul className="submenu">
-                            <li className={manu === "/employers"  ? "active" : ""}><Link href="/employers" className="sub-menu-item">Employers</Link></li>
-                            <li className={manu === "/employer-profile"  ? "active" : ""}><Link href="/employer-profile" className="sub-menu-item">Employer Profile</Link></li>
-                        </ul>
-                    </li>
-            
-                    <li className={`${["/candidates", "/candidate-profile","/candidate-profile-setting"].includes(manu)? "active" : ""} has-submenu parent-menu-item`}>
-                        <Link href="#">Candidates</Link><span className="menu-arrow"></span>
-                        <ul className="submenu">
-                            <li className={manu === "/candidates"  ? "active" : ""}><Link href="/candidates" className="sub-menu-item">Candidates</Link></li>
-                            <li className={manu === "/candidate-profile"  ? "active" : ""}><Link href="/candidate-profile" className="sub-menu-item">Candidate Profile</Link></li>
-                            <li className={manu === "/candidate-profile-setting"  ? "active" : ""}><Link href="/candidate-profile-setting" className="sub-menu-item">Profile Setting</Link></li>
-                        </ul>
-                    </li>
-            
-                    <li className={`${["/aboutus", "/services","/pricing","/helpcenter-overview", "/helpcenter-faqs","/helpcenter-guides",'/helpcenter-support',"/blogs", "/blog-sidebar","/blog-detail","/login", "/signup","/reset-password","/lock-screen","/terms", "/privacy"].includes(manu)? "active" : ""} has-submenu parent-menu-item`}>
-                        <Link href="#">Pages</Link><span className="menu-arrow"></span>
-                        <ul className="submenu">
-                            <li className={manu === "/aboutus"  ? "active" : ""}><Link href="/aboutus" className="sub-menu-item">About Us</Link></li>
-                            <li className={manu === "/services"  ? "active" : ""}><Link href="/services" className="sub-menu-item">Services</Link></li>
-                            <li className={manu === "/pricing"  ? "active" : ""}><Link href="/pricing" className="sub-menu-item">Pricing </Link></li>
-
-                            <li className={`${["/helpcenter-overview", "/helpcenter-faqs","/helpcenter-guides",'/helpcenter-support'].includes(manu)? "active" : ""} has-submenu parent-menu-item`}>
-                                <Link href="#"> Helpcenter </Link><span className="submenu-arrow"></span>
-                                <ul className="submenu">
-                                    <li className={manu === "/helpcenter-overview"  ? "active" : ""}><Link href="/helpcenter-overview" className="sub-menu-item">Overview</Link></li>
-                                    <li className={manu === "/helpcenter-faqs"  ? "active" : ""}><Link href="/helpcenter-faqs" className="sub-menu-item">FAQs</Link></li>
-                                    <li className={manu === "/helpcenter-guides"  ? "active" : ""}><Link href="/helpcenter-guides" className="sub-menu-item">Guides</Link></li>
-                                    <li className={manu === "/helpcenter-support"  ? "active" : ""}><Link href="/helpcenter-support" className="sub-menu-item">Support</Link></li>
-                                </ul>  
-                            </li>
-
-                            <li className={`${["/blogs", "/blog-sidebar","/blog-detail"].includes(manu)? "active" : ""} has-submenu parent-menu-item`}><Link href="#"> Blog </Link><span className="submenu-arrow"></span>
-                                <ul className="submenu">
-                                    <li className={manu === "/blogs"  ? "active" : ""}><Link href="/blogs" className="sub-menu-item"> Blogs</Link></li>
-                                    <li className={manu === "/blog-sidebar"  ? "active" : ""}><Link href="/blog-sidebar" className="sub-menu-item"> Blog Sidebar</Link></li>
-                                    <li className={manu === "/blog-detail"  ? "active" : ""}><Link href="/blog-detail" className="sub-menu-item"> Blog Detail</Link></li>
-                                </ul> 
-                            </li>
-
-                            <li className={`${["/login", "/signup","/reset-password","/lock-screen"].includes(manu)? "active" : ""} has-submenu parent-menu-item`}><Link href="#"> Auth Pages </Link><span className="submenu-arrow"></span>
-                                <ul className="submenu">
-                                    <li className={manu === "/login"  ? "active" : ""}><Link href="/login" className="sub-menu-item"> Login</Link></li>
-                                    <li className={manu === "/signup"  ? "active" : ""}><Link href="/signup" className="sub-menu-item"> Signup</Link></li>
-                                    <li className={manu === "/reset-password"  ? "active" : ""}><Link href="/reset-password" className="sub-menu-item"> Forgot Password</Link></li>
-                                    <li className={manu === "/lock-screen"  ? "active" : ""}><Link href="/lock-screen" className="sub-menu-item"> Lock Screen</Link></li>
-                                </ul> 
-                            </li>
-
-                            <li className={`${["/terms", "/privacy"].includes(manu)? "active" : ""} has-submenu parent-menu-item`}><Link href="#"> Utility </Link><span className="submenu-arrow"></span>
-                                <ul className="submenu">
-                                    <li className={manu === "/terms"  ? "active" : ""}><Link href="/terms" className="sub-menu-item">Terms of Services</Link></li>
-                                    <li className={manu === "/privacy"  ? "active" : ""}><Link href="/privacy" className="sub-menu-item">Privacy Policy</Link></li>
-                                </ul>  
-                            </li>
-
-                            <li className={`${["/comingsoon", "/maintenance","/error"].includes(manu)? "active" : ""} has-submenu parent-menu-item`}><Link href="#"> Special </Link><span className="submenu-arrow"></span>
-                                <ul className="submenu">
-                                    <li className={manu === "/comingsoon"  ? "active" : ""}><Link href="/comingsoon" className="sub-menu-item"> Coming Soon</Link></li>
-                                    <li className={manu === "/maintenance"  ? "active" : ""}><Link href="/maintenance" className="sub-menu-item"> Maintenance</Link></li>
-                                    <li className={manu === "/error"  ? "active" : ""}><Link href="/error" className="sub-menu-item"> 404! Error</Link></li>
-                                </ul> 
-                            </li>
-                        </ul>
-                    </li>
-            
-                    <li className={manu === "/contactus"  ? "active" : ""}><Link href="/contactus" className="sub-menu-item">Contact Us</Link></li>
-                </ul>
-            </div>
+        <div id="navigation">
+          <ul className="navigation-menu nav-right nav-light">
+            {NAV_MENU.map((item) => (
+              <MenuItem
+                key={item.label}
+                item={item}
+                pathname={pathname}
+                authState={authState}
+                depth={0}
+              />
+            ))}
+          </ul>
         </div>
+      </div>
     </header>
-    )
+  );
 }
