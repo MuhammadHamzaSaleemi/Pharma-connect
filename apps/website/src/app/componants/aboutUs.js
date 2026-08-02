@@ -15,37 +15,22 @@ export default function AboutUs({containerClass}){
                     <div className="col-lg-6 col-md-6 mb-5">
                         <div className="about-left">
                             <div className="position-relative shadow rounded img-one">
-                                <Image src='/images/about/ab01.jpg' width={0} height={0} sizes='100vw' style={{width:'100%',height:'auto'}} className="img-fluid rounded" alt=""/>
+                                <Image src='/images/about/ab01.jpeg' width={0} height={0} sizes='100vw' style={{width:'100%',height:'auto'}} className="img-fluid rounded" alt=""/>
                             </div>
 
-                            <div className="img-two shadow rounded p-2 bg-white">
-                                <Image src='/images/about/ab02.jpg' width={0} height={0} sizes='100vw' style={{width:'100%',height:'auto'}} className="img-fluid rounded" alt=""/>
-
-                                <div className="position-absolute top-0 start-50 translate-middle">
-                                    <Link href="#!" scroll={false} onClick={() => setOpen(true)} className="avatar avatar-md-md rounded-pill shadow card d-flex justify-content-center align-items-center lightbox">
-                                        <i className="mdi mdi-play mdi-24px text-primary"></i>
-                                    </Link>
-                                </div>
-                                <ModalVideo
-                                    channel="youtube"
-                                    youtube={{ mute: 0, autoplay: 0 }}
-                                    isOpen={isOpen}
-                                    videoId="yba7hPeTSjk"
-                                    onClose={() => setOpen(false)} 
-                                />
-                            </div>
+                            
                         </div>
                     </div>
 
                     <div className="col-lg-6 col-md-6">
                         <div className="section-title ms-lg-5">
-                            <h4 className="title mb-3">Millions of jobs. <br/> Find the one thats right for you.</h4>
-                            <p className="text-muted para-desc mb-0">Search all the open positions on the web. Get your own personalized salary estimate. Read reviews on over 30000+ companies worldwide.</p>
+                            <h4 className="title mb-3">Pharmacy Job Platform. <br/> Find the right opportunity you deserve.</h4>
+                            <p className="text-muted para-desc mb-0">PharmaConnect Pakistan connects pharmacists, technicians, and students with verified job openings, scholarships, and internships across Pakistan and beyond.</p>
                         
                             <ul className="list-unstyled text-muted mb-0 mt-3">
-                                <li className="mb-1"><span className="text-primary h5 me-2"><i className="mdi mdi-check-circle-outline align-middle"></i></span>Digital Marketing Solutions for Tomorrow</li>
-                                <li className="mb-1"><span className="text-primary h5 me-2"><i className="mdi mdi-check-circle-outline align-middle"></i></span>Our Talented & Experienced Marketing Agency</li>
-                                <li className="mb-1"><span className="text-primary h5 me-2"><i className="mdi mdi-check-circle-outline align-middle"></i></span>Create your own skin to match your brand</li>
+                                <li className="mb-1"><span className="text-primary h5 me-2"><i className="mdi mdi-check-circle-outline align-middle"></i></span>Every listing is marked Verified or Unverified based on confirmed source information.</li>
+                                <li className="mb-1"><span className="text-primary h5 me-2"><i className="mdi mdi-check-circle-outline align-middle"></i></span>Founded by a Pharm-D graduate with direct pharmacy industry experience.</li>
+                                <li className="mb-1"><span className="text-primary h5 me-2"><i className="mdi mdi-check-circle-outline align-middle"></i></span>600+ curated pharma careers. 800,000+ impressions. Pakistan&apos;s most active pharmacy community.</li>
                             </ul>
 
                             <div className="mt-4">

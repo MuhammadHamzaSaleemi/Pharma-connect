@@ -1,65 +1,94 @@
-import {FiAirplay,FiAward, FiAtSign,FiCodesandbox,FiChrome,FiCopy,FiCpu,FiPhone, FiActivity, FiClock,FiFileText, FiUsers, FiUser,FiInbox,FiThumbsUp,FiUmbrella, FiHelpCircle, FiBookmark, FiSettings, FiMail,FiMapPin} from "../assets/icons/vander"
+import {FiTool,FiCheckCircle,FiCheckSquare,FiShield,FiFileText,FiActivity,FiHeart,FiTrendingUp,FiPackage,FiTruck,FiHome,FiPlusSquare,FiBookOpen,FiDroplet,FiClipboard,FiSmile,FiFlag,FiGlobe,FiPhone, FiClock, FiUsers, FiUser,FiCodesandbox,FiCpu,FiHelpCircle, FiBookmark, FiSettings, FiMail,FiMapPin,LuMicroscope,LuDna} from "../assets/icons/vander"
 
 export const categoriesData = [
     {
-        icon:FiAirplay,
-        title:'Business',
-        title2:'Development',
-        jobs:'74 Jobs'
+        icon:FiTool,
+        title:'Production',
     },
     {
-        icon:FiAward,
-        title:'Marketing &',
-        title2:'Communication',
-        jobs:'20 Jobs'
+        icon:FiCheckCircle,
+        title:'Quality Assurance',
+        title2:'(QA)',
     },
     {
-        icon:FiAtSign ,
-        title:'Project',
-        title2:'Management',
-        jobs:'35 Jobs'
+        icon:FiCheckSquare,
+        title:'Quality Control',
+        title2:'(QC)',
     },
     {
-        icon:FiCodesandbox,
-        title:'Customer',
-        title2:'Service',
-        jobs:'46 Jobs'
+        icon:FiShield,
+        title:'Pharmacovigilance',
     },
     {
-        icon:FiChrome,
-        title:'Software',
-        title2:'Engineering',
-        jobs:'60 Jobs'
+        icon:FiFileText,
+        title:'Regulatory',
+        title2:'Affairs',
     },
     {
-        icon:FiCopy ,
-        title:'Human Resource',
-        title2:'HR',
-        jobs:'74 Jobs'
+        icon:FiActivity,
+        title:'Clinical',
+        title2:'Research',
     },
     {
-        icon:FiCpu,
-        title:'It &',
-        title2:'Networking',
-        jobs:'20 Jobs'
+        icon:FiHeart,
+        title:'Medical',
+        title2:'Affairs',
     },
     {
-        icon:FiInbox,
+        icon:FiTrendingUp,
         title:'Sales &',
         title2:'Marketing',
-        jobs:'35 Jobs'
     },
     {
-        icon:FiThumbsUp,
-        title:'Project',
-        title2:'Manager',
-        jobs:'46 Jobs'
+        icon:FiPackage,
+        title:'Warehouse',
     },
     {
-        icon:FiUmbrella,
-        title:'Data',
-        title2:'Science',
-        jobs:'60 Jobs'
+        icon:FiTruck,
+        title:'Supply Chain',
+    },
+    {
+        icon:FiHome,
+        title:'Community',
+        title2:'Pharmacy',
+    },
+    {
+        icon:FiPlusSquare,
+        title:'Hospital',
+        title2:'Pharmacy',
+    },
+    {
+        icon:FiBookOpen,
+        title:'Academia',
+    },
+    {
+        icon:FiDroplet,
+        title:'Formulation &',
+        title2:'Development',
+    },
+    {
+        icon:FiClipboard,
+        title:'Validation',
+    },
+    {
+        icon:LuMicroscope,
+        title:'Microbiology',
+    },
+    {
+        icon:FiSmile,
+        title:'Hospitality',
+    },
+    {
+        icon:LuDna,
+        title:'Biotechnology',
+    },
+    {
+        icon:FiFlag,
+        title:'Government',
+    },
+    {
+        icon:FiGlobe,
+        title:'NGO',
     },
 ]
 

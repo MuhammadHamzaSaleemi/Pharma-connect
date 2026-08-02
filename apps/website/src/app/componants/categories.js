@@ -48,7 +48,7 @@ export default function Categories(){
                     <div className="col-12">
                         <div className="section-title text-center">
                             <h4 className="title mb-3">Popular Categories</h4>
-                            <p className="text-muted para-desc mx-auto mb-0">Search all the open positions on the web. Get your own personalized salary estimate. Read reviews on over 30000+ companies worldwide.</p>
+                            <p className="text-muted para-desc mx-auto mb-0">These are the most sought after categories mentioned below</p>
                         </div>
                     </div>
                 </div>
@@ -61,14 +61,13 @@ export default function Categories(){
                                     let Icon = item.icon
                                     return(
                                     <div className="tiny-slide" key={index}>
-                                        <div className="position-relative job-category text-center px-4 py-5 rounded shadow m-2">
+                                        <div className="position-relative job-category text-center px-4 py-5 rounded shadow m-2" style={{minHeight:'230px'}}>
                                             <div className="feature-icon bg-soft-primary rounded shadow mx-auto position-relative overflow-hidden d-flex justify-content-center align-items-center">
                                                 <Icon className="fea icon-ex-md"/>
                                             </div>
                     
                                             <div className="mt-4">
-                                                <Link href="" className="title h5 text-dark">{item.title} <br/> {item.title2}</Link>
-                                                <p className="text-muted mb-0 mt-3">{item.jobs}</p>
+                                                <Link href="" className="title h5 text-dark">{item.title} {item.title2 && <><br/> {item.title2}</>}</Link>
                                             </div>
                                         </div>
                                     </div>

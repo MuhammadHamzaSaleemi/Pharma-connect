@@ -50,7 +50,8 @@ export default function Footer({top}){
                                         <li className="list-inline-item my-2"><Link href="/job-post" className="text-foot fs-6 fw-medium me-2"><i className="mdi mdi-circle-small"></i> Create a job</Link></li>
                                         <li className="list-inline-item my-2"><Link href="/aboutus" className="text-foot fs-6 fw-medium me-2"><i className="mdi mdi-circle-small"></i> About us</Link></li>
                                         <li className="list-inline-item my-2"><Link href="/pricing" className="text-foot fs-6 fw-medium me-2"><i className="mdi mdi-circle-small"></i> Plans</Link></li>
-                                        <li className="list-inline-item my-2"><Link href="/privacy" className="text-foot fs-6 fw-medium"><i className="mdi mdi-circle-small"></i> Privacy Policy</Link></li>
+                                        <li className="list-inline-item my-2"><Link href="/privacy" className="text-foot fs-6 fw-medium me-2"><i className="mdi mdi-circle-small"></i> Privacy Policy</Link></li>
+                                        <li className="list-inline-item my-2"><Link href="/terms" className="text-foot fs-6 fw-medium"><i className="mdi mdi-circle-small"></i> Terms of Service</Link></li>
                                     </ul>
                                 </div>
                             </div>
