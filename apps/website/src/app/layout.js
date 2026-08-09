@@ -12,8 +12,8 @@ const jakarta = Plus_Jakarta_Sans({
   })
 
 export const metadata = {
-  title: 'Jobnova - Next Js Job Board & Job Portal Template',
-  description: 'Jobnova - Next Js Job Board & Job Portal Template',
+  title: 'PharmaConnect',
+  description: 'PharmaConnect - Job Board',
 }
 
 export default function RootLayout({ children }) {

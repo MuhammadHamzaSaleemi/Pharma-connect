@@ -1,7 +1,7 @@
 {
   "name": "jobnova",
   "version": "1.0.0",
-  "description": "Jobnova - Next Js Job Board & Job Portal Template",
+  "description": "Pharma Connect",
   "private": true,
   "scripts": {
     "dev": "next dev",

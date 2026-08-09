@@ -662,7 +662,7 @@ export const candidateSkill = [
 
 export const teamData = [
     {
-        image:'/images/team/01.jpg',
+        image:'/images/team/burhan.jpeg',
         name:'Muhammad Burhan Khan',
         title:'Founder, Pharmacist',
         linkedin:'https://www.linkedin.com/in/muhammadburhankhan/',
@@ -670,7 +670,7 @@ export const teamData = [
         instagram:''
     },
     {
-        image:'/images/team/04.jpg',
+        image:'/images/team/hamza.jpg',
         name:'Muhammad Hamza Saleemi',
         title:'Co-Founder, Software Engineer',
         linkedin:'https://www.linkedin.com/in/mhamzasaleemi/',
