@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "cp -a .next/standalone/apps/website/. .next/standalone/ && rm -rf .next/standalone/apps && cp -a public/. .next/standalone/public/ && cp -a .next/static .next/standalone/.next/static",
     "start": "next start -p $PORT",
     "lint": "next lint"
   },
