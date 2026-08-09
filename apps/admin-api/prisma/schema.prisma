@@ -131,3 +131,31 @@ enum ScholarshipStatus {
   INACTIVE
   EXPIRED
 }
+
+model Blog {
+  id              String     @id @default(cuid())
+  title           String
+  slug            String     @unique
+  content         String     @db.Text
+  excerpt         String?
+  featuredImage   String?
+  category        String?
+  tags            String[]   @default([])
+  status          BlogStatus @default(DRAFT)
+  isFeatured      Boolean    @default(false)
+  seoTitle        String?
+  seoDescription  String?
+  publishedAt     DateTime?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  @@index([status])
+  @@index([category])
+  @@index([slug])
+  @@map("blogs")
+}
+
+enum BlogStatus {
+  DRAFT
+  PUBLISHED
+}

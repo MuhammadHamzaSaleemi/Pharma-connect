@@ -1,3 +1,14 @@
+import { notFound } from "next/navigation";
+
+// ROUTE DISABLED: this page isn't needed right now (removed from the navbar
+// in componants/navbar.js) but is kept for future use. notFound() blocks
+// direct URL access so this route 404s like any nonexistent page. To bring
+// it back: delete this stub and uncomment the original implementation below.
+export default function DisabledRoute() {
+  notFound();
+}
+
+/*
 import React from "react";
 import Link from "next/link";
 
@@ -92,3 +103,4 @@ export default function HelpcenterSupport(){
         </>
     )
 }
+*/

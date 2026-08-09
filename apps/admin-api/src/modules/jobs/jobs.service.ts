@@ -1,5 +1,8 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import type { Prisma } from '@prisma/client';
+import { plainToInstance } from 'class-transformer';
+import { validate } from 'class-validator';
+import ExcelJS from 'exceljs';
 import { EntityNotFoundException } from '../../common/exceptions/entity-not-found.exception';
 import type { PaginationMeta } from '../../common/dto/pagination.dto';
 import { buildPaginationMeta } from '../../common/dto/pagination.dto';
@@ -10,6 +13,32 @@ import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { JobQueryDto } from './dto/job-query.dto';
 import { JobResponseDto } from './dto/job-response.dto';
+import { BulkUploadResultDto } from './dto/bulk-upload-result.dto';
+
+function cellToString(value: ExcelJS.CellValue): string {
+  if (value === null || value === undefined) return '';
+  if (value instanceof Date) return value.toISOString();
+  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+    return String(value);
+  }
+  if (typeof value === 'object') {
+    if ('text' in value) return String(value.text ?? '');
+    if ('richText' in value) return value.richText.map((part) => part.text).join('');
+  }
+  return '';
+}
+
+const BULK_UPLOAD_COLUMNS = [
+  'title',
+  'company',
+  'city',
+  'qualification',
+  'jobDescription',
+  'experience',
+  'workType',
+  'jobFunction',
+  'sector',
+] as const;
 
 const SORTABLE_COLUMNS = [
   'title',
@@ -107,6 +136,87 @@ export class JobsService {
     this.logger.log(`Job deleted: ${id}`);
   }
 
+  async bulkCreate(buffer: Buffer): Promise<BulkUploadResultDto> {
+    const workbook = new ExcelJS.Workbook();
+    // exceljs ships Buffer typings that predate @types/node's generic Buffer<T> — safe cast, same runtime type.
+    await workbook.xlsx.load(buffer as unknown as ExcelJS.Buffer);
+    const worksheet = workbook.worksheets[0];
+    if (!worksheet) {
+      throw new BadRequestException('The uploaded file has no worksheet');
+    }
+
+    const columns = new Map<string, number>();
+    worksheet.getRow(1).eachCell((cell, colNumber) => {
+      columns.set(cellToString(cell.value).trim(), colNumber);
+    });
+
+    const missing = BULK_UPLOAD_COLUMNS.filter((column) => !columns.has(column));
+    if (missing.length > 0) {
+      throw new BadRequestException(`Missing required column(s): ${missing.join(', ')}`);
+    }
+
+    const cellValue = (row: ExcelJS.Row, column: string): string => {
+      const colNumber = columns.get(column);
+      return colNumber ? cellToString(row.getCell(colNumber).value).trim() : '';
+    };
+
+    const validJobs: Prisma.JobCreateManyInput[] = [];
+    const errors: { row: number; message: string }[] = [];
+    let totalRows = 0;
+
+    for (let rowNumber = 2; rowNumber <= worksheet.rowCount; rowNumber++) {
+      const row = worksheet.getRow(rowNumber);
+      if (row.actualCellCount === 0) {
+        continue;
+      }
+      totalRows++;
+
+      const dto = plainToInstance(CreateJobDto, {
+        title: cellValue(row, 'title'),
+        company: cellValue(row, 'company'),
+        city: cellValue(row, 'city'),
+        qualification: cellValue(row, 'qualification'),
+        jobDescription: cellValue(row, 'jobDescription'),
+        experience: cellValue(row, 'experience'),
+        workType: cellValue(row, 'workType'),
+        jobFunction: cellValue(row, 'jobFunction'),
+        status: cellValue(row, 'status') || undefined,
+        sector: cellValue(row, 'sector'),
+      });
+
+      const validationErrors = await validate(dto);
+      if (validationErrors.length > 0) {
+        errors.push({
+          row: rowNumber,
+          message: validationErrors
+            .map((error) => Object.values(error.constraints ?? {}).join(', '))
+            .join('; '),
+        });
+        continue;
+      }
+
+      validJobs.push({
+        title: dto.title,
+        company: dto.company,
+        city: dto.city,
+        qualification: dto.qualification,
+        jobDescription: dto.jobDescription,
+        experience: dto.experience,
+        workType: dto.workType,
+        jobFunction: dto.jobFunction,
+        status: dto.status,
+        sector: dto.sector,
+      });
+    }
+
+    const created = validJobs.length > 0 ? await this.jobsRepository.createMany(validJobs) : 0;
+    this.logger.log(
+      `Bulk upload: ${created} created, ${errors.length} failed of ${totalRows} rows`,
+    );
+
+    return { totalRows, created, failed: errors.length, errors };
+  }
+
   private buildWhere(query: JobQueryDto): Prisma.JobWhereInput {
     const where: Prisma.JobWhereInput = {};
 
@@ -131,7 +241,7 @@ export class JobsService {
     }
 
     if (query.city) {
-      where.city = query.city;
+      where.city = { contains: query.city, mode: 'insensitive' };
     }
 
     return where;

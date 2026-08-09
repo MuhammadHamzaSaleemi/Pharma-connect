@@ -1,26 +1,27 @@
-import { Logger, ValidationPipe, type INestApplication } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory, Reflector } from '@nestjs/core';
+import type { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { join } from 'path';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 
 function isErrnoException(error: unknown): error is NodeJS.ErrnoException {
   return (
-    typeof error === 'object' &&
-    error !== null &&
-    'code' in error &&
-    typeof (error as { code: unknown }).code === 'string'
+    typeof error === 'object' && error !== null && 'code' in error && typeof error.code === 'string'
   );
 }
 
 async function bootstrap(): Promise<void> {
   const logger = new Logger('Bootstrap');
-  const app = (await NestFactory.create(AppModule)) as INestApplication;
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get(ConfigService);
 
   app.setGlobalPrefix('api/v1');
+
+  app.useStaticAssets(join(process.cwd(), 'uploads'), { prefix: '/uploads' });
 
   app.useGlobalPipes(
     new ValidationPipe({

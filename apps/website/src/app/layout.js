@@ -1,7 +1,9 @@
 import { Plus_Jakarta_Sans } from 'next/font/google'
-import "../../node_modules/bootstrap/dist/css/bootstrap.min.css"
+import "bootstrap/dist/css/bootstrap.min.css"
 import "./assets/scss/style.scss"
 import "./assets/css/materialdesignicons.min.css"
+import { AuthProvider } from '../context/AuthContext'
+import QueryProvider from '../providers/QueryProvider'
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -17,7 +19,11 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={jakarta.variable}>{children}</body>
+      <body className={jakarta.variable}>
+        <QueryProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </QueryProvider>
+      </body>
     </html>
   )
 }

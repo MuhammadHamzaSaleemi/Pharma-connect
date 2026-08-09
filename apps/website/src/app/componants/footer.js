@@ -39,17 +39,17 @@ export default function Footer({top}){
                             <div className="row align-items-center">
                                 <div className="col-sm-3">
                                     <div className="text-center text-sm-start">
-                                        <Link href=""><Image src='/images/logo-light.png' width={120} height={18} alt=""/></Link>
+                                        <Link href=""><Image src='/images/logo.png' height={50} width={150} alt=""/></Link>
                                     </div>
                                 </div>
         
                                 <div className="col-sm-9 mt-4 mt-sm-0">
                                     <ul className="list-unstyled footer-list terms-service text-center text-sm-end mb-0">
-                                        <li className="list-inline-item my-2"><Link href="/" className="text-foot fs-6 fw-medium me-2"><i className="mdi mdi-circle-small"></i> Home</Link></li>
-                                        <li className="list-inline-item my-2"><Link href="/services" className="text-foot fs-6 fw-medium me-2"><i className="mdi mdi-circle-small"></i> How it works</Link></li>
-                                        <li className="list-inline-item my-2"><Link href="/job-post" className="text-foot fs-6 fw-medium me-2"><i className="mdi mdi-circle-small"></i> Create a job</Link></li>
+                                       
                                         <li className="list-inline-item my-2"><Link href="/aboutus" className="text-foot fs-6 fw-medium me-2"><i className="mdi mdi-circle-small"></i> About us</Link></li>
-                                        <li className="list-inline-item my-2"><Link href="/pricing" className="text-foot fs-6 fw-medium"><i className="mdi mdi-circle-small"></i> Plans</Link></li>
+                                        <li className="list-inline-item my-2"><Link href="/contactus" className="text-foot fs-6 fw-medium me-2"><i className="mdi mdi-circle-small"></i> Contact</Link></li>
+                                        <li className="list-inline-item my-2"><Link href="/privacy" className="text-foot fs-6 fw-medium me-2"><i className="mdi mdi-circle-small"></i> Privacy Policy</Link></li>
+                                        <li className="list-inline-item my-2"><Link href="/terms" className="text-foot fs-6 fw-medium"><i className="mdi mdi-circle-small"></i> Terms of Service</Link></li>
                                     </ul>
                                 </div>
                             </div>
@@ -63,18 +63,18 @@ export default function Footer({top}){
                     <div className="row align-items-center">
                         <div className="col-sm-6">
                             <div className="text-sm-start">
-                                <p className="mb-0 fw-medium">© {new Date().getFullYear()} Jobnova. Design & Develop with <i className="mdi mdi-heart text-danger"></i> by <Link href="https://shreethemes.in/" target="_blank" className="text-reset">Shreethemes</Link>.</p>
+                                <p className="mb-0 fw-medium">© {new Date().getFullYear()} 2026, PharmaConnect. All Rights Reserved.</p>
                             </div>
                         </div>
 
                         <div className="col-sm-6 mt-4 mt-sm-0 pt-2 pt-sm-0">
                             <ul className="list-unstyled social-icon foot-social-icon text-sm-end mb-0">
-                                <li className="list-inline-item"><Link href="https://1.envato.market/jobnova-next" target="_blank" className="rounded"><FiShoppingCart className="fea icon-sm align-middle"/></Link></li>
-                                <li className="list-inline-item"><Link href="https://dribbble.com/shreethemes" target="_blank" className="rounded"><FiDribbble className="fea icon-sm align-middle"/></Link></li>
-                                <li className="list-inline-item"><Link href="http://linkedin.com/company/shreethemes" target="_blank" className="rounded"><FiLinkedin className="fea icon-sm align-middle"/></Link></li>
-                                <li className="list-inline-item"><Link href="https://www.facebook.com/shreethemes" target="_blank" className="rounded"><FiFacebook className="fea icon-sm align-middle"/></Link></li>
+                                {/* <li className="list-inline-item"><Link href="https://1.envato.market/jobnova-next" target="_blank" className="rounded"><FiShoppingCart className="fea icon-sm align-middle"/></Link></li>
+                                <li className="list-inline-item"><Link href="https://dribbble.com/shreethemes" target="_blank" className="rounded"><FiDribbble className="fea icon-sm align-middle"/></Link></li> */}
+                                <li className="list-inline-item"><Link href="https://www.linkedin.com/company/pharmaconnect-pakistan/" target="_blank" className="rounded"><FiLinkedin className="fea icon-sm align-middle"/></Link></li>
+                                {/* <li className="list-inline-item"><Link href="https://www.facebook.com/shreethemes" target="_blank" className="rounded"><FiFacebook className="fea icon-sm align-middle"/></Link></li>
                                 <li className="list-inline-item"><Link href="https://www.instagram.com/shreethemes/" target="_blank" className="rounded"><FiInstagram className="fea icon-sm align-middle"/></Link></li>
-                                <li className="list-inline-item"><Link href="https://twitter.com/shreethemes" target="_blank" className="rounded"><FiTwitter className="fea icon-sm align-middle"/></Link></li>
+                                <li className="list-inline-item"><Link href="https://twitter.com/shreethemes" target="_blank" className="rounded"><FiTwitter className="fea icon-sm align-middle"/></Link></li> */}
                             </ul>
                         </div>
                     </div>

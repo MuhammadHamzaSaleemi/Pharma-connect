@@ -1,65 +1,94 @@
-import {FiAirplay,FiAward, FiAtSign,FiCodesandbox,FiChrome,FiCopy,FiCpu,FiPhone, FiActivity, FiClock,FiFileText, FiUsers, FiUser,FiInbox,FiThumbsUp,FiUmbrella, FiHelpCircle, FiBookmark, FiSettings, FiMail,FiMapPin} from "../assets/icons/vander"
+import {FiTool,FiCheckCircle,FiCheckSquare,FiShield,FiFileText,FiActivity,FiHeart,FiTrendingUp,FiPackage,FiTruck,FiHome,FiPlusSquare,FiBookOpen,FiDroplet,FiClipboard,FiSmile,FiFlag,FiGlobe,FiPhone, FiClock, FiUsers, FiUser,FiCodesandbox,FiHelpCircle, FiBookmark, FiSettings, FiMail,FiMapPin,FiTarget,FiEye,LuMicroscope,LuDna} from "../assets/icons/vander"
 
 export const categoriesData = [
     {
-        icon:FiAirplay,
-        title:'Business',
-        title2:'Development',
-        jobs:'74 Jobs'
+        icon:FiTool,
+        title:'Production',
     },
     {
-        icon:FiAward,
-        title:'Marketing &',
-        title2:'Communication',
-        jobs:'20 Jobs'
+        icon:FiCheckCircle,
+        title:'Quality Assurance',
+        title2:'(QA)',
     },
     {
-        icon:FiAtSign ,
-        title:'Project',
-        title2:'Management',
-        jobs:'35 Jobs'
+        icon:FiCheckSquare,
+        title:'Quality Control',
+        title2:'(QC)',
     },
     {
-        icon:FiCodesandbox,
-        title:'Customer',
-        title2:'Service',
-        jobs:'46 Jobs'
+        icon:FiShield,
+        title:'Pharmacovigilance',
     },
     {
-        icon:FiChrome,
-        title:'Software',
-        title2:'Engineering',
-        jobs:'60 Jobs'
+        icon:FiFileText,
+        title:'Regulatory',
+        title2:'Affairs',
     },
     {
-        icon:FiCopy ,
-        title:'Human Resource',
-        title2:'HR',
-        jobs:'74 Jobs'
+        icon:FiActivity,
+        title:'Clinical',
+        title2:'Research',
     },
     {
-        icon:FiCpu,
-        title:'It &',
-        title2:'Networking',
-        jobs:'20 Jobs'
+        icon:FiHeart,
+        title:'Medical',
+        title2:'Affairs',
     },
     {
-        icon:FiInbox,
+        icon:FiTrendingUp,
         title:'Sales &',
         title2:'Marketing',
-        jobs:'35 Jobs'
     },
     {
-        icon:FiThumbsUp,
-        title:'Project',
-        title2:'Manager',
-        jobs:'46 Jobs'
+        icon:FiPackage,
+        title:'Warehouse',
     },
     {
-        icon:FiUmbrella,
-        title:'Data',
-        title2:'Science',
-        jobs:'60 Jobs'
+        icon:FiTruck,
+        title:'Supply Chain',
+    },
+    {
+        icon:FiHome,
+        title:'Community',
+        title2:'Pharmacy',
+    },
+    {
+        icon:FiPlusSquare,
+        title:'Hospital',
+        title2:'Pharmacy',
+    },
+    {
+        icon:FiBookOpen,
+        title:'Academia',
+    },
+    {
+        icon:FiDroplet,
+        title:'Formulation &',
+        title2:'Development',
+    },
+    {
+        icon:FiClipboard,
+        title:'Validation',
+    },
+    {
+        icon:LuMicroscope,
+        title:'Microbiology',
+    },
+    {
+        icon:FiSmile,
+        title:'Hospitality',
+    },
+    {
+        icon:LuDna,
+        title:'Biotechnology',
+    },
+    {
+        icon:FiFlag,
+        title:'Government',
+    },
+    {
+        icon:FiGlobe,
+        title:'NGO',
     },
 ]
 
@@ -248,44 +277,42 @@ export const jobData = [
 
 export const servicesData = [
     {
-        icon:FiPhone,
-        title:'24/7 Support',
-        desc:'Many desktop publishing now use and a search for job.'
+        icon:FiTarget,
+        title:'Our Mission',
+        desc:'Bridge the information gap between Pakistani pharmacy talent and global opportunities through honest, curated listings.'
     },
     {
-        icon:FiCpu,
-        title:'Tech & Startup Jobs',
-        desc:'Many desktop publishing now use and a search for job.'
+        icon:FiEye,
+        title:'Our Vision',
+        desc:'A pharmacy community where every student, graduate, and professional has equal access to opportunity.'
+    },
+    {
+        icon:FiHeart,
+        title:'Our Values',
+        desc:'Curation over clutter. Trust over traffic. Community over clicks.'
+    },
+]
+
+export const servicesDataHome = [
+    {
+        icon:FiTarget,
+        title:'Curated, Not Scraped',
+        desc:'Every listing is reviewed for relevance to the pharmacy community.'
+    },
+    {
+        icon:FiEye,
+        title:'Built for the Community',
+        desc:'Made by pharmacists, for pharmacists, students, graduates, and professionals.'
     },
     {
         icon:FiActivity,
-        title:'Quick & Easy',
-        desc:'Many desktop publishing now use and a search for job.'
+        title:'Quick and Easy to Use',
+        desc:'Easy interface and filters available, making job searching simple.'
     },
     {
         icon:FiClock,
-        title:'Save Time',
-        desc:'Many desktop publishing now use and a search for job.'
-    },
-    {
-        icon:FiFileText,
-        title:'Apply with confidence',
-        desc:'Many desktop publishing now use and a search for job.'
-    },
-    {
-        icon:FiCodesandbox,
-        title:'Reduce Hiring Bias',
-        desc:'Many desktop publishing now use and a search for job.'
-    },
-    {
-        icon:FiUsers,
-        title:'Proactive Employers',
-        desc:'Many desktop publishing now use and a search for job.'
-    },
-    {
-        icon:FiUser,
-        title:'Proactive Employers',
-        desc:'Many desktop publishing now use and a search for job.'
+        title:'No Clutter',
+        desc:'Expired opportunities are hidden automatically. No clutter, ever.'
     },
 ]
 
@@ -636,23 +663,19 @@ export const candidateSkill = [
 export const teamData = [
     {
         image:'/images/team/01.jpg',
-        name:'Jack John',
-        title:'Job Seeker'
-    },
-    {
-        image:'/images/team/02.jpg',
-        name:'Krista John',
-        title:'Job Seeker'
-    },
-    {
-        image:'/images/team/03.jpg',
-        name:'Roger Jackson',
-        title:'Job Seeker'
+        name:'Muhammad Burhan Khan',
+        title:'Founder, Pharmacist',
+        linkedin:'https://www.linkedin.com/in/muhammadburhankhan/',
+        facebook:'',
+        instagram:''
     },
     {
         image:'/images/team/04.jpg',
-        name:'Johnny English',
-        title:'Job Seeker'
+        name:'Muhammad Hamza Saleemi',
+        title:'Co-Founder, Software Engineer',
+        linkedin:'https://www.linkedin.com/in/mhamzasaleemi/',
+        facebook:'',
+        instagram:'https://www.instagram.com/m.hamza_saleemi/'
     },
 ]
 export const helpcenterData = [

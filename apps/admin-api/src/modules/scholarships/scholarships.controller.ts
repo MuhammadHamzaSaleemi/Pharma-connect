@@ -13,7 +13,11 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ApiPaginatedResponse } from '../../common/decorators/api-paginated-response.decorator';
+import { Public } from '../../common/decorators/public.decorator';
 import { ResponseMessage } from '../../common/decorators/response-message.decorator';
+import { Roles } from '../../common/decorators/roles.decorator';
+import { UserRoleEnum } from '../../common/enums/user-role.enum';
+import { RolesGuard } from '../../common/guards/roles.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ScholarshipsService } from './scholarships.service';
 import { CreateScholarshipDto } from './dto/create-scholarship.dto';
@@ -23,12 +27,13 @@ import { ScholarshipResponseDto } from './dto/scholarship-response.dto';
 
 @ApiTags('Scholarships')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('scholarships')
 export class ScholarshipsController {
   constructor(private readonly scholarshipsService: ScholarshipsService) {}
 
   @Post()
+  @Roles(UserRoleEnum.SUPER_ADMIN, UserRoleEnum.ADMIN)
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create a new scholarship' })
   @ResponseMessage('Scholarship created successfully')
@@ -37,6 +42,7 @@ export class ScholarshipsController {
   }
 
   @Get()
+  @Public()
   @ApiOperation({ summary: 'List scholarships with search, filtering, sorting, and pagination' })
   @ApiPaginatedResponse(ScholarshipResponseDto)
   @ResponseMessage('Scholarships retrieved successfully')
@@ -45,6 +51,7 @@ export class ScholarshipsController {
   }
 
   @Get(':id')
+  @Public()
   @ApiOperation({ summary: 'Get a scholarship by id' })
   @ResponseMessage('Scholarship retrieved successfully')
   findOne(@Param('id') id: string) {
@@ -52,6 +59,7 @@ export class ScholarshipsController {
   }
 
   @Patch(':id')
+  @Roles(UserRoleEnum.SUPER_ADMIN, UserRoleEnum.ADMIN)
   @ApiOperation({ summary: 'Partially update a scholarship' })
   @ResponseMessage('Scholarship updated successfully')
   update(@Param('id') id: string, @Body() dto: UpdateScholarshipDto) {
@@ -59,6 +67,7 @@ export class ScholarshipsController {
   }
 
   @Delete(':id')
+  @Roles(UserRoleEnum.SUPER_ADMIN, UserRoleEnum.ADMIN)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Delete a scholarship' })
   @ResponseMessage('Scholarship deleted successfully')

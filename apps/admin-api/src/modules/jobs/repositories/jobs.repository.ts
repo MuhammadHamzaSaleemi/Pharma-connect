@@ -17,6 +17,11 @@ export class JobsRepository {
     return this.prisma.job.create({ data });
   }
 
+  async createMany(data: Prisma.JobCreateManyInput[]): Promise<number> {
+    const result = await this.prisma.job.createMany({ data });
+    return result.count;
+  }
+
   async findById(id: string): Promise<Job | null> {
     return this.prisma.job.findUnique({ where: { id } });
   }
