@@ -4,7 +4,19 @@ import Link from "next/link";
 import Image from "next/image";
 import Navbar from "./componants/navbar";
 
-import { FiSearch, FiClock, FiMapPin, FiCalendar } from "./assets/icons/vander";
+import {
+  FiClock,
+  FiMapPin,
+  FiCalendar,
+  FiBriefcase,
+  FiAward,
+  FiActivity,
+  FiFileText,
+  FiLink2,
+  FiShare2,
+  FiBook,
+  FiImage,
+} from "./assets/icons/vander";
 import AboutUs from "./componants/aboutUs";
 import Categories from "./componants/categories";
 import AboutTwo from "./componants/aboutTwo";
@@ -29,6 +41,63 @@ function formatDate(dateString) {
   });
 }
 
+const dummyJobs = [
+  {
+    id: "dummy-1",
+    company: "MediCare Pharmaceuticals",
+    createdAt: new Date().toISOString(),
+    workType: "FULL_TIME",
+    title: "Clinical Pharmacist",
+    city: "Karachi",
+    qualification: "Pharm-D",
+    experience: "2+ years",
+  },
+  {
+    id: "dummy-2",
+    company: "HealthPlus Hospital",
+    createdAt: new Date().toISOString(),
+    workType: "PART_TIME",
+    title: "Pharmacy Technician",
+    city: "Lahore",
+    qualification: "B.Pharm",
+    experience: "1+ years",
+  },
+  {
+    id: "dummy-3",
+    company: "Wellness Retail Pharmacy",
+    createdAt: new Date().toISOString(),
+    workType: "INTERNSHIP",
+    title: "Pharmacy Intern",
+    city: "Islamabad",
+    qualification: "Pharm-D (Final Year)",
+    experience: "Fresh",
+  },
+];
+
+const dummyBlogs = [
+  {
+    id: "dummy-blog-1",
+    featuredImage: "/images/blog/01.jpg",
+    title: "5 Skills Every Pharmacy Graduate Needs in 2026",
+    category: "Careers",
+    publishedAt: new Date().toISOString(),
+  },
+  {
+    id: "dummy-blog-2",
+    featuredImage: "/images/blog/02.jpg",
+    title: "How to Land Your First Hospital Pharmacy Job",
+    category: "Guides",
+    publishedAt: new Date().toISOString(),
+  },
+  {
+    id: "dummy-blog-3",
+    featuredImage: "/images/blog/03.jpg",
+    title: "Scholarships for Pharm-D Students in Pakistan",
+    category: "Scholarships",
+    publishedAt: new Date().toISOString(),
+  },
+];
+
 export default function Home() {
   const jobsQuery = usePublicJobsQuery({ page: 1, limit: 6, status: "ACTIVE" });
   const blogsQuery = usePublicBlogsQuery({
@@ -37,21 +106,41 @@ export default function Home() {
     status: "PUBLISHED",
   });
 
-  const jobs = jobsQuery.data?.data ?? [];
-  const blogs = blogsQuery.data?.data ?? [];
+  const apiJobs = jobsQuery.data?.data ?? [];
+  const jobs =
+    !jobsQuery.isLoading && (jobsQuery.isError || apiJobs.length === 0)
+      ? dummyJobs
+      : apiJobs;
+  const apiBlogs = blogsQuery.data?.data ?? [];
+  const blogs =
+    !blogsQuery.isLoading && (blogsQuery.isError || apiBlogs.length === 0)
+      ? dummyBlogs
+      : apiBlogs;
 
   return (
     <>
       <Navbar />
 
       <section
-        className="bg-half-170 d-table w-100 bg-primary"
+        className="bg-half-170 d-table w-100 position-relative overflow-hidden"
         style={{
-          backgroundImage: "url('/images/bg2.png')",
+          backgroundImage: "url('/images/hero-lab-bg.jpg')",
           backgroundPosition: "center",
         }}
       >
-        <div className="container">
+        <div
+          className="position-absolute top-0 start-0 w-100 h-100 bg-primary"
+          style={{ opacity: 0.8, mixBlendMode: "multiply" }}
+        ></div>
+        <div
+          className="position-absolute top-0 start-0 w-100 h-100"
+          style={{
+            background:
+              "linear-gradient(to right, rgba(2,10,20,0.85), transparent)",
+          }}
+        ></div>
+
+        <div className="container position-relative">
           <div className="row g-4 align-items-center">
             <div className="col-md-6">
               <div className="title-heading">
@@ -59,33 +148,42 @@ export default function Home() {
                   Discover Pharmacy <br /> Opportunities <br />
                   that matter.
                 </h1>
-                <p className="para-desc text-white-50 mb-0">
+                <p className="para-desc text-white mb-0">
                   Jobs, scholarships, and internships for pharmacists,
                   technicians, and students across Pakistan and abroad.
                 </p>
 
-                <div className="text-center subscribe-form mt-4">
-                  <form style={{ maxWidth: "800px" }}>
-                    <div className="mb-0">
-                      <div className="position-relative">
-                        <FiSearch className="fea icon-20 position-absolute top-50 start-0 translate-middle-y ms-3" />
-                        <input
-                          type="text"
-                          id="help"
-                          name="name"
-                          className="shadow rounded-pill bg-white ps-5"
-                          required=""
-                          placeholder="Search jobs & candidates ..."
-                        />
-                      </div>
-                      <button
-                        type="submit"
-                        className="btn btn-primary btn-pills"
+                <div className="d-flex flex-wrap gap-2 mt-4">
+                  <Link href="/jobs" className="btn btn-secondary btn-hero shadow-sm">
+                    Explore Jobs
+                  </Link>
+                  <Link href="/job-post" className="btn btn-glass btn-hero">
+                    Post Opportunity
+                  </Link>
+                </div>
+
+                <div className="row g-3 mt-1" style={{ maxWidth: "560px" }}>
+                  {[
+                    { label: "Jobs", icon: FiBriefcase, href: "/jobs" },
+                    { label: "Scholarships", icon: FiAward, href: "#" },
+                    { label: "Internships", icon: FiActivity, href: "#" },
+                    { label: "Blogs", icon: FiFileText, href: "/blogs" },
+                  ].map(({ label, icon: Icon, href }) => (
+                    <div className="col-6 col-md-3" key={label}>
+                      <Link
+                        href={href}
+                        className="d-flex flex-column align-items-center justify-content-center text-white text-decoration-none rounded p-3"
+                        style={{
+                          background: "rgba(255,255,255,0.1)",
+                          border: "1px solid rgba(255,255,255,0.2)",
+                          backdropFilter: "blur(6px)",
+                        }}
                       >
-                        Search
-                      </button>
+                        <Icon className="fea icon-md mb-2" />
+                        <span className="fw-medium">{label}</span>
+                      </Link>
                     </div>
-                  </form>
+                  ))}
                 </div>
               </div>
             </div>
@@ -103,77 +201,25 @@ export default function Home() {
                 />
 
                 <div className="spinner">
-                  <div className="position-absolute top-0 start-0 mt-lg-5 mt-4 ms-lg-5 ms-4">
-                    <Image
-                      src="/images/company/circle-logo.png"
-                      width={45}
-                      height={45}
-                      className="avatar avatar-md-sm rounded shadow p-2 bg-white"
-                      alt=""
-                    />
+                  <div className="position-absolute top-0 start-50 translate-middle-x" style={{ marginTop: "-16px" }}>
+                    <span className="avatar avatar-md-sm rounded shadow p-2 bg-white d-flex align-items-center justify-content-center text-danger">
+                      <FiLink2 className="fea icon-20" />
+                    </span>
                   </div>
-                  <div className="position-absolute top-0 start-50 translate-middle-x">
-                    <Image
-                      src="/images/company/facebook-logo.png"
-                      width={45}
-                      height={45}
-                      className="avatar avatar-md-sm rounded shadow p-2 bg-white"
-                      alt=""
-                    />
+                  <div className="position-absolute top-50 start-0 translate-middle-y" style={{ marginLeft: "-16px" }}>
+                    <span className="avatar avatar-md-sm rounded shadow p-2 bg-white d-flex align-items-center justify-content-center text-primary">
+                      <FiBook className="fea icon-20" />
+                    </span>
                   </div>
-                  <div className="position-absolute top-0 end-0 mt-lg-5 mt-4 me-lg-5 me-4">
-                    <Image
-                      src="/images/company/google-logo.png"
-                      width={45}
-                      height={45}
-                      className="avatar avatar-md-sm rounded shadow p-2 bg-white"
-                      alt=""
-                    />
+                  <div className="position-absolute top-50 end-0 translate-middle-y" style={{ marginRight: "-16px" }}>
+                    <span className="avatar avatar-md-sm rounded shadow p-2 bg-white d-flex align-items-center justify-content-center text-danger">
+                      <FiImage className="fea icon-20" />
+                    </span>
                   </div>
-                  <div className="position-absolute top-50 start-0 translate-middle-y">
-                    <Image
-                      src="/images/company/lenovo-logo.png"
-                      width={45}
-                      height={45}
-                      className="avatar avatar-md-sm rounded shadow p-2 bg-white"
-                      alt=""
-                    />
-                  </div>
-                  <div className="position-absolute top-50 end-0 translate-middle-y">
-                    <Image
-                      src="/images/company/android.png"
-                      width={45}
-                      height={45}
-                      className="avatar avatar-md-sm rounded shadow p-2 bg-white"
-                      alt=""
-                    />
-                  </div>
-                  <div className="position-absolute bottom-0 start-0 mb-lg-5 mb-4 ms-lg-5 ms-4">
-                    <Image
-                      src="/images/company/linkedin.png"
-                      width={45}
-                      height={45}
-                      className="avatar avatar-md-sm rounded shadow p-2 bg-white"
-                      alt=""
-                    />
-                  </div>
-                  <div className="position-absolute bottom-0 start-50 translate-middle-x">
-                    <Image
-                      src="/images/company/skype.png"
-                      width={45}
-                      height={45}
-                      className="avatar avatar-md-sm rounded shadow p-2 bg-white"
-                      alt=""
-                    />
-                  </div>
-                  <div className="position-absolute bottom-0 end-0 mb-lg-5 mb-4 me-lg-5 me-4">
-                    <Image
-                      src="/images/company/snapchat.png"
-                      width={45}
-                      height={45}
-                      className="avatar avatar-md-sm rounded shadow p-2 bg-white"
-                      alt=""
-                    />
+                  <div className="position-absolute bottom-0 start-50 translate-middle-x" style={{ marginBottom: "-16px" }}>
+                    <span className="avatar avatar-md-sm rounded shadow p-2 bg-white d-flex align-items-center justify-content-center text-primary">
+                      <FiShare2 className="fea icon-20" />
+                    </span>
                   </div>
                 </div>
               </div>
@@ -214,20 +260,6 @@ export default function Home() {
                 Loading jobs...
               </div>
             )}
-
-            {jobsQuery.isError && (
-              <div className="col-12 text-center text-muted">
-                Unable to load jobs right now.
-              </div>
-            )}
-
-            {!jobsQuery.isLoading &&
-              !jobsQuery.isError &&
-              jobs.length === 0 && (
-                <div className="col-12 text-center text-muted">
-                  No open positions at the moment.
-                </div>
-              )}
 
             {jobs.map((item) => {
               return (
@@ -289,7 +321,7 @@ export default function Home() {
             <div className="col-12 d-md-none d-block">
               <div className="text-center">
                 <Link
-                  href="/job-grid-one"
+                  href="/jobs"
                   className="btn btn-link primary text-muted"
                 >
                   See More Jobs <i className="mdi mdi-arrow-right"></i>
@@ -301,9 +333,9 @@ export default function Home() {
 
         <AboutTwo />
 
-        <div className="container mt-100 mt-60">
+        {/* <div className="container mt-100 mt-60">
           <Companies />
-        </div>
+        </div> */}
 
         <div className="container mt-100 mt-60">
           <div className="row justify-content-center">
@@ -325,20 +357,6 @@ export default function Home() {
                 Loading blog posts...
               </div>
             )}
-
-            {blogsQuery.isError && (
-              <div className="col-12 text-center text-muted">
-                Unable to load blog posts right now.
-              </div>
-            )}
-
-            {!blogsQuery.isLoading &&
-              !blogsQuery.isError &&
-              blogs.length === 0 && (
-                <div className="col-12 text-center text-muted">
-                  No blog posts published yet.
-                </div>
-              )}
 
             {blogs.map((item) => {
               return (

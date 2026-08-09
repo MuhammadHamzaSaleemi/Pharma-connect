@@ -4,7 +4,6 @@ import Image from "next/image";
 
 import Navbar from "../componants/navbar";
 import FormSelect from "../componants/formSelect";
-import AboutTwo from "../componants/aboutTwo";
 import Footer from "../componants/footer";
 import ScrollTop from "../componants/scrollTop";
 
@@ -148,8 +147,6 @@ export default async function JobGridOne({ searchParams }){
                     </div>
                 )}
             </div>
-
-           <AboutTwo/>
         </section>
         <Footer/>
         <ScrollTop/>
