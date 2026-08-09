@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "prepare": "husky install",
+    "prepare": "husky install || true",
     "postinstall": "prisma generate",
     "build": "prisma generate && nest build",
     "format": "prettier --write \"src/**/*.{ts,js,json,md}\" \"test/**/*.{ts,js,json,md}\"",
