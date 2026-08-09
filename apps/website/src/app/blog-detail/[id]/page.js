@@ -94,7 +94,7 @@ export default async function BlogDetail({ params }){
                                                 <div className="d-flex align-items-center">
                                                     <Link className="pe-3" href="#">
                                                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                                                        <img src={item.image} width={45} height={45} className="img-fluid avatar avatar-md-sm rounded-circle shadow" alt="img"/>
+                                                        <img src={item.image} width={45} height={45} className="img-fluid avatar avatar-md-sm rounded-circle shadow" alt="img" loading="lazy"/>
                                                     </Link>
                                                     <div className="commentor-detail">
                                                         <h6 className="mb-0"><Link href="#" className="text-dark media-heading">{item.name}</Link></h6>

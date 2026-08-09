@@ -374,6 +374,7 @@ export default function Home() {
                             objectFit: "cover",
                           }}
                           alt={item.title}
+                          loading="lazy"
                         />
                         <div className="card-overlay"></div>
                       </div>

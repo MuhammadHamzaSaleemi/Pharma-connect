@@ -84,7 +84,7 @@ export default async function Blogs({ searchParams }){
                                 <div className="card-img blog-image position-relative overflow-hidden rounded-0">
                                     <div className="position-relative overflow-hidden">
                                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                                        <img src={item.featuredImage || '/images/blog/01.jpg'} style={{width:"100%", height:'auto'}} className="img-fluid" alt={item.title}/>
+                                        <img src={item.featuredImage || '/images/blog/01.jpg'} style={{width:"100%", height:'auto'}} className="img-fluid" alt={item.title} loading="lazy"/>
                                         <div className="card-overlay"></div>
                                     </div>
                                 </div>
