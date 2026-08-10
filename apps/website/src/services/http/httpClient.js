@@ -6,7 +6,7 @@
 // service, must transparently recover from a 401 the same way.
 import { getAccessToken, getRefreshToken, setSession, clearSession } from "../auth/tokenStorage";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1').replace(/\/+$/, '');
 
 // Shared by every concurrent 401 so only one refresh call is ever in flight —
 // callers that arrive while a refresh is already running just await it.
