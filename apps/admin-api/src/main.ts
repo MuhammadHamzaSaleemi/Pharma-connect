@@ -36,8 +36,8 @@ async function bootstrap(): Promise<void> {
   app.useGlobalInterceptors(new ResponseInterceptor(app.get(Reflector)));
 
   app.enableCors({
-    origin: configService.get<string>('corsOrigin')?.split(',') ?? '*',
-    credentials: configService.get<boolean>('corsAllowCredentials') ?? true,
+    origin: '*',
+    credentials: false,
   });
 
   const swaggerConfig = new DocumentBuilder()
