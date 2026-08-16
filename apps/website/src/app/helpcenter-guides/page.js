@@ -34,7 +34,7 @@ export default function HelpcenterGuides(){
                 <div className="position-middle-bottom">
                     <nav aria-label="breadcrumb" className="d-block">
                         <ul className="breadcrumb breadcrumb-muted mb-0 p-0">
-                            <li className="breadcrumb-item"><Link href="/">Jobnova</Link></li>
+                            <li className="breadcrumb-item"><Link href="/">PharmaConnect</Link></li>
                             <li className="breadcrumb-item"><Link href="/helpcenter-overview">Help Center</Link></li>
                             <li className="breadcrumb-item active" aria-current="page">Guides</li>
                         </ul>
@@ -78,7 +78,7 @@ export default function HelpcenterGuides(){
                             <li className="mt-2"><Link href="#" className="text-muted"><i className="mdi mdi-arrow-right text-primary me-2"></i>Updating your listing</Link></li>
                             <li className="mt-2"><Link href="#" className="text-muted"><i className="mdi mdi-arrow-right text-primary me-2"></i>Neighbourhoods</Link></li>
                             <li className="mt-2"><Link href="#" className="text-muted"><i className="mdi mdi-arrow-right text-primary me-2"></i>Listing photos & photography</Link></li>
-                            <li className="mt-2"><Link href="#" className="text-muted"><i className="mdi mdi-arrow-right text-primary me-2"></i>Jobnova Plus</Link></li>
+                            <li className="mt-2"><Link href="#" className="text-muted"><i className="mdi mdi-arrow-right text-primary me-2"></i>PharmaConnect Plus</Link></li>
                             <li className="mt-2"><Link href="#" className="text-muted"><i className="mdi mdi-arrow-right text-primary me-2"></i>API-connected software</Link></li>
                         </ul>
                     </div>
@@ -97,8 +97,8 @@ export default function HelpcenterGuides(){
                     <div className="col-lg-4 col-md-6 col-12 mt-4 pt-2">
                         <h5>Your reservations</h5>
                         <ul className="list-unstyled mt-4 mb-0">
-                            <li className="mt-2"><Link href="#" className="text-muted"><i className="mdi mdi-arrow-right text-primary me-2"></i>Jobnova safely</Link></li>
-                            <li className="mt-2"><Link href="#" className="text-muted"><i className="mdi mdi-arrow-right text-primary me-2"></i>Jobnova Experiences and Adventures</Link></li>
+                            <li className="mt-2"><Link href="#" className="text-muted"><i className="mdi mdi-arrow-right text-primary me-2"></i>PharmaConnect safely</Link></li>
+                            <li className="mt-2"><Link href="#" className="text-muted"><i className="mdi mdi-arrow-right text-primary me-2"></i>PharmaConnect Experiences and Adventures</Link></li>
                             <li className="mt-2"><Link href="#" className="text-muted"><i className="mdi mdi-arrow-right text-primary me-2"></i>Changing a reservation</Link></li>
                             <li className="mt-2"><Link href="#" className="text-muted"><i className="mdi mdi-arrow-right text-primary me-2"></i>Cancelling a reservation</Link></li>
                             <li className="mt-2"><Link href="#" className="text-muted"><i className="mdi mdi-arrow-right text-primary me-2"></i>Long-term reservations</Link></li>

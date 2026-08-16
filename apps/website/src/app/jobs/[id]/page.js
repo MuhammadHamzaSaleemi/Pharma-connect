@@ -58,8 +58,8 @@ export default async function JobDetailOne({ params }){
                 <div className="position-middle-bottom">
                     <nav aria-label="breadcrumb" className="d-block">
                         <ul className="breadcrumb breadcrumb-muted mb-0 p-0">
-                            <li className="breadcrumb-item"><Link href="/">Jobnova</Link></li>
-                            <li className="breadcrumb-item"><Link href="/job-grid-one">Jobs</Link></li>
+                            <li className="breadcrumb-item"><Link href="/">PharmaConnect</Link></li>
+                            <li className="breadcrumb-item"><Link href="/jobs">Jobs</Link></li>
                             <li className="breadcrumb-item active" aria-current="page">Job Detail</li>
                         </ul>
                     </nav>
@@ -146,10 +146,6 @@ export default async function JobDetailOne({ params }){
                     <div className="col-lg-8 col-md-6 col-12">
                         <h5>Job Description: </h5>
                         <div className="text-muted" dangerouslySetInnerHTML={{ __html: data?.jobDescription ?? '' }}/>
-
-                        <div className="mt-4">
-                            <Link href="/job-apply" className="btn btn-outline-primary">Apply Now <i className="mdi mdi-send"></i></Link>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -184,7 +180,7 @@ export default async function JobDetailOne({ params }){
                                         </div>
 
                                         <div className="mt-4">
-                                            <Link href={`/job-detail-one/${item.id}`} className="text-dark title h5">{item.title}</Link>
+                                            <Link href={`/jobs/${item.id}`} className="text-dark title h5">{item.title}</Link>
 
                                             <span className="text-muted d-flex align-items-center mt-2"><FiMapPin className="fea icon-sm me-1"/>{item.city}</span>
 

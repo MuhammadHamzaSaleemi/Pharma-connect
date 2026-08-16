@@ -159,7 +159,7 @@ export default function Index(){
                 <div className="row justify-content-center mb-4 pb-2">
                     <div className="col-12">
                         <div className="section-title text-center">
-                            <h4 className="title mb-3">Here's why you'll love it Jobnova</h4>
+                            <h4 className="title mb-3">Here's why you'll love it PharmaConnect</h4>
                             <p className="text-muted para-desc mx-auto mb-0">Search all the open positions on the web. Get your own personalized salary estimate. Read reviews on over 30000+ companies worldwide.</p>
                         </div>
                     </div>

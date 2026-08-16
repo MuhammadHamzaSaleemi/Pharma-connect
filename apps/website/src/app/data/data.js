@@ -494,7 +494,7 @@ export const accordionData = [
         desc:'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.'
     },
     {
-        title:'Do I need a designer to use Jobnova ?',
+        title:'Do I need a designer to use PharmaConnect ?',
         desc:'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.'
     },
     {
@@ -726,19 +726,19 @@ export const contactData = [
     {
         icon:FiPhone,
         title:'Phone',
-        desc:'Start working with Jobnova that can provide everything',
+        desc:'Start working with PharmaConnect that can provide everything',
         link:'tel:+152534-468-854'
     },
     {
         icon:FiMail,
         title:'Email',
-        desc:'Start working with Jobnova that can provide everything',
+        desc:'Start working with PharmaConnect that can provide everything',
         link:'contact@example.com'
     },
     {
         icon:FiMapPin,
         title:'Location',
-        desc:'Start working with Jobnova that can provide everything',
+        desc:'Start working with PharmaConnect that can provide everything',
         link:'View on Google map'
     },
 ]

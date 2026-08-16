@@ -108,7 +108,7 @@ export default async function JobGridOne({ searchParams }){
                                     </div>
 
                                     <div className="mt-4">
-                                        <Link href={`/job-detail-one/${item.id}`} className="text-dark title h5">{item.title}</Link>
+                                        <Link href={`/jobs/${item.id}`} className="text-dark title h5">{item.title}</Link>
 
                                         <span className="text-muted d-flex align-items-center mt-2"><FiMapPin className="fea icon-sm me-1"/>{item.city}</span>
 

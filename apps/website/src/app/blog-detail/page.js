@@ -21,7 +21,7 @@ export default function BlogDetail(){
                 <div className="row mt-5 justify-content-center">
                     <div className="col-12">
                         <div className="title-heading text-center">
-                            <span className="badge bg-primary">Jobnova</span>
+                            <span className="badge bg-primary">PharmaConnect</span>
                             <h5 className="heading fw-semibold mb-0 sub-heading text-white title-dark mt-4">Using Banner Stands To Increase Trade Show Traffic</h5>
 
                             <ul className="list-inline text-center mb-0">
@@ -47,7 +47,7 @@ export default function BlogDetail(){
                 <div className="position-middle-bottom">
                     <nav aria-label="breadcrumb" className="d-block">
                         <ul className="breadcrumb breadcrumb-muted mb-0 p-0">
-                            <li className="breadcrumb-item"><Link href="/">Jobnova</Link></li>
+                            <li className="breadcrumb-item"><Link href="/">PharmaConnect</Link></li>
                             <li className="breadcrumb-item"><Link href="/blogs">Blogs</Link></li>
                             <li className="breadcrumb-item active" aria-current="page">Detail</li>
                         </ul>
@@ -74,7 +74,7 @@ export default function BlogDetail(){
                                 <p className="text-muted">The most well-known dummy text is the Lorem Ipsum, which is said to have originated in the 16th century. Lorem Ipsum is composed in a pseudo-Latin language which more or less corresponds to proper Latin. It contains a series of real Latin words. This ancient dummy text is also incomprehensible, but it imitates the rhythm of most European languages in Latin script. The advantage of its Latin origin and the relative meaninglessness of Lorum Ipsum is that the text does not attract attention to itself or distract the viewers attention from the layout.</p>
                                 <p className="text-muted">Thus, Lorem Ipsum has only limited suitability as a visual filler for German texts. If the fill text is intended to illustrate the characteristics of different typefaces, it sometimes makes sense to select texts containing the various letters and symbols specific to the output language.</p>
                             
-                                <blockquote className="text-center mx-auto blockquote"><i className="mdi mdi-format-quote-open mdi-48px text-muted opacity-2 d-block"></i> The man who comes back through the door in the wall will never be quite the same as the man who went out. <small className="d-block text-muted mt-2">- Jobnova Template</small></blockquote>
+                                <blockquote className="text-center mx-auto blockquote"><i className="mdi mdi-format-quote-open mdi-48px text-muted opacity-2 d-block"></i> The man who comes back through the door in the wall will never be quite the same as the man who went out. <small className="d-block text-muted mt-2">- PharmaConnect Template</small></blockquote>
                             
                                 <p className="text-muted">There is now an abundance of readable dummy texts. These are usually used when a text is required purely to fill a space. These alternatives to the classic Lorem Ipsum texts are often amusing and tell short, funny or nonsensical stories.</p>
                             

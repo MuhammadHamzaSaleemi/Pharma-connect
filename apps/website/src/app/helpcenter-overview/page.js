@@ -44,7 +44,7 @@ export default function HelpcenterOverview(){
                 <div className="position-middle-bottom">
                     <nav aria-label="breadcrumb" className="d-block">
                         <ul className="breadcrumb breadcrumb-muted mb-0 p-0">
-                            <li className="breadcrumb-item"><Link href="/">Jobnova</Link></li>
+                            <li className="breadcrumb-item"><Link href="/">PharmaConnect</Link></li>
                             <li className="breadcrumb-item active" aria-current="page">Helpcenter</li>
                         </ul>
                     </nav>
@@ -65,7 +65,7 @@ export default function HelpcenterOverview(){
                     <div className="col-12">
                         <div className="section-title text-center mb-4 pb-2">
                             <h4 className="mb-4 title">Find the help you need</h4>
-                            <p className="para-desc mx-auto text-muted">We are a huge marketplace dedicated to connecting great artists of all Jobnova with their fans and unique token collectors!</p>
+                            <p className="para-desc mx-auto text-muted">We are a huge marketplace dedicated to connecting great artists of all PharmaConnect with their fans and unique token collectors!</p>
                         </div>
                     </div>
                 </div>
@@ -99,7 +99,7 @@ export default function HelpcenterOverview(){
                     <div className="col-12">
                         <div className="section-title text-center mb-4 pb-2">
                             <h4 className="mb-4">Get Started</h4>
-                            <p className="para-desc mx-auto text-muted">We are a huge marketplace dedicated to connecting great artists of all Jobnova with their fans and unique token collectors!</p>
+                            <p className="para-desc mx-auto text-muted">We are a huge marketplace dedicated to connecting great artists of all PharmaConnect with their fans and unique token collectors!</p>
                         </div>
                     </div>
                 </div>

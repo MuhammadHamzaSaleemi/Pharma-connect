@@ -39,7 +39,7 @@ export default function Candidates(){
                 <div className="position-middle-bottom">
                     <nav aria-label="breadcrumb" className="d-block">
                         <ul className="breadcrumb breadcrumb-muted mb-0 p-0">
-                            <li className="breadcrumb-item"><Link href="/">Jobnova</Link></li>
+                            <li className="breadcrumb-item"><Link href="/">PharmaConnect</Link></li>
                             <li className="breadcrumb-item active" aria-current="page">Candidates</li>
                         </ul>
                     </nav>

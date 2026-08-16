@@ -33,7 +33,7 @@ export default function Error(){
                                 </div>
                             </div>
                             <div className="text-center">
-                                <p className="mb-0 text-muted">© {new Date().getFullYear()} Jobnova. Design & Develop with <i className="mdi mdi-heart text-danger"></i> by <Link href="https://shreethemes.in/" target="_blank" className="text-reset">Shreethemes</Link>.</p>
+                                <p className="mb-0 text-muted">© {new Date().getFullYear()} PharmaConnect. Design & Develop with <i className="mdi mdi-heart text-danger"></i> by <Link href="https://shreethemes.in/" target="_blank" className="text-reset">Shreethemes</Link>.</p>
                             </div>
                         </div>
                     </div>

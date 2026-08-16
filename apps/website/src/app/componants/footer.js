@@ -25,7 +25,6 @@ export default function Footer({top}){
 
                         <div className="col-md-5 mt-4 mt-sm-0">
                             <div className="text-md-end ms-5 ms-sm-0">
-                                <Link href="/job-apply" className="btn btn-primary me-1 my-1">Apply Now</Link>
                                 <Link href="/contactus" className="btn btn-soft-primary my-1">Contact Us</Link>
                             </div>
                         </div>
@@ -63,7 +62,7 @@ export default function Footer({top}){
                     <div className="row align-items-center">
                         <div className="col-sm-6">
                             <div className="text-sm-start">
-                                <p className="mb-0 fw-medium">© {new Date().getFullYear()} 2026, PharmaConnect. All Rights Reserved.</p>
+                                <p className="mb-0 fw-medium">© {new Date().getFullYear()}, PharmaConnect. All Rights Reserved.</p>
                             </div>
                         </div>
 

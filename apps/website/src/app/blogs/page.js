@@ -53,7 +53,7 @@ export default async function Blogs({ searchParams }){
                 <div className="position-middle-bottom">
                     <nav aria-label="breadcrumb" className="d-block">
                         <ul className="breadcrumb breadcrumb-muted mb-0 p-0">
-                            <li className="breadcrumb-item"><Link href="/">Jobnova</Link></li>
+                            <li className="breadcrumb-item"><Link href="/">PharmaConnect</Link></li>
                             <li className="breadcrumb-item active" aria-current="page">Blogs</li>
                         </ul>
                     </nav>
@@ -99,10 +99,10 @@ export default async function Blogs({ searchParams }){
                                             <li className="d-inline-flex align-items-center"><FiClock className="fea icon-ex-sm me-1 text-dark"/>{estimateReadTime(item.content)}</li>
                                         </ul>
 
-                                        <Link href={`/blog-detail/${item.id}`} className="title fw-semibold fs-5 text-dark">{item.title}</Link>
+                                        <Link href={`/blogs/${item.id}`} className="title fw-semibold fs-5 text-dark">{item.title}</Link>
 
                                         <ul className="list-unstyled d-flex justify-content-between align-items-center text-muted mb-0 mt-3">
-                                            <li className="list-inline-item me-2"><Link href={`/blog-detail/${item.id}`} className="btn btn-link primary text-dark">Read Now <i className="mdi mdi-arrow-right"></i></Link></li>
+                                            <li className="list-inline-item me-2"><Link href={`/blogs/${item.id}`} className="btn btn-link primary text-dark">Read Now <i className="mdi mdi-arrow-right"></i></Link></li>
                                         </ul>
                                     </div>
                                 </div>

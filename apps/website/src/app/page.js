@@ -154,7 +154,10 @@ export default function Home() {
                 </p>
 
                 <div className="d-flex flex-wrap gap-2 mt-4">
-                  <Link href="/jobs" className="btn btn-secondary btn-hero shadow-sm">
+                  <Link
+                    href="/jobs"
+                    className="btn btn-secondary btn-hero shadow-sm"
+                  >
                     Explore Jobs
                   </Link>
                   <Link href="/job-post" className="btn btn-glass btn-hero">
@@ -201,22 +204,34 @@ export default function Home() {
                 />
 
                 <div className="spinner">
-                  <div className="position-absolute top-0 start-50 translate-middle-x" style={{ marginTop: "-16px" }}>
+                  <div
+                    className="position-absolute top-0 start-50 translate-middle-x"
+                    style={{ marginTop: "-16px" }}
+                  >
                     <span className="avatar avatar-md-sm rounded shadow p-2 bg-white d-flex align-items-center justify-content-center text-danger">
                       <FiLink2 className="fea icon-20" />
                     </span>
                   </div>
-                  <div className="position-absolute top-50 start-0 translate-middle-y" style={{ marginLeft: "-16px" }}>
+                  <div
+                    className="position-absolute top-50 start-0 translate-middle-y"
+                    style={{ marginLeft: "-16px" }}
+                  >
                     <span className="avatar avatar-md-sm rounded shadow p-2 bg-white d-flex align-items-center justify-content-center text-primary">
                       <FiBook className="fea icon-20" />
                     </span>
                   </div>
-                  <div className="position-absolute top-50 end-0 translate-middle-y" style={{ marginRight: "-16px" }}>
+                  <div
+                    className="position-absolute top-50 end-0 translate-middle-y"
+                    style={{ marginRight: "-16px" }}
+                  >
                     <span className="avatar avatar-md-sm rounded shadow p-2 bg-white d-flex align-items-center justify-content-center text-danger">
                       <FiImage className="fea icon-20" />
                     </span>
                   </div>
-                  <div className="position-absolute bottom-0 start-50 translate-middle-x" style={{ marginBottom: "-16px" }}>
+                  <div
+                    className="position-absolute bottom-0 start-50 translate-middle-x"
+                    style={{ marginBottom: "-16px" }}
+                  >
                     <span className="avatar avatar-md-sm rounded shadow p-2 bg-white d-flex align-items-center justify-content-center text-primary">
                       <FiShare2 className="fea icon-20" />
                     </span>
@@ -237,7 +252,8 @@ export default function Home() {
               <div className="section-title text-md-start text-center">
                 <h4 className="title mb-3">Explore Jobs</h4>
                 <p className="text-muted para-desc mb-0">
-                  Roles from leading manufacturers, hospitals, and retail networks across Karachi, Lahore, Islamabad and beyond.
+                  Roles from leading manufacturers, hospitals, and retail
+                  networks across Karachi, Lahore, Islamabad and beyond.
                 </p>
               </div>
             </div>
@@ -245,7 +261,7 @@ export default function Home() {
             <div className="col-lg-6 col-md-3 d-none d-md-block">
               <div className="text-md-end">
                 <Link
-                  href="/job-grid-one"
+                  href="/jobs"
                   className="btn btn-link primary text-muted"
                 >
                   See More Jobs <i className="mdi mdi-arrow-right"></i>
@@ -264,7 +280,10 @@ export default function Home() {
             {jobs.map((item) => {
               return (
                 <div className="col-lg-4 col-md-6 col-12" key={item.id}>
-                  <div className="job-post rounded shadow p-4 h-100" style={{minHeight:'230px'}}>
+                  <div
+                    className="job-post rounded shadow p-4 h-100"
+                    style={{ minHeight: "230px" }}
+                  >
                     <div className="d-flex align-items-center justify-content-between">
                       <div className="d-flex align-items-center">
                         <Image
@@ -293,7 +312,7 @@ export default function Home() {
 
                     <div className="mt-4">
                       <Link
-                        href={`/job-detail-one/${item.id}`}
+                        href={`/jobs/${item.id}`}
                         className="text-dark title h5"
                       >
                         {item.title}
@@ -320,10 +339,7 @@ export default function Home() {
 
             <div className="col-12 d-md-none d-block">
               <div className="text-center">
-                <Link
-                  href="/jobs"
-                  className="btn btn-link primary text-muted"
-                >
+                <Link href="/jobs" className="btn btn-link primary text-muted">
                   See More Jobs <i className="mdi mdi-arrow-right"></i>
                 </Link>
               </div>
@@ -343,9 +359,9 @@ export default function Home() {
               <div className="section-title text-center mb-4 pb-2">
                 <h4 className="title mb-3">Latest Blog or News</h4>
                 <p className="text-muted para-desc mb-0 mx-auto">
-                  Search all the open positions on the web. Get your own
-                  personalized salary estimate. Read reviews on over 30000+
-                  companies worldwide.
+                  Verified pharmacy blogs and news for Pakistani and global
+                  professionals. Every article sourced from authentic
+                  international and local channels.
                 </p>
               </div>
             </div>
@@ -395,7 +411,7 @@ export default function Home() {
                         </ul>
 
                         <Link
-                          href={`/blog-detail/${item.id}`}
+                          href={`/blogs/${item.id}`}
                           className="title fw-semibold fs-5 text-dark"
                         >
                           {item.title}
@@ -404,7 +420,7 @@ export default function Home() {
                         <ul className="list-unstyled d-flex justify-content-between align-items-center text-muted mb-0 mt-3">
                           <li className="list-inline-item">
                             <Link
-                              href={`/blog-detail/${item.id}`}
+                              href={`/blogs/${item.id}`}
                               className="btn btn-link primary text-dark"
                             >
                               Read Now <i className="mdi mdi-arrow-right"></i>
