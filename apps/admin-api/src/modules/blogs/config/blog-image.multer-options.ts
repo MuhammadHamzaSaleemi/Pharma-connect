@@ -8,7 +8,10 @@ import { extname, join } from 'path';
 const ALLOWED_MIME_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
 const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024;
 
-export const BLOG_UPLOADS_DIR = join(process.cwd(), 'uploads', 'blogs');
+export const BLOG_UPLOADS_DIR = join(
+  process.env['UPLOAD_DIR'] ?? join(process.cwd(), 'uploads'),
+  'blogs',
+);
 
 export const blogImageMulterOptions: MulterOptions = {
   storage: diskStorage({
