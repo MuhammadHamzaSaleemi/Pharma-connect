@@ -61,7 +61,7 @@ export default function Privacy(){
                                 <h5 className="card-title mt-4">1. Information We Collect</h5>
                                 <p className="text-muted mb-1"><strong>Information you provide directly:</strong></p>
                                 <ul className="list-unstyled text-muted">
-                                    <li className="mt-2"><FiArrowRight className="fea icon-sm me-2"/>Contact form submissions (name, email, message, and subject category — e.g. job inquiry, report a listing, partnership, feedback), sent via EmailJS to our own email account (see Section 5)</li>
+                                    <li className="mt-2"><FiArrowRight className="fea icon-sm me-2"/>Contact submissions — when you click the Contact Us button, your device&apos;s own email or WhatsApp app opens with our address pre-filled. Any name, email, message, or subject details you send are transmitted directly from your device to our inbox (info@pharmaconnect-pakistan.com) or WhatsApp Business number. We do not use a third-party form-processing service to collect or relay this information — it goes straight from you to us.</li>
                                     <li className="mt-2"><FiArrowRight className="fea icon-sm me-2"/>Newsletter subscription details (email address), if you choose to subscribe</li>
                                     <li className="mt-2"><FiArrowRight className="fea icon-sm me-2"/>Any information you submit when reporting a job listing as suspicious or unverified</li>
                                 </ul>
@@ -111,9 +111,7 @@ export default function Privacy(){
                                 <ul className="list-unstyled text-muted">
                                     <li className="mt-2"><FiArrowRight className="fea icon-sm me-2"/>Google AdSense — for displaying advertisements (see Section 2)</li>
                                     <li className="mt-2"><FiArrowRight className="fea icon-sm me-2"/>Analytics providers (e.g. Google Analytics) — to understand Site traffic and usage patterns</li>
-                                    <li className="mt-2"><FiArrowRight className="fea icon-sm me-2"/>Email/newsletter platforms — to manage newsletter subscriptions</li>
-                                    <li className="mt-2"><FiArrowRight className="fea icon-sm me-2"/>EmailJS — to deliver messages submitted through our Contact form (including job inquiries, partnership requests, feedback, and listing reports) directly to our own email account</li>
-                                </ul>
+                                    <li className="mt-2"><FiArrowRight className="fea icon-sm me-2"/>Email/newsletter platforms — to manage newsletter subscriptions</li>                                </ul>
                                 <p className="text-muted mt-3">These providers may process information outside Pakistan, including in the United States, under their own privacy policies and safeguards, in addition to this one.</p>
 
                                 <h5 className="card-title mt-4">6. Your Rights and Choices</h5>

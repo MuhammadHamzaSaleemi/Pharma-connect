@@ -12,10 +12,6 @@ import {
   FiAward,
   FiActivity,
   FiFileText,
-  FiLink2,
-  FiShare2,
-  FiBook,
-  FiImage,
 } from "./assets/icons/vander";
 import AboutUs from "./componants/aboutUs";
 import Categories from "./componants/categories";
@@ -160,7 +156,7 @@ export default function Home() {
                   >
                     Explore Jobs
                   </Link>
-                  <Link href="/job-post" className="btn btn-glass btn-hero">
+                  <Link href="/contactus" className="btn btn-glass btn-hero">
                     Post Opportunity
                   </Link>
                 </div>
@@ -208,32 +204,60 @@ export default function Home() {
                     className="position-absolute top-0 start-50 translate-middle-x"
                     style={{ marginTop: "-16px" }}
                   >
-                    <span className="avatar avatar-md-sm rounded shadow p-2 bg-white d-flex align-items-center justify-content-center text-danger">
-                      <FiLink2 className="fea icon-20" />
+                    <span className="avatar avatar-md-sm rounded shadow p-2 bg-white d-flex align-items-center justify-content-center">
+                      <Image
+                        src="/images/gsk.png"
+                        width={0}
+                        height={0}
+                        sizes="100vw"
+                        style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                        alt="GSK"
+                      />
                     </span>
                   </div>
                   <div
                     className="position-absolute top-50 start-0 translate-middle-y"
                     style={{ marginLeft: "-16px" }}
                   >
-                    <span className="avatar avatar-md-sm rounded shadow p-2 bg-white d-flex align-items-center justify-content-center text-primary">
-                      <FiBook className="fea icon-20" />
+                    <span className="avatar avatar-md-sm rounded shadow p-2 bg-white d-flex align-items-center justify-content-center">
+                      <Image
+                        src="/images/getz.png"
+                        width={0}
+                        height={0}
+                        sizes="100vw"
+                        style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                        alt="Getz Pharma"
+                      />
                     </span>
                   </div>
                   <div
                     className="position-absolute top-50 end-0 translate-middle-y"
                     style={{ marginRight: "-16px" }}
                   >
-                    <span className="avatar avatar-md-sm rounded shadow p-2 bg-white d-flex align-items-center justify-content-center text-danger">
-                      <FiImage className="fea icon-20" />
+                    <span className="avatar avatar-md-sm rounded shadow p-2 bg-white d-flex align-items-center justify-content-center">
+                      <Image
+                        src="/images/ast.png"
+                        width={0}
+                        height={0}
+                        sizes="100vw"
+                        style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                        alt="AST"
+                      />
                     </span>
                   </div>
                   <div
                     className="position-absolute bottom-0 start-50 translate-middle-x"
                     style={{ marginBottom: "-16px" }}
                   >
-                    <span className="avatar avatar-md-sm rounded shadow p-2 bg-white d-flex align-items-center justify-content-center text-primary">
-                      <FiShare2 className="fea icon-20" />
+                    <span className="avatar avatar-md-sm rounded shadow p-2 bg-white d-flex align-items-center justify-content-center">
+                      <Image
+                        src="/images/abbott.png"
+                        width={0}
+                        height={0}
+                        sizes="100vw"
+                        style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                        alt="Abbott"
+                      />
                     </span>
                   </div>
                 </div>

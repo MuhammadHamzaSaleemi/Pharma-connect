@@ -1,4 +1,4 @@
-import {FiTool,FiCheckCircle,FiCheckSquare,FiShield,FiFileText,FiActivity,FiHeart,FiTrendingUp,FiPackage,FiTruck,FiHome,FiPlusSquare,FiBookOpen,FiDroplet,FiClipboard,FiSmile,FiFlag,FiGlobe,FiPhone, FiClock, FiUsers, FiUser,FiCodesandbox,FiHelpCircle, FiBookmark, FiSettings, FiMail,FiMapPin,FiTarget,FiEye,LuMicroscope,LuDna} from "../assets/icons/vander"
+import {FiTool,FiCheckCircle,FiCheckSquare,FiShield,FiFileText,FiActivity,FiHeart,FiTrendingUp,FiPackage,FiTruck,FiHome,FiPlusSquare,FiBookOpen,FiDroplet,FiClipboard,FiSmile,FiFlag,FiGlobe,FiPhone, FiClock, FiUsers, FiUser,FiCodesandbox,FiHelpCircle, FiBookmark, FiSettings, FiMail,FiTarget,FiEye,LuMicroscope,LuDna} from "../assets/icons/vander"
 
 export const categoriesData = [
     {
@@ -727,18 +727,14 @@ export const contactData = [
         icon:FiPhone,
         title:'Phone',
         desc:'Start working with PharmaConnect that can provide everything',
-        link:'tel:+152534-468-854'
+        link:'+92 324 4296468',
+        href:'https://wa.me/923244296468'
     },
     {
         icon:FiMail,
         title:'Email',
         desc:'Start working with PharmaConnect that can provide everything',
-        link:'contact@example.com'
-    },
-    {
-        icon:FiMapPin,
-        title:'Location',
-        desc:'Start working with PharmaConnect that can provide everything',
-        link:'View on Google map'
+        link:'info@pharmaconnect-pakistan.com',
+        href:'https://mail.google.com/mail/?view=cm&fs=1&to=info@pharmaconnect-pakistan.com'
     },
 ]

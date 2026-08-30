@@ -8,12 +8,6 @@ import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 
-function isErrnoException(error: unknown): error is NodeJS.ErrnoException {
-  return (
-    typeof error === 'object' && error !== null && 'code' in error && typeof error.code === 'string'
-  );
-}
-
 async function bootstrap(): Promise<void> {
   const logger = new Logger('Bootstrap');
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -37,42 +31,36 @@ async function bootstrap(): Promise<void> {
   app.useGlobalFilters(new AllExceptionsFilter());
   app.useGlobalInterceptors(new ResponseInterceptor(app.get(Reflector)));
 
+  const isProduction = configService.get<string>('environment') === 'production';
+
   app.enableCors({
-    origin: '*',
-    credentials: false,
+    origin: configService
+      .get<string>('corsOrigin', '*')
+      .split(',')
+      .map((origin) => origin.trim()),
+    credentials: configService.get<boolean>('corsAllowCredentials') ?? false,
   });
 
-  const swaggerConfig = new DocumentBuilder()
-    .setTitle('PharmaConnect Admin API')
-    .setDescription('Backend foundation for PharmaConnect admin services')
-    .setVersion('1.0')
-    .addBearerAuth()
-    .build();
+  if (!isProduction) {
+    const swaggerConfig = new DocumentBuilder()
+      .setTitle('PharmaConnect Admin API')
+      .setDescription('Backend foundation for PharmaConnect admin services')
+      .setVersion('1.0')
+      .addBearerAuth()
+      .build();
 
-  const document = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup('docs', app, document);
+    const document = SwaggerModule.createDocument(app, swaggerConfig);
+    SwaggerModule.setup('docs', app, document);
+  }
 
   const port = configService.get<number>('port') ?? 3000;
 
-  try {
-    await app.listen(port);
-  } catch (error: unknown) {
-    if (isErrnoException(error) && error.code === 'EADDRINUSE') {
-      logger.warn(`Port ${port} is busy. Falling back to an available port.`);
-      await app.listen(0);
-    } else {
-      throw error;
-    }
+  await app.listen(port, '127.0.0.1');
+
+  logger.log(`Server listening at http://127.0.0.1:${port}/api/v1`);
+  if (!isProduction) {
+    logger.log(`Swagger available at http://127.0.0.1:${port}/docs`);
   }
-
-  const address = app.getHttpServer().address();
-  const portString =
-    typeof address === 'object' && address !== null && 'port' in address
-      ? String(address.port)
-      : String(port);
-
-  logger.log(`Server listening at http://localhost:${portString}/api/v1`);
-  logger.log(`Swagger available at http://localhost:${portString}/docs`);
 }
 
 void bootstrap();

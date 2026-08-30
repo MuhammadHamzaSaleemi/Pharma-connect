@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 
-import {FiShoppingCart, FiDribbble, FiLinkedin, FiFacebook, FiInstagram, FiTwitter,FiBookmark} from '../assets/icons/vander'
+import {FiShoppingCart, FiDribbble, FiLinkedin, FiFacebook, FiInstagram, FiTwitter,FiBookmark, FaWhatsapp} from '../assets/icons/vander'
 
 export default function Footer({top}){
     return(
@@ -71,6 +71,7 @@ export default function Footer({top}){
                                 {/* <li className="list-inline-item"><Link href="https://1.envato.market/jobnova-next" target="_blank" className="rounded"><FiShoppingCart className="fea icon-sm align-middle"/></Link></li>
                                 <li className="list-inline-item"><Link href="https://dribbble.com/shreethemes" target="_blank" className="rounded"><FiDribbble className="fea icon-sm align-middle"/></Link></li> */}
                                 <li className="list-inline-item"><Link href="https://www.linkedin.com/company/pharmaconnect-pakistan/" target="_blank" className="rounded"><FiLinkedin className="fea icon-sm align-middle"/></Link></li>
+                                <li className="list-inline-item"><Link href="https://wa.me/923244296468" target="_blank" className="rounded"><FaWhatsapp className="fea icon-sm align-middle"/></Link></li>
                                 {/* <li className="list-inline-item"><Link href="https://www.facebook.com/shreethemes" target="_blank" className="rounded"><FiFacebook className="fea icon-sm align-middle"/></Link></li>
                                 <li className="list-inline-item"><Link href="https://www.instagram.com/shreethemes/" target="_blank" className="rounded"><FiInstagram className="fea icon-sm align-middle"/></Link></li>
                                 <li className="list-inline-item"><Link href="https://twitter.com/shreethemes" target="_blank" className="rounded"><FiTwitter className="fea icon-sm align-middle"/></Link></li> */}
