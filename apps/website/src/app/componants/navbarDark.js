@@ -7,7 +7,8 @@ import { usePathname } from 'next/navigation'
 import { LuSearch,FiUser,FiSettings,FiLock,FiLogOut } from "../assets/icons/vander";
 
 export default function Navbar({navClass, navLight}){
-    let [isOpen, setMenu] = useState(true);
+    // Mobile menu starts collapsed; `.open` (from _menu.scss) reveals it below 992px.
+    let [isOpen, setMenu] = useState(false);
     let [scroll, setScroll] = useState(false);
     let [search, setSearch] = useState(false);
     let [cartitem, setCartitem] = useState(false);
@@ -64,7 +65,7 @@ export default function Navbar({navClass, navLight}){
             </Link>
             <div className="menu-extras">
                 <div className="menu-item">
-                    <Link href='#' className="navbar-toggle" id="isToggle" onClick={toggleMenu}>
+                    <Link href='#' className={`navbar-toggle ${isOpen ? "open" : ""}`} id="isToggle" onClick={toggleMenu}>
                         <div className="lines">
                             <span></span>
                             <span></span>
@@ -113,7 +114,7 @@ export default function Navbar({navClass, navLight}){
                 </li>
             </ul>
     
-            <div id="navigation">  
+            <div id="navigation" className={isOpen ? "open" : ""}>
                 <ul className="navigation-menu nav-right">
                     <li className={`${["/","/index-two", "/index-three"].includes(manu)? "active" : ""} has-submenu parent-menu-item`}>
                         <Link href="/index">Home</Link><span className="menu-arrow"></span>

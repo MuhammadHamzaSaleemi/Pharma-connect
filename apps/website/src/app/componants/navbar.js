@@ -223,7 +223,8 @@ function MenuItem({ item, pathname, authState, depth }) {
 }
 
 export default function Navbar({ navClass, navLight }) {
-  let [isOpen, setMenu] = useState(true);
+  // Mobile menu starts collapsed; `.open` (from _menu.scss) reveals it below 992px.
+  let [isOpen, setMenu] = useState(false);
   let [scroll, setScroll] = useState(false);
   let [search, setSearch] = useState(false);
   let [cartitem, setCartitem] = useState(false);
@@ -344,7 +345,7 @@ export default function Navbar({ navClass, navLight }) {
           <div className="menu-item">
             <Link
               href="#"
-              className="navbar-toggle"
+              className={`navbar-toggle ${isOpen ? "open" : ""}`}
               id="isToggle"
               onClick={toggleMenu}
             >
@@ -388,7 +389,8 @@ export default function Navbar({ navClass, navLight }) {
                 )} */}
         </ul>
 
-        <div id="navigation">
+        {/* `.open` toggles visibility on mobile; desktop CSS forces it visible anyway. */}
+        <div id="navigation" className={isOpen ? "open" : ""}>
           <ul className="navigation-menu nav-right nav-light">
             {NAV_MENU.map((item) => (
               <MenuItem
