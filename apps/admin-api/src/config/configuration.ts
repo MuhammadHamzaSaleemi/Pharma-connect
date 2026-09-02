@@ -1,10 +1,15 @@
 import { join } from 'path';
 
+const defaultAppUrl =
+  process.env['NODE_ENV'] === 'production'
+    ? 'https://api.pharmaconnect-pakistan.com'
+    : `http://localhost:${Number(process.env['PORT'] ?? 3000)}`;
+
 export default () => ({
   appName: 'pharma-admin-api',
   environment: process.env['NODE_ENV'] ?? 'development',
   port: Number(process.env['PORT'] ?? 3000),
-  appUrl: process.env['APP_URL'] ?? `http://localhost:${Number(process.env['PORT'] ?? 3000)}`,
+  appUrl: process.env['APP_URL'] ?? defaultAppUrl,
   uploadDir: process.env['UPLOAD_DIR'] ?? join(process.cwd(), 'uploads'),
   corsOrigin: process.env['CORS_ORIGIN'] ?? '*',
   corsAllowCredentials: process.env['CORS_ALLOW_CREDENTIALS'] !== 'false',
