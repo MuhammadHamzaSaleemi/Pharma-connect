@@ -1,19 +1,11 @@
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
 
-import { formatEnumLabel } from "../../lib/enumOptions";
+import JobsCards from "./jobsCards";
 import { COUNTRY_CITIES } from "../../lib/countryCities";
 import { experienceMatches } from "../../lib/experience";
-import { FiClock, FiMapPin } from "../assets/icons/vander";
 
 const PAGE_SIZE = 9;
-
-function daysAgo(dateString) {
-    const diff = Date.now() - new Date(dateString).getTime();
-    const days = Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
-    return days === 0 ? 'Today' : `${days} day${days === 1 ? '' : 's'} ago`;
-}
 
 // Client-side filter — same semantics the backend used: city is a
 // case-insensitive substring match; country (no backend field) matches any job
@@ -57,43 +49,7 @@ export default function JobResults({ jobs, searchParams }) {
 
     return (
         <>
-            <div className="row g-4">
-                {pageJobs.length === 0 && (
-                    <div className="col-12 text-center">
-                        <p className="text-muted mb-0">No job vacancies found.</p>
-                    </div>
-                )}
-
-                {pageJobs.map((item) => (
-                    <div className="col-lg-4 col-md-6 col-12 d-flex" key={item.id}>
-                        {/* d-flex on the column + h-100/w-100 here => every card in a row is as tall as the tallest */}
-                        <div className="job-post rounded shadow p-4 h-100 w-100">
-                            <div className="d-flex align-items-center justify-content-between">
-                                <div className="d-flex align-items-center">
-                                    <Image src='/images/company/circle-logo.png' width={65} height={65} className="avatar avatar-small rounded shadow p-3 bg-white" alt=""/>
-
-                                    <div className="ms-3">
-                                        <span className="h5 company text-dark">{item.company}</span>
-                                        <span className="text-muted d-flex align-items-center small mt-2"><FiClock className="fea icon-sm me-1"/>{daysAgo(item.createdAt)}</span>
-                                    </div>
-                                </div>
-
-                                <span className="badge bg-soft-primary">{formatEnumLabel(item.workType)}</span>
-                            </div>
-
-                            <div className="mt-4">
-                                <Link href={`/jobs/${item.id}`} className="text-dark title h5">{item.title}</Link>
-
-                                <span className="text-muted d-flex align-items-center mt-2"><FiMapPin className="fea icon-sm me-1"/>{item.city}</span>
-
-                                <div className="progress-box mt-3">
-                                    <span className="text-dark">{item.qualification} <span className="text-muted">&middot; {item.experience}</span></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-            </div>
+            <JobsCards jobs={pageJobs} />
 
             {totalPages > 1 && (
                 <div className="row">

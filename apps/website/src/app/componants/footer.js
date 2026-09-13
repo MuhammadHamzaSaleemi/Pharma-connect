@@ -70,8 +70,10 @@ export default function Footer({top}){
                             <ul className="list-unstyled social-icon foot-social-icon text-sm-end mb-0">
                                 {/* <li className="list-inline-item"><Link href="https://1.envato.market/jobnova-next" target="_blank" className="rounded"><FiShoppingCart className="fea icon-sm align-middle"/></Link></li>
                                 <li className="list-inline-item"><Link href="https://dribbble.com/shreethemes" target="_blank" className="rounded"><FiDribbble className="fea icon-sm align-middle"/></Link></li> */}
-                                <li className="list-inline-item"><Link href="https://www.linkedin.com/company/pharmaconnect-pakistan/" target="_blank" className="rounded"><FiLinkedin className="fea icon-sm align-middle"/></Link></li>
-                                <li className="list-inline-item"><Link href="https://wa.me/923244296468" target="_blank" className="rounded"><FaWhatsapp className="fea icon-sm align-middle"/></Link></li>
+                                {/* rounded-2 (not bare .rounded): on /jobs this footer shares a page with the
+                                    Tailwind homepage CSS, which redefines .rounded with a different radius. */}
+                                <li className="list-inline-item"><Link href="https://www.linkedin.com/company/pharmaconnect-pakistan/" target="_blank" className="rounded-2"><FiLinkedin className="fea icon-sm align-middle"/></Link></li>
+                                <li className="list-inline-item"><Link href="https://wa.me/923244296468" target="_blank" className="rounded-2"><FaWhatsapp className="fea icon-sm align-middle"/></Link></li>
                                 {/* <li className="list-inline-item"><Link href="https://www.facebook.com/shreethemes" target="_blank" className="rounded"><FiFacebook className="fea icon-sm align-middle"/></Link></li>
                                 <li className="list-inline-item"><Link href="https://www.instagram.com/shreethemes/" target="_blank" className="rounded"><FiInstagram className="fea icon-sm align-middle"/></Link></li>
                                 <li className="list-inline-item"><Link href="https://twitter.com/shreethemes" target="_blank" className="rounded"><FiTwitter className="fea icon-sm align-middle"/></Link></li> */}

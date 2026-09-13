@@ -50,6 +50,11 @@ function doFetch(path, { method, body, token, headers, isFormData }) {
             ...headers,
         },
         body: isFormData ? body : body ? JSON.stringify(body) : undefined,
+        // Next.js caches server-side fetches (force-cache) by default, which
+        // silently pinned SSR pages (e.g. the public /jobs list) to whatever
+        // data existed at first request, forever. This API is the source of
+        // truth for live data — never let the framework cache it behind our back.
+        cache: 'no-store',
     });
 }
 
