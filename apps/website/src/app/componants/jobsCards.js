@@ -1,5 +1,6 @@
 import React from "react";
 import JobCard from "./jobCard";
+import JobCardSkeleton from "./jobCardSkeleton";
 import StateMessage from "./stateMessage";
 
 // Presentational only — no data fetching, no pagination. The Home page and
@@ -8,11 +9,17 @@ import StateMessage from "./stateMessage";
 export default function JobsCards({
   jobs,
   loading = false,
-  loadingMessage = "Loading jobs...",
+  skeletonCount = 6,
   emptyMessage = "No job vacancies found.",
 }) {
   if (loading) {
-    return <StateMessage loading>{loadingMessage}</StateMessage>;
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg">
+        {Array.from({ length: skeletonCount }).map((_, i) => (
+          <JobCardSkeleton key={i} />
+        ))}
+      </div>
+    );
   }
 
   if (!jobs || jobs.length === 0) {

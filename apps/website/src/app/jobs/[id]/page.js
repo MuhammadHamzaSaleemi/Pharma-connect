@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import SiteHeader from "../../componants/siteHeader";
 import SiteFooter from "../../componants/siteFooter";
 import ScrollTop from "../../componants/scrollTop";
+import Breadcrumb from "../../componants/breadcrumb";
 import JobDetail from "../../componants/jobDetail";
 
 import { jobsApi } from "../../../services/jobs/jobs.api";
@@ -34,6 +35,7 @@ export default async function JobDetailPage({ params }) {
         <div className="bg-surface font-sans text-on-surface antialiased">
             <SiteHeader />
             <main className="w-full pt-20 bg-surface">
+                <Breadcrumb items={[{ label: "Find Jobs", href: "/jobs" }, { label: data.title }]} />
                 <JobDetail job={data} related={related} />
             </main>
             <SiteFooter />

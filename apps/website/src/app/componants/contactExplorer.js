@@ -128,7 +128,7 @@ export default function ContactExplorer() {
   return (
     <div className="flex flex-col w-full">
       {/* Hero header */}
-      <section className="w-full bg-surface-crisp py-space-xl">
+      <section className="w-full bg-surface-card shadow-sm py-space-xl">
         <Container>
           <div className="flex flex-col gap-space-xs max-w-3xl">
             <Badge tone="primary" pulse className="w-fit">

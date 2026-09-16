@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import SiteHeader from "../../componants/siteHeader";
 import SiteFooter from "../../componants/siteFooter";
 import ScrollTop from "../../componants/scrollTop";
+import Breadcrumb from "../../componants/breadcrumb";
 import BlogDetail from "../../componants/blogDetail";
 
 import { blogsApi } from "../../../services/blogs/blogs.api";
@@ -30,6 +31,7 @@ export default async function BlogDetailPage({ params }) {
         <div className="bg-surface font-sans text-on-surface antialiased">
             <SiteHeader />
             <main className="w-full pt-20 bg-surface">
+                <Breadcrumb items={[{ label: "Blogs", href: "/blogs" }, { label: data.title }]} />
                 <BlogDetail post={data} related={related} />
             </main>
             <SiteFooter />

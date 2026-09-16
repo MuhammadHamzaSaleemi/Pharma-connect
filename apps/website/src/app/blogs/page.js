@@ -1,6 +1,7 @@
 import SiteHeader from "../componants/siteHeader";
 import SiteFooter from "../componants/siteFooter";
 import ScrollTop from "../componants/scrollTop";
+import Breadcrumb from "../componants/breadcrumb";
 import BlogsExplorer from "../componants/blogsExplorer";
 import { blogsApi } from "../../services/blogs/blogs.api";
 
@@ -23,6 +24,7 @@ export default async function Blogs() {
     <div className="bg-surface font-sans text-on-surface antialiased">
       <SiteHeader />
       <main className="w-full pt-20 bg-surface">
+        <Breadcrumb />
         <BlogsExplorer blogs={blogs} />
       </main>
       <SiteFooter />

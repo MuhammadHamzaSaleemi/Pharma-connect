@@ -42,22 +42,9 @@ export default function JobDetail({ job, related = [] }) {
   return (
     <div className="flex flex-col w-full">
       {/* Header */}
-      <section className="w-full bg-surface-crisp py-space-xl">
+      <section className="w-full bg-surface-card shadow-sm py-space-xl">
         <Container>
           <div className="flex flex-col gap-space-md">
-            <nav className="flex items-center gap-space-xs text-on-surface-variant text-sm font-semibold">
-              <Link href="/" className="hover:text-primary flex items-center gap-1">
-                <Icon name="home" className="text-[16px]" />
-                Home
-              </Link>
-              <Icon name="chevron_right" className="text-[14px]" />
-              <Link href="/jobs" className="hover:text-primary">
-                Find Jobs
-              </Link>
-              <Icon name="chevron_right" className="text-[14px]" />
-              <span className="text-primary font-bold truncate">{job.title}</span>
-            </nav>
-
             <Card padding="lg" hoverLift={false} className="relative overflow-hidden">
               <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary via-cyan-bright to-berry-accent" />
               <div className="flex flex-col gap-space-md pt-space-xs">
@@ -125,14 +112,7 @@ export default function JobDetail({ job, related = [] }) {
                   </p>
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-space-sm pt-space-xs">
-                  <Button href={applyWhatsappHref(job)} target="_blank" variant="primary" icon="chat">
-                    Apply via WhatsApp
-                  </Button>
-                  <Button href={applyMailtoHref(job)} variant="secondary" icon="mail">
-                    Email Your CV
-                  </Button>
-                </div>
+               
               </div>
             </Card>
           </div>
@@ -172,9 +152,7 @@ export default function JobDetail({ job, related = [] }) {
                     </div>
                   ))}
                 </div>
-                <Button href={applyWhatsappHref(job)} target="_blank" variant="primary" icon="chat" fullWidth className="mt-space-xs">
-                  Apply via WhatsApp
-                </Button>
+               
               </Card>
 
               <Card padding="lg" hoverLift={false} className="flex items-center gap-space-sm bg-gradient-to-br from-verified-green/10 via-surface-card to-surface-card">

@@ -27,22 +27,9 @@ export default function BlogDetail({ post, related = [] }) {
   return (
     <div className="flex flex-col w-full">
       {/* Header */}
-      <section className="w-full bg-surface-crisp py-space-xl">
+      <section className="w-full bg-surface-card shadow-sm py-space-xl">
         <Container>
           <div className="flex flex-col gap-space-md">
-            <nav className="flex items-center gap-space-xs text-on-surface-variant text-sm font-semibold">
-              <Link href="/" className="hover:text-primary flex items-center gap-1">
-                <Icon name="home" className="text-[16px]" />
-                Home
-              </Link>
-              <Icon name="chevron_right" className="text-[14px]" />
-              <Link href="/blogs" className="hover:text-primary">
-                Blogs
-              </Link>
-              <Icon name="chevron_right" className="text-[14px]" />
-              <span className="text-primary font-bold truncate">{post.title}</span>
-            </nav>
-
             <div className="flex flex-wrap items-center gap-space-sm">
               <Badge tone="primary" className="w-fit">
                 {post.category || "Blog"}

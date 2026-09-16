@@ -11,8 +11,8 @@ import Button from "./componants/button";
 import Card from "./componants/card";
 import Container from "./componants/container";
 import SectionHeading from "./componants/sectionHeading";
-import StateMessage from "./componants/stateMessage";
 import BlogCard from "./componants/blogCard";
+import BlogCardSkeleton from "./componants/blogCardSkeleton";
 import ScrollTop from "./componants/scrollTop";
 import { usePublicBlogsQuery } from "../services/blogs/blogs.queries";
 import "./assets/css/tailwind.css";
@@ -385,15 +385,13 @@ export default function Home() {
               </Link>
             </div>
 
-            {blogsQuery.isLoading ? (
-              <StateMessage loading>Loading blog posts...</StateMessage>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-space-lg">
-                {blogs.map((post) => (
-                  <BlogCard key={post.id} post={post} />
-                ))}
-              </div>
-            )}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-space-lg">
+              {blogsQuery.isLoading
+                ? Array.from({ length: 3 }).map((_, i) => (
+                    <BlogCardSkeleton key={i} />
+                  ))
+                : blogs.map((post) => <BlogCard key={post.id} post={post} />)}
+            </div>
           </Container>
         </section>
 

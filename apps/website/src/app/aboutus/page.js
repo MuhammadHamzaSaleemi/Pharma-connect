@@ -3,6 +3,7 @@ import Image from "next/image";
 import SiteHeader from "../componants/siteHeader";
 import SiteFooter from "../componants/siteFooter";
 import ScrollTop from "../componants/scrollTop";
+import Breadcrumb from "../componants/breadcrumb";
 import Container from "../componants/container";
 import Badge from "../componants/badge";
 import Button from "../componants/button";
@@ -96,6 +97,7 @@ export default function AboutUsPage() {
       <SiteHeader />
 
       <main className="w-full pt-20 bg-surface">
+        <Breadcrumb />
         {/* HERO */}
         <section className="w-full bg-surface-card shadow-sm py-space-xl">
           <Container>
