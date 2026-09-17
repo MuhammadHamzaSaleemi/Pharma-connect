@@ -327,22 +327,6 @@ export default function ContactExplorer() {
                     />
                   </div>
 
-                  <label className="flex items-start gap-space-sm p-space-sm bg-surface-container-low rounded-lg cursor-pointer">
-                    <input
-                      type="checkbox"
-                      required
-                      className="mt-1 w-4 h-4 rounded accent-primary shrink-0"
-                    />
-                    <span className="text-sm text-on-surface-variant leading-snug">
-                      I confirm this request complies with{" "}
-                      <strong className="text-navy-surface">
-                        Drug Regulatory Authority of Pakistan (DRAP)
-                      </strong>{" "}
-                      and Pharmacy Council standards, and involves no
-                      application fees for candidates.
-                    </span>
-                  </label>
-
                   <div className="flex flex-col sm:flex-row items-center justify-between gap-space-md pt-space-xs">
                     <span className="flex items-center gap-1.5 text-on-surface-variant text-xs">
                       <Icon
