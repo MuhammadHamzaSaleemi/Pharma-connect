@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { IsDateString, IsEnum, IsOptional, IsString } from 'class-validator';
 import { PaginationDto } from '../../../common/dto/pagination.dto';
 import { JobStatusEnum } from '../../../common/enums/jobs/job-status.enum';
 import { SectorEnum } from '../../../common/enums/jobs/sector.enum';
@@ -25,4 +25,24 @@ export class JobQueryDto extends PaginationDto {
   @IsOptional()
   @IsString()
   city?: string;
+
+  @ApiPropertyOptional({ example: '2-4 years' })
+  @IsOptional()
+  @IsString()
+  experience?: string;
+
+  @ApiPropertyOptional({ example: 'Production' })
+  @IsOptional()
+  @IsString()
+  jobFunction?: string;
+
+  @ApiPropertyOptional({ example: '2026-01-01T00:00:00.000Z', description: 'createdAt >= this' })
+  @IsOptional()
+  @IsDateString()
+  createdFrom?: string;
+
+  @ApiPropertyOptional({ example: '2026-01-31T23:59:59.999Z', description: 'createdAt <= this' })
+  @IsOptional()
+  @IsDateString()
+  createdTo?: string;
 }

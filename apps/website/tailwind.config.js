@@ -44,6 +44,7 @@ module.exports = {
     './src/app/componants/pagination.js',
     './src/app/componants/scholarshipsExplorer.js',
     './src/app/scholarships/page.js',
+    './src/app/login/page.js',
   ],
   corePlugins: {
     // The public site relies on Bootstrap's base styles; Tailwind's reset

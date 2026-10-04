@@ -5,6 +5,7 @@ import { useAuth } from "../../../context/AuthContext";
 import Table from "../../../componants/admin/Table";
 import Modal from "../../../componants/admin/ui/Modal";
 import Button from "../../../componants/admin/ui/Button";
+import RowActions from "../../../componants/admin/ui/RowActions";
 import ConfirmDialog from "../../../componants/admin/ui/ConfirmDialog";
 import DynamicForm from "../../../componants/admin/forms/DynamicForm";
 import { scholarshipFormFields, scholarshipFormInitialValues } from "../../../services/scholarships/scholarships.form";
@@ -77,23 +78,21 @@ export default function DashboardScholarships() {
         { header: 'Status', accessor: 'status' },
         {
             header: 'Actions',
+            className: 'w-px text-right',
             render: (row) => (
-                <div className="flex items-center gap-1">
-                    <Button variant="ghost" size="icon" title="Edit" onClick={() => openEditModal(row)}>
-                        <LuPencil className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="icon" title="Delete" onClick={() => setDeletingScholarship(row)}>
-                        <LuTrash2 className="h-4 w-4 text-red-600" />
-                    </Button>
-                </div>
+                <RowActions
+                    actions={[
+                        { label: 'Edit', icon: LuPencil, onClick: () => openEditModal(row) },
+                        { label: 'Delete', icon: LuTrash2, onClick: () => setDeletingScholarship(row), danger: true },
+                    ]}
+                />
             ),
         },
     ];
 
     return (
         <div>
-            <div className="mb-4 flex items-center justify-between">
-                <h4 className="text-lg font-semibold text-gray-800">Scholarships</h4>
+            <div className="mb-4 flex items-center justify-end">
                 <Button onClick={openAddModal}>Add Scholarship</Button>
             </div>
 

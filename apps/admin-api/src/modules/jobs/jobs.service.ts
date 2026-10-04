@@ -255,6 +255,21 @@ export class JobsService {
       where.city = { contains: query.city, mode: 'insensitive' };
     }
 
+    if (query.experience) {
+      where.experience = { contains: query.experience, mode: 'insensitive' };
+    }
+
+    if (query.jobFunction) {
+      where.jobFunction = { contains: query.jobFunction, mode: 'insensitive' };
+    }
+
+    if (query.createdFrom || query.createdTo) {
+      where.createdAt = {
+        ...(query.createdFrom && { gte: new Date(query.createdFrom) }),
+        ...(query.createdTo && { lte: new Date(query.createdTo) }),
+      };
+    }
+
     return where;
   }
 

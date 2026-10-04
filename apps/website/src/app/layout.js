@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=add_circle,arrow_forward,arrow_outward,article,biotech,bolt,bookmark,bookmark_border,calendar_today,chat,check,check_circle,chevron_left,chevron_right,clinical_notes,close,expand_less,expand_more,favorite,filter_alt_off,filter_list,flag,groups,home,info,inventory_2,local_hospital,local_pharmacy,location_on,mail,medical_services,menu,notifications_active,policy,progress_activity,public,schedule,school,science,search,search_off,share,sort,timer,trending_up,tune,verified,verified_user,visibility,work&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=add_circle,arrow_forward,arrow_outward,article,biotech,bolt,bookmark,bookmark_border,calendar_today,chat,check,check_circle,chevron_left,chevron_right,clinical_notes,close,expand_less,expand_more,favorite,filter_alt_off,filter_list,flag,groups,home,info,inventory_2,local_hospital,local_pharmacy,location_on,lock,mail,medical_services,menu,notifications_active,policy,progress_activity,public,schedule,school,science,search,search_off,share,sort,timer,trending_up,tune,verified,verified_user,visibility,visibility_off,work&display=swap"
         />
       </head>
       <body className={jakarta.variable}>
