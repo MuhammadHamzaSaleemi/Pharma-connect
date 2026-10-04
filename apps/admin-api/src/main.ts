@@ -33,11 +33,11 @@ async function bootstrap(): Promise<void> {
 
   const isProduction = configService.get<string>('environment') === 'production';
 
+  const corsOrigin = configService.get<string>('corsOrigin', '*').trim();
+
   app.enableCors({
-    origin: configService
-      .get<string>('corsOrigin', '*')
-      .split(',')
-      .map((origin) => origin.trim()),
+    // cors treats array entries as exact matches, so ['*'] would allow nothing; `true` reflects the request origin.
+    origin: corsOrigin === '*' ? true : corsOrigin.split(',').map((origin) => origin.trim()),
     credentials: configService.get<boolean>('corsAllowCredentials') ?? false,
   });
 
