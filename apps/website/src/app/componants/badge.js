@@ -48,7 +48,9 @@ export default function Badge({
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold tracking-widest whitespace-nowrap ${
+      // max-w-full + break-words: long eyebrows wrap inside their container
+      // on narrow screens instead of pushing past the viewport.
+      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-2xl text-[10px] leading-snug font-bold tracking-widest max-w-full break-words ${
         uppercase ? "uppercase" : ""
       } ${t.pill} ${className}`}
       {...rest}

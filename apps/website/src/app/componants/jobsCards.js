@@ -11,10 +11,12 @@ export default function JobsCards({
   loading = false,
   skeletonCount = 6,
   emptyMessage = "No job vacancies found.",
+  // Pass "xl:grid-cols-3" when rendered beside a sidebar (narrower column).
+  threeColsAt = "lg:grid-cols-3",
 }) {
   if (loading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg">
+      <div className={`grid grid-cols-1 md:grid-cols-2 ${threeColsAt} gap-space-lg`}>
         {Array.from({ length: skeletonCount }).map((_, i) => (
           <JobCardSkeleton key={i} />
         ))}
@@ -27,7 +29,7 @@ export default function JobsCards({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg">
+    <div className={`grid grid-cols-1 md:grid-cols-2 ${threeColsAt} gap-space-lg`}>
       {jobs.map((job, index) => (
         <JobCard key={job.id} job={job} index={index} />
       ))}

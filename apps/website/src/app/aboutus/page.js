@@ -326,7 +326,7 @@ export default function AboutUsPage() {
             />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-space-lg mx-auto">
               {FOUNDERS.map((f) => (
-                <Card key={f.name} padding="lg" hoverLift={false} className="flex gap-space-md items-start">
+                <Card key={f.name} padding="lg" hoverLift={false} className="flex flex-col sm:flex-row gap-space-md items-start">
                   <div className="w-20 h-20 rounded-2xl overflow-hidden shrink-0 bg-surface-container-low">
                     <Image
                       src={f.image}
@@ -338,7 +338,7 @@ export default function AboutUsPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-space-xs">
-                      <div>
+                      <div className="min-w-0">
                         <h3 className="font-bold text-navy-surface">{f.name}</h3>
                         <Badge tone="primary" dot={false} uppercase={false} className="mt-1">
                           {f.title}

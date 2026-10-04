@@ -10,9 +10,12 @@ import Container from "./container";
 // page with a real title (job/blog detail) should pass `items` instead.
 const ROUTE_LABELS = {
   jobs: "Find Jobs",
+  scholarships: "Scholarships & Academic Grants",
   blogs: "Blogs",
   aboutus: "About Us",
   contactus: "Contact Us",
+  privacy: "Privacy Policy",
+  terms: "Terms of Service",
 };
 
 function humanize(segment) {

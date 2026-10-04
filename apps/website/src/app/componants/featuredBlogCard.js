@@ -62,7 +62,7 @@ export default function FeaturedBlogCard({ post, index = 0 }) {
             </p>
           )}
         </div>
-        <div className="pt-space-sm border-t border-border-subtle flex items-center justify-between gap-space-xs mt-auto">
+        <div className="pt-space-sm border-t border-border-subtle flex flex-wrap items-center justify-between gap-space-xs mt-auto">
           <Badge tone="verified" dot={false} uppercase={false} className="text-[11px]">
             <Icon name="verified" className="text-[14px]" />
             Verified Source

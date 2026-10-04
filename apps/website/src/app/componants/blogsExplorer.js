@@ -115,7 +115,7 @@ export default function BlogsExplorer({ blogs }) {
                 />
               </div>
               <div className="flex items-center gap-space-sm w-full md:w-auto shrink-0 justify-between md:justify-end">
-                <div className="relative inline-flex items-center bg-surface-card px-space-md py-2 rounded-lg shadow-sm text-on-surface-variant">
+                <div className="relative inline-flex items-center min-w-0 bg-surface-card px-space-md py-2 rounded-lg shadow-sm text-on-surface-variant">
                   <Icon
                     name="sort"
                     className="text-[18px] mr-1 text-teal-clinical"
@@ -123,7 +123,7 @@ export default function BlogsExplorer({ blogs }) {
                   <select
                     value={sort}
                     onChange={(e) => setSort(e.target.value)}
-                    className="bg-transparent border-none outline-none text-navy-surface text-sm font-semibold cursor-pointer"
+                    className="min-w-0 max-w-full bg-transparent border-none outline-none text-navy-surface text-sm font-semibold cursor-pointer"
                   >
                     <option value="recent">Sort by: Latest Published</option>
                     <option value="title">Sort by: Title (A-Z)</option>

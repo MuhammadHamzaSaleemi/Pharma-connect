@@ -10,7 +10,6 @@ const FOOTER_COLUMNS = [
     title: "Explore Careers",
     links: [
       { label: "Find Jobs", href: "/jobs" },
-      { label: "Scholarships", href: "/jobs" },
       { label: "Internships", href: "/jobs" },
       { label: "Top Employers", href: "/jobs" },
     ],
@@ -29,7 +28,7 @@ const FOOTER_COLUMNS = [
     links: [
       { label: "Privacy Policy", href: "/privacy" },
       { label: "Terms of Service", href: "/terms" },
-      { label: "Cookie Policy", href: "/privacy" },
+      { label: "Cookie Policy", href: "/privacy#cookies" },
     ],
   },
 ];
@@ -40,7 +39,7 @@ export default function SiteFooter() {
       <Container className="py-space-3xl">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-xl">
           <div>
-            <div className="flex items-center gap-space-sm">
+            <div className="flex flex-wrap items-center gap-space-sm">
               <Image
                 src="/images/logo.png"
                 width={130}

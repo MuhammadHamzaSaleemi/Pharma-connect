@@ -223,8 +223,8 @@ export default function JobDetail({ job, related = [] }) {
       {/* Institutional recruitment CTA */}
       <section className="w-full pb-space-3xl">
         <Container>
-          <div className="rounded-3xl bg-navy-surface text-on-primary p-space-xl sm:p-space-2xl flex flex-col md:flex-row items-center justify-between gap-space-xl">
-            <div className="flex flex-col gap-space-xs max-w-2xl text-center md:text-left">
+          <div className="rounded-3xl bg-navy-surface text-on-primary p-space-xl sm:p-space-2xl flex flex-col lg:flex-row items-center justify-between gap-space-xl">
+            <div className="flex flex-col gap-space-xs max-w-2xl text-center lg:text-left">
               <span className="text-xs font-bold uppercase tracking-widest text-cyan-bright">
                 Institutional Recruitment Network
               </span>

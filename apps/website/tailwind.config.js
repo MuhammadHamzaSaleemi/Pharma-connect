@@ -36,6 +36,14 @@ module.exports = {
     './src/app/contactus/page.js',
     './src/app/jobs/page.js',
     './src/app/jobs/[id]/page.js',
+    './src/app/not-found.js',
+    './src/app/componants/legalPage.js',
+    './src/app/privacy/page.js',
+    './src/app/terms/page.js',
+    './src/app/componants/goBackButton.js',
+    './src/app/componants/pagination.js',
+    './src/app/componants/scholarshipsExplorer.js',
+    './src/app/scholarships/page.js',
   ],
   corePlugins: {
     // The public site relies on Bootstrap's base styles; Tailwind's reset

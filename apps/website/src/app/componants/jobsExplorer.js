@@ -6,6 +6,7 @@ import Button from "./button";
 import Card from "./card";
 import Container from "./container";
 import JobsCards from "./jobsCards";
+import Pagination from "./pagination";
 import { COUNTRY_OPTIONS, cityOptionsFor } from "../../lib/countryCities";
 import { EXPERIENCE_OPTIONS, experienceMatches } from "../../lib/experience";
 import { enumToOptions } from "../../lib/enumOptions";
@@ -28,23 +29,11 @@ const QUICK_TAGS = [
   { label: "Remote / Hybrid", type: "workType", values: ["REMOTE", "HYBRID"] },
 ];
 
-function toggleValue(list, value) {
+export function toggleValue(list, value) {
   return list.includes(value) ? list.filter((v) => v !== value) : [...list, value];
 }
 
-function getPageNumbers(current, total) {
-  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
-  const pages = [1];
-  if (current > 3) pages.push("...");
-  for (let p = Math.max(2, current - 1); p <= Math.min(total - 1, current + 1); p++) {
-    pages.push(p);
-  }
-  if (current < total - 2) pages.push("...");
-  pages.push(total);
-  return pages;
-}
-
-function FacetCheckbox({ label, count, checked, onChange }) {
+export function FacetCheckbox({ label, count, checked, onChange }) {
   return (
     <label className="flex items-center justify-between gap-space-sm cursor-pointer text-sm text-on-surface-variant hover:text-navy-surface">
       <span className="flex items-center gap-space-xs">
@@ -447,60 +436,17 @@ export default function JobsExplorer({ jobs }) {
                 </div>
               </Card>
 
-              <JobsCards jobs={pageJobs} />
+              <JobsCards jobs={pageJobs} threeColsAt="xl:grid-cols-3" />
 
-              {totalPages > 1 && (
-                <div className="pt-space-lg flex flex-col sm:flex-row items-center justify-between gap-space-md">
-                  <p className="text-xs text-on-surface-variant text-center sm:text-left">
-                    Showing page <span className="font-bold text-navy-surface">{currentPage}</span>{" "}
-                    of <span className="font-bold text-navy-surface">{totalPages}</span> (
-                    {sorted.length} results)
-                  </p>
-                  <nav className="flex items-center gap-1 text-sm">
-                    <button
-                      type="button"
-                      disabled={currentPage <= 1}
-                      onClick={() => setPage((p) => Math.max(1, p - 1))}
-                      className="w-9 h-9 flex items-center justify-center rounded-lg bg-surface-card border border-border-subtle text-on-surface-variant hover:bg-surface-container-low transition-colors disabled:opacity-40 disabled:pointer-events-none"
-                      aria-label="Previous page"
-                    >
-                      <Icon name="chevron_left" className="text-[18px]" />
-                    </button>
-                    {getPageNumbers(currentPage, totalPages).map((p, i) =>
-                      p === "..." ? (
-                        <span key={`ellipsis-${i}`} className="w-8 text-center text-outline">
-                          ...
-                        </span>
-                      ) : (
-                        <button
-                          key={p}
-                          type="button"
-                          onClick={() => setPage(p)}
-                          className={`w-9 h-9 flex items-center justify-center rounded-lg font-bold transition-colors ${
-                            p === currentPage
-                              ? "bg-primary text-on-primary border-0"
-                              : "bg-surface-card border border-border-subtle text-on-surface-variant hover:bg-surface-container-low"
-                          }`}
-                        >
-                          {p}
-                        </button>
-                      ),
-                    )}
-                    <button
-                      type="button"
-                      disabled={currentPage >= totalPages}
-                      onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                      className="w-9 h-9 flex items-center justify-center rounded-lg bg-surface-card border border-border-subtle text-on-surface-variant hover:bg-surface-container-low transition-colors disabled:opacity-40 disabled:pointer-events-none"
-                      aria-label="Next page"
-                    >
-                      <Icon name="chevron_right" className="text-[18px]" />
-                    </button>
-                  </nav>
-                </div>
-              )}
+              <Pagination
+                page={currentPage}
+                totalPages={totalPages}
+                totalResults={sorted.length}
+                onChange={setPage}
+              />
 
               {/* PROMO BAND */}
-              <div className="rounded-2xl bg-navy-deep text-white p-space-lg flex flex-col sm:flex-row items-center justify-between gap-space-md mt-space-lg">
+              <div className="rounded-2xl bg-navy-deep text-white p-space-lg flex flex-col xl:flex-row items-center justify-between gap-space-md mt-space-lg">
                 <div className="flex items-center gap-space-sm">
                   <div className="w-11 h-11 rounded-xl bg-verified-green/15 text-verified-green flex items-center justify-center shrink-0">
                     <Icon name="chat" className="text-[22px]" />
@@ -517,7 +463,7 @@ export default function JobsExplorer({ jobs }) {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-space-sm shrink-0">
+                <div className="flex flex-wrap items-center justify-center gap-space-sm shrink-0">
                   <Button
                     href="https://wa.me/923244296468"
                     target="_blank"

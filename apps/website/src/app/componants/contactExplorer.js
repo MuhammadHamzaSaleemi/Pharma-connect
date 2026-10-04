@@ -178,7 +178,7 @@ export default function ContactExplorer() {
                   <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-space-xs">
                     Select Your Category
                   </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-space-xs p-2 bg-surface-container-low rounded-lg">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4 gap-space-xs p-2 bg-surface-container-low rounded-lg">
                     {PERSONAS.map((p) => (
                       <Button
                         key={p.key}
@@ -186,7 +186,7 @@ export default function ContactExplorer() {
                          variant={persona.key === p.key ? "primary" : "secondary"}
                         type="button"
                         onClick={() => handlePersona(p)}
-                        className={`shrink-0 px-space-md py-1.5 rounded-full text-sm font-semibold transition-all whitespace-nowrap ${
+                        className={`shrink-0 !px-space-xs 2xl:!px-space-md py-1.5 rounded-full text-xs sm:text-sm leading-tight font-semibold transition-all ${
                           persona.key === p.key
                             ? "bg-primary text-on-primary shadow-sm"
                             : "bg-surface-container-low text-on-surface-variant hover:text-navy-surface"
@@ -264,7 +264,7 @@ export default function ContactExplorer() {
                         className="w-full bg-surface-container-low text-navy-surface rounded-lg border-none px-space-md py-space-xs text-sm placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/40"
                       />
                     </div>
-                    <div className="flex flex-col gap-space-2xs">
+                    <div className="flex flex-col gap-space-2xs min-w-0">
                       <label
                         htmlFor="category"
                         className="text-sm font-semibold text-navy-surface"
@@ -444,7 +444,7 @@ export default function ContactExplorer() {
                   <div className="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-primary shrink-0">
                     <Icon name="mail" className="text-[18px]" />
                   </div>
-                  <div className="flex flex-col">
+                  <div className="flex flex-col min-w-0 [overflow-wrap:anywhere]">
                     <span className="text-xs text-on-surface-variant uppercase font-semibold">
                       General &amp; Editorial Inquiries
                     </span>

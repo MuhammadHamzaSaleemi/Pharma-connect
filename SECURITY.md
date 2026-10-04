@@ -21,7 +21,9 @@ other priorities.
 - `apps/website/src/app/blog-detail/[id]/page.js` and
   `apps/website/src/app/job-detail-one/[id]/page.js` render blog/job content via
   `dangerouslySetInnerHTML` with **no server-side or client-side sanitization**
-  (no DOMPurify or equivalent) of the stored HTML.
+  (no DOMPurify or equivalent) of the stored HTML. The public `/scholarships`
+  page (`apps/website/src/app/componants/scholarshipsExplorer.js`) does the same
+  for `financialBenefits` and `howToApply`.
 - That HTML is authored through the TipTap-based `RichTextEditor`
   (`apps/website/src/componants/admin/ui/RichTextEditor.js`), which constrains
   output to its own schema (bold/italic/headings/lists/links, etc.) — but the

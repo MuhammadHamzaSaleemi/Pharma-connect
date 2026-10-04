@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import type { Prisma } from '@prisma/client';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
@@ -51,6 +52,7 @@ const SORTABLE_COLUMNS = [
   'updatedAt',
 ] as const;
 const DEFAULT_SORT_COLUMN = 'createdAt';
+const JOB_RETENTION_DAYS = 21;
 
 @Injectable()
 export class JobsService {
@@ -134,6 +136,15 @@ export class JobsService {
 
     await this.jobsRepository.delete(id);
     this.logger.log(`Job deleted: ${id}`);
+  }
+
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  async removeExpiredJobs(): Promise<void> {
+    const cutoff = new Date(Date.now() - JOB_RETENTION_DAYS * 24 * 60 * 60 * 1000);
+    const count = await this.jobsRepository.deleteOlderThan(cutoff);
+    if (count > 0) {
+      this.logger.log(`Removed ${count} job(s) older than ${JOB_RETENTION_DAYS} days`);
+    }
   }
 
   async bulkCreate(buffer: Buffer): Promise<BulkUploadResultDto> {

@@ -19,7 +19,14 @@
 @each $heading,
 $size in $heading-font-sizes {
     #{$heading}, .#{$heading} {
-        font-size: $size !important;
+        // h1-h3 scale from ~68% at 320px up to the full size at 992px, so
+        // long titles fit on phones; desktop sizes stay unchanged.
+        @if $size >= 28px {
+            $min: round($size * 0.68);
+            font-size: clamp(#{$min}, calc(#{$min} + #{$size - $min} * (100vw - 320px) / 672), #{$size}) !important;
+        } @else {
+            font-size: $size !important;
+        }
     }
 }
 

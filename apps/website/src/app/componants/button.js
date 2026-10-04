@@ -16,7 +16,9 @@ const VARIANTS = {
 };
 
 const SIZES = {
-  sm: "px-3 py-1.5 text-xs gap-1 rounded-lg",
+  // px-space-md, not px-3: Bootstrap's `.px-3 { 1rem !important }` would
+  // otherwise win and block any per-use padding override.
+  sm: "px-space-md py-1.5 text-xs gap-1 rounded-lg",
   md: "px-space-lg py-space-sm text-sm gap-space-xs rounded-xl",
   lg: "px-space-xl py-space-sm text-sm gap-space-xs rounded-xl",
 };

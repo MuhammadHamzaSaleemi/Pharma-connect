@@ -42,4 +42,9 @@ export class JobsRepository {
   async delete(id: string): Promise<Job> {
     return this.prisma.job.delete({ where: { id } });
   }
+
+  async deleteOlderThan(cutoff: Date): Promise<number> {
+    const result = await this.prisma.job.deleteMany({ where: { createdAt: { lt: cutoff } } });
+    return result.count;
+  }
 }

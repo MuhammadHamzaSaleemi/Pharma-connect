@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
+import { ScheduleModule } from '@nestjs/schedule';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import * as Joi from 'joi';
 import configuration from './config/configuration';
@@ -41,6 +42,7 @@ import { ScholarshipsModule } from './modules/scholarships/scholarships.module';
         },
       ],
     }),
+    ScheduleModule.forRoot(),
     PrismaModule,
     AuthModule,
     BlogsModule,

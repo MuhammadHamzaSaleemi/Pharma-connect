@@ -215,12 +215,13 @@ export default function Home() {
               description="These are the most sought after categories across pharmaceutical manufacturing, clinical research, and hospital networks."
               className="mb-space-2xl"
             />
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-space-md">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-space-xs sm:gap-space-md">
               {CATEGORIES.map((c) => (
                 <Card
                   key={c.title}
                   href="/jobs"
-                  className="text-left group flex flex-col items-start"
+                  padding="sm"
+                  className="sm:p-space-lg text-left group flex flex-col items-start"
                 >
                   <div
                     className={`w-12 h-12 rounded-xl flex items-center justify-center mb-space-md transition-colors ${CATEGORY_TONES[c.tone]}`}
