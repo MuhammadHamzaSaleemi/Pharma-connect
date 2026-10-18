@@ -10,4 +10,18 @@
         color: #9ca3af;
         pointer-events: none;
     }
+
+    /* Native <select> with our own chevron. The browser's arrow sits wherever each engine puts
+       it and could spill past the right edge, so it's hidden and redrawn 0.75rem from the right,
+       vertically centred. The padding is !important (and select.x outranks .px-3) because
+       Bootstrap's px-3 also sets padding-right with !important. */
+    select.select-chevron {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.75rem center;
+        background-repeat: no-repeat;
+        background-size: 1.25rem 1.25rem;
+        padding-right: 2.5rem !important;
+        text-overflow: ellipsis;
+    }
 }

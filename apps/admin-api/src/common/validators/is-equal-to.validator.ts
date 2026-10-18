@@ -20,7 +20,10 @@ class IsEqualToConstraint implements ValidatorConstraintInterface {
   }
 }
 
-export function IsEqualTo(property: string, validationOptions?: ValidationOptions): PropertyDecorator {
+export function IsEqualTo(
+  property: string,
+  validationOptions?: ValidationOptions,
+): PropertyDecorator {
   return (object: object, propertyName: string | symbol): void => {
     registerDecorator({
       target: object.constructor,

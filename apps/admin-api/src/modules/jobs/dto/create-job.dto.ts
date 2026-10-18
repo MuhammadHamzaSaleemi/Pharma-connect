@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import { SanitizeHtml } from '../../../common/decorators/sanitize-html.decorator';
 import { JobStatusEnum } from '../../../common/enums/jobs/job-status.enum';
 import { SectorEnum } from '../../../common/enums/jobs/sector.enum';
 import { WorkTypeEnum } from '../../../common/enums/jobs/work-type.enum';
@@ -29,6 +30,7 @@ export class CreateJobDto {
   @ApiProperty({ example: 'Responsible for overseeing production line quality...' })
   @IsString()
   @IsNotEmpty()
+  @SanitizeHtml()
   jobDescription!: string;
 
   @ApiProperty({ example: '2-4 years' })

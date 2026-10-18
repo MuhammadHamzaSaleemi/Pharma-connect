@@ -1,10 +1,17 @@
 import React from "react";
+import { pageMetadata } from "../../lib/site";
 
-import SiteHeader from "../componants/siteHeader";
-import SiteFooter from "../componants/siteFooter";
-import ScrollTop from "../componants/scrollTop";
-import Breadcrumb from "../componants/breadcrumb";
-import ContactExplorer from "../componants/contactExplorer";
+import SiteHeader from "../../componants/siteHeader";
+import SiteFooter from "../../componants/siteFooter";
+import ScrollTop from "../../componants/scrollTop";
+import Breadcrumb from "../../componants/breadcrumb";
+import ContactExplorer from "../../componants/contactExplorer";
+
+export const metadata = pageMetadata({
+  title: "Contact Us",
+  description: "Get in touch with PharmaConnect to share a pharmacy job opening, report a listing, or ask about careers. Reach us by email, WhatsApp or LinkedIn.",
+  path: "/contactus",
+});
 
 export default function ContactUs() {
     return (

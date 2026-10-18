@@ -1,22 +1,33 @@
 'use client'
 import React, { useState } from "react";
-import { LuPencil, LuTrash2 } from "react-icons/lu";
+import { LuCheckCircle, LuFileText, LuNewspaper, LuStar, LuPencil, LuTrash2 } from "react-icons/lu";
 import { useAuth } from "../../../context/AuthContext";
 import Table from "../../../componants/admin/Table";
 import Modal from "../../../componants/admin/ui/Modal";
 import Button from "../../../componants/admin/ui/Button";
 import RowActions from "../../../componants/admin/ui/RowActions";
 import ConfirmDialog from "../../../componants/admin/ui/ConfirmDialog";
+import StatCards from "../../../componants/admin/ui/StatCards";
+import FilterBar from "../../../componants/admin/ui/FilterBar";
 import DynamicForm from "../../../componants/admin/forms/DynamicForm";
 import { blogFormFields, blogFormInitialValues, buildBlogFormData } from "../../../services/blogs/blogs.form";
 import {
     useBlogsQuery,
+    useBlogStatsQuery,
     useCreateBlogMutation,
     useUpdateBlogMutation,
     useDeleteBlogMutation,
 } from "../../../services/blogs/blogs.queries";
+import { BLOG_STATUS_VALUES } from "../../../services/blogs/blogs.types";
+import { enumToOptions } from "../../../lib/enumOptions";
+import { useListFilters } from "../../../lib/useListFilters";
 
 const PAGE_SIZE = 10;
+const EMPTY_FILTERS = { search: '', status: '', isFeatured: '' };
+const SELECT_FILTERS = [
+    { name: 'status', label: 'All statuses', options: enumToOptions(BLOG_STATUS_VALUES) },
+    { name: 'isFeatured', label: 'All posts', options: [{ value: 'true', label: 'Featured' }, { value: 'false', label: 'Not featured' }] },
+];
 
 function toDateInputValue(isoString) {
     return isoString ? isoString.slice(0, 10) : '';
@@ -24,18 +35,27 @@ function toDateInputValue(isoString) {
 
 export default function DashboardBlogs() {
     const { accessToken } = useAuth();
-    const [page, setPage] = useState(1);
+    const { page, setPage, filters, appliedFilters, updateFilter, isFiltered } = useListFilters(EMPTY_FILTERS);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [editingBlog, setEditingBlog] = useState(null);
     const [deletingBlog, setDeletingBlog] = useState(null);
 
-    const blogsQuery = useBlogsQuery(accessToken, { page, limit: PAGE_SIZE });
+    const blogsQuery = useBlogsQuery(accessToken, { page, limit: PAGE_SIZE, ...appliedFilters });
+    const statsQuery = useBlogStatsQuery(accessToken);
     const createBlogMutation = useCreateBlogMutation(accessToken);
     const updateBlogMutation = useUpdateBlogMutation(accessToken);
     const deleteBlogMutation = useDeleteBlogMutation(accessToken);
 
     const blogs = blogsQuery.data?.data ?? [];
     const meta = blogsQuery.data?.meta ?? null;
+
+    const stats = statsQuery.data;
+    const statCards = [
+        { label: 'Total Blogs', value: stats?.total, hint: 'All posts', icon: LuNewspaper, tone: 'bg-blue-50 text-blue-600', status: '' },
+        { label: 'Published', value: stats?.byStatus.PUBLISHED, hint: 'Status: published', icon: LuCheckCircle, tone: 'bg-green-50 text-green-600', status: 'PUBLISHED' },
+        { label: 'Drafts', value: stats?.byStatus.DRAFT, hint: 'Not published yet', icon: LuFileText, tone: 'bg-gray-100 text-gray-600', status: 'DRAFT' },
+        { label: 'Featured', value: stats?.featured, hint: 'Marked as featured', icon: LuStar, tone: 'bg-amber-50 text-amber-600' },
+    ];
 
     const openAddModal = () => {
         setEditingBlog(null);
@@ -93,16 +113,18 @@ export default function DashboardBlogs() {
 
     return (
         <div>
-            <div className="mb-4 flex items-center justify-end">
+            <StatCards cards={statCards} stats={stats} selected={filters.status} onSelect={(status) => updateFilter('status', status)} />
+
+            <FilterBar filters={filters} onChange={updateFilter} searchPlaceholder="Search title, category or excerpt" selects={SELECT_FILTERS}>
                 <Button onClick={openAddModal}>Add Blog</Button>
-            </div>
+            </FilterBar>
 
             <Table
                 columns={columns}
                 data={blogs}
                 isLoading={blogsQuery.isLoading}
                 error={blogsQuery.isError ? (blogsQuery.error?.message || 'Unable to load blogs') : ''}
-                emptyMessage="No blogs found"
+                emptyMessage={isFiltered ? "No blogs match the selected filters" : "No blogs found"}
                 meta={meta}
                 onPageChange={setPage}
             />

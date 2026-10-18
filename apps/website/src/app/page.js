@@ -1,20 +1,21 @@
-"use client";
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import SiteHeader from "./componants/siteHeader";
-import SiteFooter from "./componants/siteFooter";
-import ExploreJobs from "./componants/exploreJobs";
-import Icon from "./componants/msIcon";
-import Badge from "./componants/badge";
-import Button from "./componants/button";
-import Card from "./componants/card";
-import Container from "./componants/container";
-import SectionHeading from "./componants/sectionHeading";
-import BlogCard from "./componants/blogCard";
-import BlogCardSkeleton from "./componants/blogCardSkeleton";
-import ScrollTop from "./componants/scrollTop";
-import { usePublicBlogsQuery } from "../services/blogs/blogs.queries";
+import SiteHeader from "../componants/siteHeader";
+import SiteFooter from "../componants/siteFooter";
+import ExploreJobs from "../componants/exploreJobs";
+import Icon from "../componants/msIcon";
+import Badge from "../componants/badge";
+import Button from "../componants/button";
+import Card from "../componants/card";
+import Container from "../componants/container";
+import SectionHeading from "../componants/sectionHeading";
+import BlogCard from "../componants/blogCard";
+import ScrollTop from "../componants/scrollTop";
+import JsonLd from "../componants/jsonLd";
+import { jobsApi } from "../services/jobs/jobs.api";
+import { blogsApi } from "../services/blogs/blogs.api";
+import { SITE_URL, SITE_NAME, SITE_LOGO, SITE_DESCRIPTION, SOCIAL_LINKS, pageMetadata } from "../lib/site";
 import "./assets/css/tailwind.css";
 
 const QUICK_LINKS = [
@@ -70,45 +71,57 @@ const WHY_FEATURES = [
   },
 ];
 
-const dummyBlogs = [
-  {
-    id: "dummy-blog-1",
-    featuredImage: "/images/blog/01.jpg",
-    title: "5 Skills Every Pharmacy Graduate Needs in 2026",
-    category: "Careers",
-    publishedAt: new Date().toISOString(),
-  },
-  {
-    id: "dummy-blog-2",
-    featuredImage: "/images/blog/02.jpg",
-    title: "How to Land Your First Hospital Pharmacy Job",
-    category: "Guides",
-    publishedAt: new Date().toISOString(),
-  },
-  {
-    id: "dummy-blog-3",
-    featuredImage: "/images/blog/03.jpg",
-    title: "Scholarships for Pharm-D Students in Pakistan",
-    category: "Scholarships",
-    publishedAt: new Date().toISOString(),
-  },
-];
+export const metadata = pageMetadata({
+  title: "PharmaConnect Pakistan | Pharmacy Jobs, Internships & Career Guides",
+  absoluteTitle: true,
+  description: SITE_DESCRIPTION,
+  path: "/",
+});
 
-export default function Home() {
-  const blogsQuery = usePublicBlogsQuery({
-    page: 1,
-    limit: 3,
-    status: "PUBLISHED",
-  });
+const STRUCTURED_DATA = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${SITE_URL}/#organization`,
+      name: "PharmaConnect Pakistan",
+      alternateName: SITE_NAME,
+      url: SITE_URL,
+      logo: SITE_LOGO,
+      email: "info@pharmaconnect-pakistan.com",
+      foundingDate: "2024",
+      founder: { "@type": "Person", name: "Muhammad Burhan Khan" },
+      sameAs: SOCIAL_LINKS,
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      name: SITE_NAME,
+      url: SITE_URL,
+      inLanguage: "en",
+      publisher: { "@id": `${SITE_URL}/#organization` },
+    },
+  ],
+};
 
-  const apiBlogs = blogsQuery.data?.data ?? [];
-  const blogs =
-    !blogsQuery.isLoading && (blogsQuery.isError || apiBlogs.length === 0)
-      ? dummyBlogs
-      : apiBlogs;
+async function fetchList(api, params) {
+  try {
+    const result = await api.list(undefined, { page: 1, ...params });
+    return result?.data ?? [];
+  } catch {
+    return [];
+  }
+}
+
+export default async function Home() {
+  const [jobs, blogs] = await Promise.all([
+    fetchList(jobsApi, { limit: 6, status: "ACTIVE" }),
+    fetchList(blogsApi, { limit: 3, status: "PUBLISHED" }),
+  ]);
 
   return (
     <div className="bg-surface font-sans text-on-surface antialiased">
+      <JsonLd data={STRUCTURED_DATA} />
       <SiteHeader />
 
       <main className="w-full pt-20 bg-surface">
@@ -168,11 +181,12 @@ export default function Home() {
                 <div className="relative w-full max-w-[440px] aspect-square flex items-center justify-center">
                   <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-cyan-bright/15 via-surface-container to-berry-accent/15 -rotate-6 scale-105" />
                   <Image
-                    src="/images/hero2.png"
+                    src="/images/hero2.webp"
                     width={440}
                     height={440}
                     className="relative z-10 w-full h-full object-contain drop-shadow-xl"
-                    alt="PharmaConnect careers"
+                    alt="Pharmacist reviewing career opportunities on PharmaConnect"
+                    priority
                   />
                   <div className="absolute -top-4 -left-4 z-20 bg-surface-card/95 backdrop-blur-md px-space-md py-space-xs rounded-xl shadow-md border border-border-subtle flex items-center gap-space-xs">
                     <div className="w-8 h-8 rounded-lg bg-verified-green/15 text-verified-green flex items-center justify-center">
@@ -228,9 +242,9 @@ export default function Home() {
                   >
                     <Icon name={c.icon} className="text-[26px]" />
                   </div>
-                  <h5 className="font-bold text-navy-surface group-hover:text-primary transition-colors">
+                  <h3 className="text-base font-bold text-navy-surface group-hover:text-primary transition-colors">
                     {c.title}
-                  </h5>
+                  </h3>
                   <span className="text-xs text-on-surface-variant mt-1">
                     {c.count} open positions
                   </span>
@@ -241,7 +255,7 @@ export default function Home() {
         </section>
 
         {/* EXPLORE JOBS */}
-        <ExploreJobs />
+        <ExploreJobs jobs={jobs} />
 
         {/* WHY PHARMACONNECT */}
         <section className="w-full py-space-3xl bg-surface">
@@ -286,9 +300,13 @@ export default function Home() {
                 <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-border-subtle">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src="/images/about/ab01.jpeg"
+                    src="/images/about/ab01.webp"
+                    width={600}
+                    height={700}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-auto object-cover max-h-[500px]"
-                    alt="PharmaConnect dispensary"
+                    alt="Pharmacy dispensary shelves stocked with medicines"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-navy-surface/85 via-transparent to-transparent" />
                   <div className="absolute bottom-6 left-6 right-6 text-on-primary">
@@ -387,11 +405,7 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-space-lg">
-              {blogsQuery.isLoading
-                ? Array.from({ length: 3 }).map((_, i) => (
-                    <BlogCardSkeleton key={i} />
-                  ))
-                : blogs.map((post) => <BlogCard key={post.id} post={post} />)}
+              {blogs.map((post) => <BlogCard key={post.id} post={post} />)}
             </div>
           </Container>
         </section>

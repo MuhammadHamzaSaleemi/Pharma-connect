@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { UserRoleEnum } from '../../../common/enums/user-role.enum';
 import { UserStatusEnum } from '../../../common/enums/user-status.enum';
 
@@ -11,6 +11,9 @@ export class CurrentUserDto {
 
   @ApiProperty()
   email!: string;
+
+  @ApiPropertyOptional({ type: String, nullable: true })
+  avatar!: string | null;
 
   @ApiProperty({ enum: UserRoleEnum })
   role!: UserRoleEnum;

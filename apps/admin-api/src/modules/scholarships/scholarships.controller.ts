@@ -11,7 +11,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ApiPaginatedResponse } from '../../common/decorators/api-paginated-response.decorator';
 import { Public } from '../../common/decorators/public.decorator';
 import { ResponseMessage } from '../../common/decorators/response-message.decorator';
@@ -24,6 +24,7 @@ import { CreateScholarshipDto } from './dto/create-scholarship.dto';
 import { UpdateScholarshipDto } from './dto/update-scholarship.dto';
 import { ScholarshipQueryDto } from './dto/scholarship-query.dto';
 import { ScholarshipResponseDto } from './dto/scholarship-response.dto';
+import { ScholarshipStatsDto } from './dto/scholarship-stats.dto';
 
 @ApiTags('Scholarships')
 @ApiBearerAuth()
@@ -33,7 +34,7 @@ export class ScholarshipsController {
   constructor(private readonly scholarshipsService: ScholarshipsService) {}
 
   @Post()
-  @Roles(UserRoleEnum.SUPER_ADMIN, UserRoleEnum.ADMIN)
+  @Roles(UserRoleEnum.SUPER_ADMIN, UserRoleEnum.ADMIN, UserRoleEnum.EXECUTIVE)
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create a new scholarship' })
   @ResponseMessage('Scholarship created successfully')
@@ -43,23 +44,45 @@ export class ScholarshipsController {
 
   @Get()
   @Public()
-  @ApiOperation({ summary: 'List scholarships with search, filtering, sorting, and pagination' })
+  @ApiOperation({
+    summary: 'List active scholarships with search, filtering, sorting, and pagination',
+  })
   @ApiPaginatedResponse(ScholarshipResponseDto)
   @ResponseMessage('Scholarships retrieved successfully')
   findAll(@Query() query: ScholarshipQueryDto) {
     return this.scholarshipsService.findAll(query);
   }
 
+  // Declared before `:id` so "manage" isn't captured as a scholarship id.
+  @Get('manage')
+  @Roles(UserRoleEnum.SUPER_ADMIN, UserRoleEnum.ADMIN, UserRoleEnum.EXECUTIVE)
+  @ApiOperation({ summary: 'Dashboard scholarship list, including drafts and expired ones' })
+  @ApiPaginatedResponse(ScholarshipResponseDto)
+  @ResponseMessage('Scholarships retrieved successfully')
+  findManageable(@Query() query: ScholarshipQueryDto) {
+    return this.scholarshipsService.findAll(query, true);
+  }
+
+  // Declared before `:id` so "stats" isn't captured as a scholarship id.
+  @Get('stats')
+  @Roles(UserRoleEnum.SUPER_ADMIN, UserRoleEnum.ADMIN, UserRoleEnum.EXECUTIVE)
+  @ApiOperation({ summary: 'Dashboard scholarship counters' })
+  @ApiOkResponse({ type: ScholarshipStatsDto })
+  @ResponseMessage('Scholarship stats retrieved successfully')
+  getStats(): Promise<ScholarshipStatsDto> {
+    return this.scholarshipsService.getStats();
+  }
+
   @Get(':id')
   @Public()
-  @ApiOperation({ summary: 'Get a scholarship by id' })
+  @ApiOperation({ summary: 'Get an active scholarship by id' })
   @ResponseMessage('Scholarship retrieved successfully')
   findOne(@Param('id') id: string) {
     return this.scholarshipsService.findOne(id);
   }
 
   @Patch(':id')
-  @Roles(UserRoleEnum.SUPER_ADMIN, UserRoleEnum.ADMIN)
+  @Roles(UserRoleEnum.SUPER_ADMIN, UserRoleEnum.ADMIN, UserRoleEnum.EXECUTIVE)
   @ApiOperation({ summary: 'Partially update a scholarship' })
   @ResponseMessage('Scholarship updated successfully')
   update(@Param('id') id: string, @Body() dto: UpdateScholarshipDto) {
@@ -67,7 +90,7 @@ export class ScholarshipsController {
   }
 
   @Delete(':id')
-  @Roles(UserRoleEnum.SUPER_ADMIN, UserRoleEnum.ADMIN)
+  @Roles(UserRoleEnum.SUPER_ADMIN, UserRoleEnum.ADMIN, UserRoleEnum.EXECUTIVE)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Delete a scholarship' })
   @ResponseMessage('Scholarship deleted successfully')

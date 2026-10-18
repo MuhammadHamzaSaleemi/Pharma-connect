@@ -5,10 +5,18 @@ import { jobsKeys } from "./jobs.keys";
 
 export function useJobsQuery(token, params) {
     return useQuery({
-        queryKey: jobsKeys.list(params),
-        queryFn: () => jobsApi.list(token, params),
+        queryKey: jobsKeys.manageList(params),
+        queryFn: () => jobsApi.listManage(token, params),
         enabled: !!token,
         placeholderData: (previousData) => previousData,
+    });
+}
+
+export function useJobStatsQuery(token) {
+    return useQuery({
+        queryKey: jobsKeys.stats(),
+        queryFn: () => jobsApi.stats(token),
+        enabled: !!token,
     });
 }
 

@@ -54,12 +54,13 @@ async function bootstrap(): Promise<void> {
   }
 
   const port = configService.get<number>('port') ?? 3000;
+  const host = configService.get<string>('host') ?? '127.0.0.1';
 
-  await app.listen(port, '127.0.0.1');
+  await app.listen(port, host);
 
-  logger.log(`Server listening at http://127.0.0.1:${port}/api/v1`);
+  logger.log(`Server listening at http://${host}:${port}/api/v1`);
   if (!isProduction) {
-    logger.log(`Swagger available at http://127.0.0.1:${port}/docs`);
+    logger.log(`Swagger available at http://${host}:${port}/docs`);
   }
 }
 

@@ -1,21 +1,22 @@
-import SiteHeader from "../componants/siteHeader";
-import SiteFooter from "../componants/siteFooter";
-import ScrollTop from "../componants/scrollTop";
-import Breadcrumb from "../componants/breadcrumb";
-import BlogsExplorer from "../componants/blogsExplorer";
+import SiteHeader from "../../componants/siteHeader";
+import { pageMetadata } from "../../lib/site";
+import SiteFooter from "../../componants/siteFooter";
+import ScrollTop from "../../componants/scrollTop";
+import Breadcrumb from "../../componants/breadcrumb";
+import BlogsExplorer from "../../componants/blogsExplorer";
 import { blogsApi } from "../../services/blogs/blogs.api";
+import { fetchAllPages } from "../../lib/fetchAllPages";
 
-const FETCH_LIMIT = 100;
+export const metadata = pageMetadata({
+  title: "Pharmacy Career Blog: Guides & Industry News",
+  description: "Career guides, licensing updates and pharmaceutical industry news for pharmacists, Pharm-D students and graduates in Pakistan and abroad.",
+  path: "/blogs",
+});
 
 export default async function Blogs() {
   let blogs = [];
   try {
-    const result = await blogsApi.list(undefined, {
-      status: "PUBLISHED",
-      page: 1,
-      limit: FETCH_LIMIT,
-    });
-    blogs = result?.data ?? [];
+    blogs = await fetchAllPages(blogsApi, { status: "PUBLISHED" });
   } catch {
     blogs = [];
   }

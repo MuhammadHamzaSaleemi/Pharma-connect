@@ -1,13 +1,16 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import type { Prisma } from '@prisma/client';
+import type { Blog, Prisma } from '@prisma/client';
 import { unlink } from 'fs/promises';
 import { join } from 'path';
 import { EntityNotFoundException } from '../../common/exceptions/entity-not-found.exception';
 import type { PaginationMeta } from '../../common/dto/pagination.dto';
 import { buildPaginationMeta } from '../../common/dto/pagination.dto';
 import { SortDirectionEnum } from '../../common/enums/sort-direction.enum';
-import { BLOG_UPLOADS_DIR } from './config/blog-image.multer-options';
+import { BlogStatusEnum } from '../../common/enums/blogs/blog-status.enum';
+import { toStatusCounts } from '../../common/utils/status-counts';
+import { BlogStatsDto } from './dto/blog-stats.dto';
+import { uploadsDir } from '../../common/uploads/image-upload.options';
 import { BlogsRepository } from './repositories/blogs.repository';
 import { BlogTransformer } from './transformers/blog.transformer';
 import { CreateBlogDto } from './dto/create-blog.dto';
@@ -24,6 +27,10 @@ const SORTABLE_COLUMNS = [
   'updatedAt',
 ] as const;
 const DEFAULT_SORT_COLUMN = 'createdAt';
+// Dashboard "needs attention": drafts untouched this long, and published posts missing any of
+// these fields (they feed the blog cards and search-result snippets).
+const STALE_DRAFT_DAYS = 14;
+const SEO_FIELDS = ['excerpt', 'featuredImage', 'seoTitle', 'seoDescription'] as const;
 
 @Injectable()
 export class BlogsService {
@@ -57,8 +64,16 @@ export class BlogsService {
     return this.blogTransformer.transform(blog);
   }
 
-  async findAll(query: BlogQueryDto): Promise<{ data: BlogResponseDto[]; meta: PaginationMeta }> {
+  /** Public listing by default (published posts only); `manage` is the dashboard listing. */
+  async findAll(
+    query: BlogQueryDto,
+    manage = false,
+  ): Promise<{ data: BlogResponseDto[]; meta: PaginationMeta }> {
     const where = this.buildWhere(query);
+    if (!manage) {
+      // Public visitors only ever see published posts, whatever `status` they ask for.
+      where.status = BlogStatusEnum.PUBLISHED;
+    }
     const orderBy = this.buildOrderBy(query);
     const skip = (query.page - 1) * query.limit;
 
@@ -73,9 +88,55 @@ export class BlogsService {
     };
   }
 
+  /** Dashboard counters. */
+  async getStats(): Promise<BlogStatsDto> {
+    const staleWhere: Prisma.BlogWhereInput = {
+      status: BlogStatusEnum.DRAFT,
+      updatedAt: { lt: new Date(Date.now() - STALE_DRAFT_DAYS * 24 * 60 * 60 * 1000) },
+    };
+    const incompleteWhere: Prisma.BlogWhereInput = {
+      status: BlogStatusEnum.PUBLISHED,
+      OR: SEO_FIELDS.flatMap((field) => [{ [field]: null }, { [field]: '' }]),
+    };
+    const page = (where: Prisma.BlogWhereInput, orderBy: Prisma.BlogOrderByWithRelationInput) =>
+      this.blogsRepository.findMany({ skip: 0, take: 5, where, orderBy });
+
+    const [groups, featured, staleDrafts, stale, incomplete, incompleteBlogs, recent] =
+      await Promise.all([
+        this.blogsRepository.countByStatus(),
+        this.blogsRepository.count({ isFeatured: true }),
+        this.blogsRepository.count(staleWhere),
+        page(staleWhere, { updatedAt: 'asc' }),
+        this.blogsRepository.count(incompleteWhere),
+        page(incompleteWhere, { publishedAt: 'desc' }),
+        page({}, { updatedAt: 'desc' }),
+      ]);
+    const ref = ({ id, title, status, updatedAt }: Blog) => ({
+      id,
+      title,
+      status: status,
+      updatedAt,
+    });
+
+    return {
+      ...toStatusCounts(Object.values(BlogStatusEnum), groups),
+      featured,
+      staleDrafts,
+      staleDraftItems: stale.map(ref),
+      incomplete,
+      incompleteItems: incompleteBlogs.map((blog) => ({
+        ...ref(blog),
+        missing: SEO_FIELDS.filter((field) => !blog[field]),
+      })),
+      recent: recent.map(ref),
+    };
+  }
+
+  // Public detail lookup: the website links blogs by slug, older links by id. Drafts are
+  // reported as not found.
   async findOne(id: string): Promise<BlogResponseDto> {
-    const blog = await this.blogsRepository.findById(id);
-    if (!blog) {
+    const blog = await this.blogsRepository.findByIdOrSlug(id);
+    if (!blog || blog.status !== BlogStatusEnum.PUBLISHED) {
       throw new EntityNotFoundException('Blog', id);
     }
     return this.blogTransformer.transform(blog);
@@ -148,7 +209,7 @@ export class BlogsService {
 
     const filename = url.slice(prefix.length);
     try {
-      await unlink(join(BLOG_UPLOADS_DIR, filename));
+      await unlink(join(uploadsDir('blogs'), filename));
     } catch (error) {
       this.logger.warn(
         `Failed to delete featured image file "${filename}": ${(error as Error).message}`,
@@ -156,12 +217,15 @@ export class BlogsService {
     }
   }
 
+  // Titles with no Latin letters or digits (e.g. Urdu) would otherwise slug to '' and give the post
+  // an empty URL segment; generateUniqueSlug then numbers repeats (post, post-2, ...).
   private slugify(title: string): string {
-    return title
+    const slug = title
       .toLowerCase()
       .trim()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '');
+    return slug || 'post';
   }
 
   private async generateUniqueSlug(title: string, excludeId?: string): Promise<string> {
@@ -181,7 +245,11 @@ export class BlogsService {
     const where: Prisma.BlogWhereInput = {};
 
     if (query.search) {
-      where.title = { contains: query.search, mode: 'insensitive' };
+      where.OR = [
+        { title: { contains: query.search, mode: 'insensitive' } },
+        { category: { contains: query.search, mode: 'insensitive' } },
+        { excerpt: { contains: query.search, mode: 'insensitive' } },
+      ];
     }
 
     if (query.status) {
@@ -190,6 +258,10 @@ export class BlogsService {
 
     if (query.category) {
       where.category = query.category;
+    }
+
+    if (query.isFeatured !== undefined) {
+      where.isFeatured = query.isFeatured;
     }
 
     return where;

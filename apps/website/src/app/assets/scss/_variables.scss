@@ -38,8 +38,8 @@ $footer:                    lighten($black, 6%);
 // Base font
 $font-size-base:            15px;
 
-$font-family-base:          var(--font-jakarta);
-$font-family-secondary:      var(--font-jakarta);
+$font-family-base:          var(--font-sans), system-ui, sans-serif;
+$font-family-secondary:      var(--font-sans), system-ui, sans-serif;
 
 // Overlay
 $overlay:                   rgba($dark, 0.65);

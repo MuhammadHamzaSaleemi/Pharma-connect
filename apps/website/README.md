@@ -1,36 +1,27 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# PharmaConnect website
 
-## Getting Started
+Next.js 14 (App Router, plain JavaScript): the public site (jobs, blogs, scholarships, about,
+contact) and the admin dashboard under `/dashboard`. All data comes from `apps/admin-api`.
 
-First, run the development server:
+## Setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install          # from the repo root (npm workspaces)
+npm run dev          # or `npm run dev:website` from the repo root; http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Environment (`.env.local`, gitignored):
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+| Variable | Default | Purpose |
+|---|---|---|
+| `NEXT_PUBLIC_API_URL` | `http://localhost:5000/api/v1` | admin-api base URL |
+| `NEXT_PUBLIC_SITE_URL` | `https://pharmaconnect-pakistan.com` | canonical origin for metadata, sitemap and JSON-LD |
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Checks and build
 
-## Learn More
+```bash
+npm run lint         # next lint (the build itself ignores lint, so CI runs it separately)
+npm run build        # standalone output; postbuild flattens it into .next/standalone (needs a POSIX shell)
+```
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Coding conventions are in `STANDARDS.md`; architecture notes in the root `CLAUDE.md`.

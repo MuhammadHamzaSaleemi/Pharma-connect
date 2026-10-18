@@ -101,7 +101,7 @@ export default function Field({
                     value={value ?? ''}
                     disabled={disabled}
                     onChange={(event) => onChange(name, event.target.value)}
-                    className={singleLineControlClasses}
+                    className={`${singleLineControlClasses} select-chevron`}
                 >
                     <option value="" disabled>{placeholder || 'Select...'}</option>
                     {options.map((option) => (

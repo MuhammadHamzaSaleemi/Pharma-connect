@@ -35,6 +35,24 @@ export class JobsRepository {
     return this.prisma.job.count({ where });
   }
 
+  async countByStatus(where: Prisma.JobWhereInput) {
+    return this.prisma.job.groupBy({ by: ['status'], where, _count: { _all: true } });
+  }
+
+  // Just the columns the dashboard breakdowns group by.
+  async findForBreakdown(where: Prisma.JobWhereInput) {
+    return this.prisma.job.findMany({
+      where,
+      select: {
+        status: true,
+        sector: true,
+        workType: true,
+        city: true,
+        createdBy: { select: { name: true } },
+      },
+    });
+  }
+
   async update(id: string, data: Prisma.JobUpdateInput): Promise<Job> {
     return this.prisma.job.update({ where: { id }, data });
   }

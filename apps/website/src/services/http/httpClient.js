@@ -12,28 +12,42 @@ const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/
 // callers that arrive while a refresh is already running just await it.
 let refreshPromise = null;
 
-function refreshAccessToken() {
+async function rotateTokens() {
+    const refreshToken = getRefreshToken();
+    if (!refreshToken) {
+        throw new Error('No refresh token available');
+    }
+
+    const res = await fetch(`${API_BASE_URL}/auth/refresh-token`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refreshToken }),
+    });
+    const json = await res.json().catch(() => null);
+
+    if (!res.ok) {
+        throw new Error(json?.message || 'Unable to refresh session');
+    }
+
+    setSession({ accessToken: json.data.accessToken, refreshToken: json.data.refreshToken });
+}
+
+// `staleToken` is the access token that just got a 401. Refresh tokens are
+// single-use and the API revokes every session when one is replayed, so two
+// tabs must never refresh with the same token: the Web Locks API serialises
+// refreshes across tabs, and a tab that waited skips its own refresh when
+// another tab already stored a new token.
+function refreshAccessToken(staleToken) {
     if (!refreshPromise) {
-        refreshPromise = (async () => {
-            const refreshToken = getRefreshToken();
-            if (!refreshToken) {
-                throw new Error('No refresh token available');
-            }
-
-            const res = await fetch(`${API_BASE_URL}/auth/refresh-token`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ refreshToken }),
-            });
-            const json = await res.json().catch(() => null);
-
-            if (!res.ok) {
-                throw new Error(json?.message || 'Unable to refresh session');
-            }
-
-            setSession({ accessToken: json.data.accessToken, refreshToken: json.data.refreshToken });
-            return json.data;
-        })().finally(() => {
+        const refreshOnce = async () => {
+            const current = getAccessToken();
+            if (current && current !== staleToken) return;
+            await rotateTokens();
+        };
+        refreshPromise = (navigator.locks
+            ? navigator.locks.request('pharmaconnect-token-refresh', refreshOnce)
+            : refreshOnce()
+        ).finally(() => {
             refreshPromise = null;
         });
     }
@@ -94,7 +108,7 @@ async function performRequest(path, options = {}) {
 
         let refreshed = false;
         try {
-            await refreshAccessToken();
+            await refreshAccessToken(token);
             refreshed = true;
         } catch {
             // Refresh failed outright (expired/invalid/revoked refresh

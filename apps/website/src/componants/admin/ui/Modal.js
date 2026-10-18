@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import Button from "./Button";
 
@@ -25,12 +25,43 @@ const MAX_WIDTH_CLASSES = {
  *   title: string
  *   maxWidth: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'  (default 'lg')
  */
+const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]), [contenteditable="true"]';
+
 export default function Modal({ isOpen, onClose, title, maxWidth = 'lg', children }) {
+    const dialogRef = useRef(null);
+    // Callers pass a new onClose every render; read it through a ref so the effect below runs once per open.
+    const onCloseRef = useRef(onClose);
+    onCloseRef.current = onClose;
+
     useEffect(() => {
         if (!isOpen) return;
 
+        // Focus moves into the dialog, Tab stays inside it, and focus returns to the opener on close.
+        const opener = document.activeElement;
+        const focusables = () => [...(dialogRef.current?.querySelectorAll(FOCUSABLE) ?? [])];
+        const first = focusables().find((element) => !element.closest('[data-modal-close]'));
+        (first ?? dialogRef.current)?.focus();
+
         const handleKeyDown = (event) => {
-            if (event.key === 'Escape') onClose();
+            if (event.key === 'Escape') {
+                onCloseRef.current();
+                return;
+            }
+            if (event.key !== 'Tab') return;
+            const elements = focusables();
+            if (elements.length === 0) {
+                event.preventDefault();
+                return;
+            }
+            const firstElement = elements[0];
+            const lastElement = elements[elements.length - 1];
+            if (event.shiftKey && document.activeElement === firstElement) {
+                event.preventDefault();
+                lastElement.focus();
+            } else if (!event.shiftKey && document.activeElement === lastElement) {
+                event.preventDefault();
+                firstElement.focus();
+            }
         };
 
         document.addEventListener('keydown', handleKeyDown);
@@ -39,8 +70,9 @@ export default function Modal({ isOpen, onClose, title, maxWidth = 'lg', childre
         return () => {
             document.removeEventListener('keydown', handleKeyDown);
             document.body.style.overflow = '';
+            if (opener instanceof HTMLElement) opener.focus();
         };
-    }, [isOpen, onClose]);
+    }, [isOpen]);
 
     if (!isOpen) return null;
 
@@ -48,14 +80,16 @@ export default function Modal({ isOpen, onClose, title, maxWidth = 'lg', childre
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/50" onClick={onClose} aria-hidden="true" />
             <div
+                ref={dialogRef}
+                tabIndex={-1}
                 role="dialog"
                 aria-modal="true"
                 aria-label={title}
-                className={`relative z-10 max-h-[90vh] w-full overflow-y-auto rounded-lg bg-white p-6 shadow-xl ${MAX_WIDTH_CLASSES[maxWidth] ?? MAX_WIDTH_CLASSES.lg}`}
+                className={`relative z-10 max-h-[90vh] w-full overflow-y-auto rounded-lg bg-white p-6 shadow-xl focus:outline-none ${MAX_WIDTH_CLASSES[maxWidth] ?? MAX_WIDTH_CLASSES.lg}`}
             >
                 <div className="mb-4 flex items-center justify-between">
                     <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
-                    <Button variant="ghost" size="icon" onClick={onClose} aria-label="Close">
+                    <Button variant="ghost" size="icon" onClick={onClose} aria-label="Close" data-modal-close>
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                             <path fillRule="evenodd" clipRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" />
                         </svg>

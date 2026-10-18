@@ -6,6 +6,7 @@
     "apps/*"
   ],
   "scripts": {
+    "prepare": "husky apps/admin-api/.husky",
     "dev:admin-api": "npm run start:dev -w apps/admin-api",
     "dev:website": "npm run dev -w apps/website",
     "build:admin-api": "npm run build -w apps/admin-api",

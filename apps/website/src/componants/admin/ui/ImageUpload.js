@@ -1,13 +1,14 @@
 'use client'
 import React, { useEffect, useRef, useState } from "react";
 import { LuUploadCloud, LuX } from "react-icons/lu";
+import { useAuth } from "../../../context/AuthContext";
 import { useUploadImageMutation } from "../../../services/uploads/uploads.queries";
 
 /**
  * Reusable drag-and-drop image upload box.
  *
- * mode='upload' (default): uploads the file to /api/upload (local disk
- * storage on the website server) and reports back only the resulting URL —
+ * mode='upload' (default): uploads the file to admin-api (POST /uploads/image,
+ * signed-in users only) and reports back only the resulting URL —
  * `onChange` receives a string, never a File.
  *
  * mode='file': keeps the raw File instead of uploading it anywhere —
@@ -24,10 +25,10 @@ import { useUploadImageMutation } from "../../../services/uploads/uploads.querie
 export default function ImageUpload({ value, onChange, disabled = false, mode = 'upload' }) {
     const inputRef = useRef(null);
     const [isDragging, setIsDragging] = useState(false);
-    const [progress, setProgress] = useState(null);
     const [error, setError] = useState('');
     const [objectUrl, setObjectUrl] = useState('');
-    const uploadImageMutation = useUploadImageMutation();
+    const { accessToken } = useAuth();
+    const uploadImageMutation = useUploadImageMutation(accessToken);
 
     useEffect(() => {
         if (!(value instanceof File)) {
@@ -50,14 +51,11 @@ export default function ImageUpload({ value, onChange, disabled = false, mode = 
             return;
         }
 
-        setProgress(0);
         try {
-            const { url } = await uploadImageMutation.mutateAsync({ file, onProgress: setProgress });
+            const { url } = await uploadImageMutation.mutateAsync(file);
             onChange(url);
         } catch (err) {
             setError(err.message || 'Upload failed');
-        } finally {
-            setProgress(null);
         }
     };
 
@@ -101,10 +99,8 @@ export default function ImageUpload({ value, onChange, disabled = false, mode = 
                 />
             </div>
 
-            {progress !== null && (
-                <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-gray-200">
-                    <div className="h-full bg-blue-600 transition-all" style={{ width: `${progress}%` }} />
-                </div>
+            {uploadImageMutation.isPending && (
+                <p role="status" className="mt-2 text-xs text-gray-500">Uploading...</p>
             )}
 
             {error && <p className="mt-2 text-xs text-red-500">{error}</p>}

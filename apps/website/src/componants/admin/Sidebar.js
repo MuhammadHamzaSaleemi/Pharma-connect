@@ -3,13 +3,17 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { LuLayoutDashboard, LuBriefcase, LuGraduationCap, LuNewspaper, LuPanelLeftClose, LuPanelLeftOpen } from "react-icons/lu";
+import { useAuth } from "../../context/AuthContext";
+import { canAccessPath } from "../../lib/roles";
+import { LuLayoutDashboard, LuBriefcase, LuGraduationCap, LuNewspaper, LuUsers, LuSettings, LuPanelLeftClose, LuPanelLeftOpen } from "react-icons/lu";
 
 export const SIDEBAR_ITEMS = [
     { label: 'Dashboard', href: '/dashboard', icon: LuLayoutDashboard },
     { label: 'Jobs', href: '/dashboard/jobs', icon: LuBriefcase },
     { label: 'Scholarships', href: '/dashboard/scholarships', icon: LuGraduationCap },
     { label: 'Blogs', href: '/dashboard/blogs', icon: LuNewspaper },
+    { label: 'Users', href: '/dashboard/users', icon: LuUsers },
+    { label: 'Account Settings', href: '/dashboard/settings', icon: LuSettings },
 ];
 
 export const isActive = (pathname, href) =>
@@ -28,6 +32,7 @@ const fade = (collapsed) => `transition-opacity duration-200 ${collapsed ? 'opac
 
 export default function Sidebar() {
     const pathname = usePathname();
+    const { user } = useAuth();
     const [collapsed, setCollapsed] = useState(false);
 
     // Start collapsed on small screens so the content area keeps its room.
@@ -48,7 +53,7 @@ export default function Sidebar() {
                 className="relative flex h-16 flex-shrink-0 items-center px-[20px] [border-bottom:1px_solid_rgb(255_255_255/0.1)]"
             >
                 <Image
-                    src="/images/logo.png"
+                    src="/images/logo.webp"
                     alt="PharmaConnect"
                     width={525}
                     height={222}
@@ -71,7 +76,7 @@ export default function Sidebar() {
                 <p className={`mb-[8px] whitespace-nowrap px-[12px] text-[11px] font-semibold uppercase tracking-wider text-slate-500 ${fade(collapsed)}`}>
                     Menu
                 </p>
-                {SIDEBAR_ITEMS.map((item) => {
+                {SIDEBAR_ITEMS.filter((item) => canAccessPath(user?.role, item.href)).map((item) => {
                     const active = isActive(pathname, item.href);
                     const Icon = item.icon;
                     return (

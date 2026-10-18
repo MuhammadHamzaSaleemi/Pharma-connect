@@ -1,10 +1,12 @@
 import React from "react";
-import LegalPage, { LegalP, LegalList, LegalLink, EmailLink } from "../componants/legalPage";
+import { pageMetadata } from "../../lib/site";
+import LegalPage, { LegalP, LegalList, LegalLink, EmailLink } from "../../componants/legalPage";
 
-export const metadata = {
-  title: "Terms of Service - PharmaConnect Pakistan",
-  description: "Terms of Service for PharmaConnect Pakistan",
-};
+export const metadata = pageMetadata({
+  title: "Terms of Service",
+  description: "The terms for using PharmaConnect Pakistan, covering job listing accuracy, acceptable use and liability.",
+  path: "/terms",
+});
 
 const SECTIONS = [
   {

@@ -1,10 +1,12 @@
 import React from "react";
-import LegalPage, { LegalP, LegalSub, LegalList, LegalLink, EmailLink } from "../componants/legalPage";
+import { pageMetadata } from "../../lib/site";
+import LegalPage, { LegalP, LegalSub, LegalList, LegalLink, EmailLink } from "../../componants/legalPage";
 
-export const metadata = {
-  title: "Privacy Policy - PharmaConnect Pakistan",
-  description: "Privacy Policy for PharmaConnect Pakistan",
-};
+export const metadata = pageMetadata({
+  title: "Privacy Policy",
+  description: "How PharmaConnect Pakistan collects, uses and protects your information, including cookies, analytics and advertising.",
+  path: "/privacy",
+});
 
 const SECTIONS = [
   {

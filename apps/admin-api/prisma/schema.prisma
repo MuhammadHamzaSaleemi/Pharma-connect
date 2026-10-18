@@ -11,6 +11,7 @@ model User {
   id                       String       @id @default(cuid())
   email                    String       @unique
   name                     String
+  avatar                   String?
   password                 String
   role                     UserRole     @default(ADMIN)
   status                   UserStatus   @default(ACTIVE)
@@ -21,6 +22,7 @@ model User {
   tokenValidFrom           DateTime     @default(now())
   createdAt                DateTime     @default(now())
   updatedAt                DateTime     @updatedAt
+  jobs                     Job[]
 
   @@map("users")
 }
@@ -28,9 +30,7 @@ model User {
 enum UserRole {
   SUPER_ADMIN
   ADMIN
-  PHARMACIST
-  MANAGER
-  VIEWER
+  EXECUTIVE
 }
 
 enum UserStatus {
@@ -57,9 +57,14 @@ model Job {
   jobFunction    String
   status         JobStatus   @default(DRAFT)
   sector         JobSector
+  // Job creator (shown in per-owner stats). Null for jobs created before ownership
+  // was tracked, or whose creator was deleted.
+  createdById    String?
+  createdBy      User?       @relation(fields: [createdById], references: [id], onDelete: SetNull)
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
 
+  @@index([createdById])
   @@index([status])
   @@index([sector])
   @@index([workType])
@@ -151,7 +156,6 @@ model Blog {
 
   @@index([status])
   @@index([category])
-  @@index([slug])
   @@map("blogs")
 }
 

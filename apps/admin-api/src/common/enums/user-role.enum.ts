@@ -1,7 +1,2 @@
-export enum UserRoleEnum {
-  SUPER_ADMIN = 'SUPER_ADMIN',
-  ADMIN = 'ADMIN',
-  PHARMACIST = 'PHARMACIST',
-  MANAGER = 'MANAGER',
-  VIEWER = 'VIEWER',
-}
+// Single source of truth is the Prisma schema; this alias keeps the existing import name.
+export { UserRole as UserRoleEnum } from '@prisma/client';

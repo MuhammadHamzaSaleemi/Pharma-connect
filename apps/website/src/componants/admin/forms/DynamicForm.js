@@ -6,9 +6,10 @@ import Button from "../ui/Button";
 /**
  * Reusable, config-driven form. Pass a `fields` array describing each
  * field (same shape accepted by the Field component) and this renders,
- * validates (required-only), and manages submission for you.
+ * validates (required, plus an optional per-field `validate`), and manages submission for you.
  *
- * fields: Array<{ name, label, type, options?, required?, placeholder?, rows?, colSpan?: 'half'|'full' }>
+ * fields: Array<{ name, label, type, options?, required?, placeholder?, rows?, colSpan?: 'half'|'full',
+ *                 validate?: (value, values) => string }>  // return an error message, or '' when valid
  * initialValues: object keyed by field name
  * onSubmit: (values) => Promise<void> | void — throw/reject with an Error to show a form-level message
  */
@@ -41,6 +42,9 @@ export default function DynamicForm({
         fields.forEach((field) => {
             if (field.required && !values[field.name]) {
                 nextErrors[field.name] = `${field.label} is required`;
+            } else if (field.validate) {
+                const message = field.validate(values[field.name], values);
+                if (message) nextErrors[field.name] = message;
             }
         });
         setErrors(nextErrors);

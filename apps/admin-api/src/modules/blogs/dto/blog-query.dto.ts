@@ -1,5 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsBoolean, IsEnum, IsOptional, IsString } from 'class-validator';
 import { PaginationDto } from '../../../common/dto/pagination.dto';
 import { BlogStatusEnum } from '../../../common/enums/blogs/blog-status.enum';
 
@@ -13,4 +14,13 @@ export class BlogQueryDto extends PaginationDto {
   @IsOptional()
   @IsString()
   category?: string;
+
+  @ApiPropertyOptional({ type: Boolean })
+  @IsOptional()
+  // Read the raw query string: implicit conversion would turn "false" into true.
+  @Transform(({ obj }: { obj: Record<string, unknown> }) =>
+    obj.isFeatured === 'true' ? true : obj.isFeatured === 'false' ? false : obj.isFeatured,
+  )
+  @IsBoolean()
+  isFeatured?: boolean;
 }

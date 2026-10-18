@@ -1,15 +1,16 @@
 'use client'
 import React, { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "../../context/AuthContext";
-import { isAdminRole } from "../../lib/roles";
+import { canAccessDashboard, canAccessPath } from "../../lib/roles";
 import AdminLayout from "../../componants/admin/AdminLayout";
 import "./tailwind.css";
 
 export default function DashboardLayout({ children }) {
     const router = useRouter();
+    const pathname = usePathname();
     const { user, isAuthenticated, isLoading } = useAuth();
-    const authorized = isAuthenticated && isAdminRole(user?.role);
+    const authorized = isAuthenticated && canAccessPath(user?.role, pathname);
 
     useEffect(() => {
         if (isLoading) return;
@@ -17,10 +18,15 @@ export default function DashboardLayout({ children }) {
             router.replace('/login');
             return;
         }
-        if (!isAdminRole(user?.role)) {
+        if (!canAccessDashboard(user?.role)) {
             router.replace('/');
+            return;
         }
-    }, [isLoading, isAuthenticated, user, router]);
+        // Typed or bookmarked a section this role can't open: send them to the dashboard home.
+        if (!canAccessPath(user?.role, pathname)) {
+            router.replace('/dashboard');
+        }
+    }, [isLoading, isAuthenticated, user, pathname, router]);
 
     if (isLoading || !authorized) {
         return (

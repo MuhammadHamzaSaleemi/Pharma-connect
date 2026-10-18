@@ -1,51 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    './src/app/dashboard/**/*.{js,jsx}',
-    './src/componants/admin/**/*.{js,jsx}',
-    // Public homepage is fully Tailwind. Its tailwind.css is imported from
-    // src/app/page.js only, so utilities never load on the Bootstrap pages
-    // and the .border/.shadow/.container class collisions stay contained.
-    './src/app/page.js',
-    './src/app/componants/siteHeader.js',
-    './src/app/componants/siteFooter.js',
-    './src/app/componants/exploreJobs.js',
-    './src/app/componants/jobsCards.js',
-    './src/app/componants/jobCard.js',
-    './src/app/componants/jobCardSkeleton.js',
-    './src/app/componants/blogCardSkeleton.js',
-    './src/app/componants/skeleton.js',
-    './src/app/componants/breadcrumb.js',
-    './src/app/componants/jobsExplorer.js',
-    './src/app/aboutus/page.js',
-    './src/app/componants/faq.js',
-    './src/app/componants/badge.js',
-    './src/app/componants/button.js',
-    './src/app/componants/card.js',
-    './src/app/componants/container.js',
-    './src/app/componants/sectionHeading.js',
-    './src/app/componants/stateMessage.js',
-    './src/app/componants/blogCard.js',
-    './src/app/componants/featuredBlogCard.js',
-    './src/app/componants/blogsExplorer.js',
-    './src/app/componants/blogDetail.js',
-    './src/app/componants/contactExplorer.js',
-    './src/app/componants/jobDetail.js',
-    './src/app/blogs/page.js',
-    './src/app/blogs/[id]/page.js',
-    './src/app/contactus/page.js',
-    './src/app/jobs/page.js',
-    './src/app/jobs/[id]/page.js',
-    './src/app/not-found.js',
-    './src/app/componants/legalPage.js',
-    './src/app/privacy/page.js',
-    './src/app/terms/page.js',
-    './src/app/componants/goBackButton.js',
-    './src/app/componants/pagination.js',
-    './src/app/componants/scholarshipsExplorer.js',
-    './src/app/scholarships/page.js',
-    './src/app/login/page.js',
-  ],
+  // Everything that renders Tailwind classes. The public pages load app/assets/css/tailwind.css and the
+  // dashboard loads dashboard/tailwind.css; both are built from this one config.
+  content: ['./src/app/**/*.js', './src/componants/**/*.js'],
   corePlugins: {
     // The public site relies on Bootstrap's base styles; Tailwind's reset
     // would otherwise clobber them since dashboard pages share the root layout.
@@ -140,7 +97,7 @@ module.exports = {
         container: "1600px",
       },
       fontFamily: {
-        sans: ["var(--font-jakarta)", "sans-serif"],
+        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
       },
     },
   },

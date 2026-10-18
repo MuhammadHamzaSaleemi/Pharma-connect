@@ -3,10 +3,10 @@ import { useMutation } from "@tanstack/react-query";
 import { uploadImage } from "./uploads.api";
 
 /**
- * mutate({ file, onProgress? }) -> Promise<{ url: string }>
+ * mutate(file) -> Promise<{ url: string }>
  */
-export function useUploadImageMutation() {
+export function useUploadImageMutation(token) {
     return useMutation({
-        mutationFn: ({ file, onProgress }) => uploadImage(file, { onProgress }),
+        mutationFn: (file) => uploadImage(token, file),
     });
 }

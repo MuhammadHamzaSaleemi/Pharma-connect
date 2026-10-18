@@ -21,6 +21,10 @@ export class BlogsRepository {
     return this.prisma.blog.findUnique({ where: { id } });
   }
 
+  async findByIdOrSlug(idOrSlug: string): Promise<Blog | null> {
+    return this.prisma.blog.findFirst({ where: { OR: [{ id: idOrSlug }, { slug: idOrSlug }] } });
+  }
+
   async findMany(params: FindManyParams): Promise<Blog[]> {
     const { skip, take, where, orderBy } = params;
     return this.prisma.blog.findMany({ skip, take, where, orderBy });
@@ -28,6 +32,10 @@ export class BlogsRepository {
 
   async count(where: Prisma.BlogWhereInput): Promise<number> {
     return this.prisma.blog.count({ where });
+  }
+
+  async countByStatus() {
+    return this.prisma.blog.groupBy({ by: ['status'], _count: { _all: true } });
   }
 
   async update(id: string, data: Prisma.BlogUpdateInput): Promise<Blog> {

@@ -5,10 +5,18 @@ import { scholarshipsKeys } from "./scholarships.keys";
 
 export function useScholarshipsQuery(token, params) {
     return useQuery({
-        queryKey: scholarshipsKeys.list(params),
-        queryFn: () => scholarshipsApi.list(token, params),
+        queryKey: scholarshipsKeys.manageList(params),
+        queryFn: () => scholarshipsApi.listManage(token, params),
         enabled: !!token,
         placeholderData: (previousData) => previousData,
+    });
+}
+
+export function useScholarshipStatsQuery(token) {
+    return useQuery({
+        queryKey: scholarshipsKeys.stats(),
+        queryFn: () => scholarshipsApi.stats(token),
+        enabled: !!token,
     });
 }
 

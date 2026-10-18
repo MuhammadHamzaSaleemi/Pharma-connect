@@ -1,81 +1,42 @@
 'use client'
-import React, { useEffect, useState } from "react";
-import { LuPencil, LuTrash2 } from "react-icons/lu";
+import React, { useState } from "react";
+import { LuBriefcase, LuCheckCircle, LuFileText, LuHourglass, LuPencil, LuTrash2 } from "react-icons/lu";
 import { useAuth } from "../../../context/AuthContext";
 import Table from "../../../componants/admin/Table";
 import Modal from "../../../componants/admin/ui/Modal";
 import Button from "../../../componants/admin/ui/Button";
 import RowActions from "../../../componants/admin/ui/RowActions";
 import ConfirmDialog from "../../../componants/admin/ui/ConfirmDialog";
+import StatCards from "../../../componants/admin/ui/StatCards";
+import FilterBar from "../../../componants/admin/ui/FilterBar";
 import DynamicForm from "../../../componants/admin/forms/DynamicForm";
 import { jobFormFields, jobFormInitialValues } from "../../../services/jobs/jobs.form";
-import { useJobsQuery, useCreateJobMutation, useUpdateJobMutation, useDeleteJobMutation, useBulkUploadJobsMutation } from "../../../services/jobs/jobs.queries";
-import { WORK_TYPE_VALUES, SECTOR_VALUES, JOB_STATUS_VALUES } from "../../../services/jobs/jobs.types";
+import { useJobsQuery, useJobStatsQuery, useCreateJobMutation, useUpdateJobMutation, useDeleteJobMutation, useBulkUploadJobsMutation } from "../../../services/jobs/jobs.queries";
+import { WORK_TYPE_VALUES, JOB_STATUS_VALUES } from "../../../services/jobs/jobs.types";
 import { enumToOptions } from "../../../lib/enumOptions";
+import { useListFilters } from "../../../lib/useListFilters";
 
 const PAGE_SIZE = 10;
 const BULK_UPLOAD_COLUMNS = ['title', 'company', 'city', 'qualification', 'jobDescription', 'experience', 'workType', 'jobFunction', 'sector', 'status (optional)'];
 
-const EMPTY_FILTERS = {
-    search: '', status: '', city: '', workType: '', sector: '', jobFunction: '',
-    experience: '', createdFrom: '', createdTo: '', sort: 'createdAt:desc',
-};
+const EMPTY_FILTERS = { search: '', status: '', workType: '' };
 const SELECT_FILTERS = [
-    { name: 'status', label: 'Status', options: enumToOptions(JOB_STATUS_VALUES) },
-    { name: 'workType', label: 'Job Type', options: enumToOptions(WORK_TYPE_VALUES) },
-    { name: 'sector', label: 'Sector', options: enumToOptions(SECTOR_VALUES) },
+    { name: 'status', label: 'All statuses', options: enumToOptions(JOB_STATUS_VALUES) },
+    { name: 'workType', label: 'All job types', options: enumToOptions(WORK_TYPE_VALUES) },
 ];
-const TEXT_FILTERS = [
-    { name: 'city', label: 'City', placeholder: 'e.g. Lahore' },
-    { name: 'jobFunction', label: 'Department / Function', placeholder: 'e.g. Production' },
-    { name: 'experience', label: 'Experience', placeholder: 'e.g. 2-4 years' },
-];
-const SORT_OPTIONS = [
-    { value: 'createdAt:desc', label: 'Newest first' },
-    { value: 'createdAt:asc', label: 'Oldest first' },
-    { value: 'title:asc', label: 'Title (A-Z)' },
-    { value: 'company:asc', label: 'Company (A-Z)' },
-];
-const CONTROL_CLASSES = 'h-10 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500';
-
-// Date inputs give local calendar days; widen "to" to end of day so the range is inclusive.
-function toApiParams({ sort, createdFrom, createdTo, ...rest }) {
-    const [sortBy, sortOrder] = sort.split(':');
-    return {
-        ...rest,
-        sortBy,
-        sortOrder: sortOrder.toUpperCase(),
-        createdFrom: createdFrom && new Date(`${createdFrom}T00:00:00`).toISOString(),
-        createdTo: createdTo && new Date(`${createdTo}T23:59:59.999`).toISOString(),
-    };
-}
 
 export default function DashboardJobs() {
     const { accessToken } = useAuth();
-    const [page, setPage] = useState(1);
+    const { page, setPage, filters, appliedFilters, updateFilter, isFiltered } = useListFilters(EMPTY_FILTERS);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [editingJob, setEditingJob] = useState(null);
     const [deletingJob, setDeletingJob] = useState(null);
     const [isBulkUploadOpen, setIsBulkUploadOpen] = useState(false);
     const [bulkFile, setBulkFile] = useState(null);
     const [bulkResult, setBulkResult] = useState(null);
-    const [filters, setFilters] = useState(EMPTY_FILTERS);
-    const [appliedFilters, setAppliedFilters] = useState(EMPTY_FILTERS);
 
-    // Debounce so typing in text filters doesn't fire a request per keystroke.
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setAppliedFilters(filters);
-            setPage(1);
-        }, 400);
-        return () => clearTimeout(timer);
-    }, [filters]);
-
-    const updateFilter = (name, value) => setFilters((prev) => ({ ...prev, [name]: value }));
-    const activeFilterCount = Object.keys(EMPTY_FILTERS).filter((key) => key !== 'sort' && filters[key]).length;
-    const isFiltered = activeFilterCount > 0 || filters.sort !== EMPTY_FILTERS.sort;
-
-    const jobsQuery = useJobsQuery(accessToken, { page, limit: PAGE_SIZE, ...toApiParams(appliedFilters) });
+    const jobsQuery = useJobsQuery(accessToken, { page, limit: PAGE_SIZE, ...appliedFilters });
+    const statsQuery = useJobStatsQuery(accessToken);
     const createJobMutation = useCreateJobMutation(accessToken);
     const updateJobMutation = useUpdateJobMutation(accessToken);
     const deleteJobMutation = useDeleteJobMutation(accessToken);
@@ -83,6 +44,14 @@ export default function DashboardJobs() {
 
     const jobs = jobsQuery.data?.data ?? [];
     const meta = jobsQuery.data?.meta ?? null;
+
+    const stats = statsQuery.data;
+    const statCards = [
+        { label: 'Total Jobs', value: stats?.total, hint: stats && `${stats.byStatus.INACTIVE} inactive · ${stats.byStatus.CLOSED} closed`, icon: LuBriefcase, tone: 'bg-blue-50 text-blue-600', status: '' },
+        { label: 'Active', value: stats?.byStatus.ACTIVE, hint: 'Live on the website', icon: LuCheckCircle, tone: 'bg-green-50 text-green-600', status: 'ACTIVE' },
+        { label: 'Drafts', value: stats?.byStatus.DRAFT, hint: 'Not published yet', icon: LuFileText, tone: 'bg-gray-100 text-gray-600', status: 'DRAFT' },
+        { label: 'Expiring Soon', value: stats?.expiringSoon, hint: 'Deleted within 7 days', icon: LuHourglass, tone: 'bg-amber-50 text-amber-600' },
+    ];
 
     const openAddModal = () => {
         setEditingJob(null);
@@ -153,112 +122,12 @@ export default function DashboardJobs() {
 
     return (
         <div>
-            <div className="mb-4 flex items-center justify-end">
-                <div className="flex items-center gap-2">
-                    <Button variant="secondary" onClick={openBulkUploadModal}>Bulk Upload</Button>
-                    <Button onClick={openAddModal}>Add Job</Button>
-                </div>
-            </div>
+            <StatCards cards={statCards} stats={stats} selected={filters.status} onSelect={(status) => updateFilter('status', status)} />
 
-            <div className="mb-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-                <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-                    <h5 className="text-sm font-semibold text-gray-700">
-                        Filters
-                        {activeFilterCount > 0 && (
-                            <span className="ml-2 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
-                                {activeFilterCount} active
-                            </span>
-                        )}
-                    </h5>
-                    <div className="flex items-center gap-3">
-                        {meta && <span className="text-xs text-gray-500">{meta.total} result(s)</span>}
-                        <Button variant="secondary" size="sm" onClick={() => setFilters(EMPTY_FILTERS)} disabled={!isFiltered}>
-                            Clear Filters
-                        </Button>
-                    </div>
-                </div>
-
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                    <div className="sm:col-span-2">
-                        <label htmlFor="filter-search" className="mb-1 block text-sm font-medium text-gray-700">Search</label>
-                        <input
-                            id="filter-search"
-                            type="search"
-                            value={filters.search}
-                            placeholder="Title, company or city"
-                            onChange={(e) => updateFilter('search', e.target.value)}
-                            className={CONTROL_CLASSES}
-                        />
-                    </div>
-
-                    {SELECT_FILTERS.map(({ name, label, options }) => (
-                        <div key={name}>
-                            <label htmlFor={`filter-${name}`} className="mb-1 block text-sm font-medium text-gray-700">{label}</label>
-                            <select
-                                id={`filter-${name}`}
-                                value={filters[name]}
-                                onChange={(e) => updateFilter(name, e.target.value)}
-                                className={CONTROL_CLASSES}
-                            >
-                                <option value="">All</option>
-                                {options.map((option) => (
-                                    <option key={option.value} value={option.value}>{option.label}</option>
-                                ))}
-                            </select>
-                        </div>
-                    ))}
-
-                    {TEXT_FILTERS.map(({ name, label, placeholder }) => (
-                        <div key={name}>
-                            <label htmlFor={`filter-${name}`} className="mb-1 block text-sm font-medium text-gray-700">{label}</label>
-                            <input
-                                id={`filter-${name}`}
-                                type="text"
-                                value={filters[name]}
-                                placeholder={placeholder}
-                                onChange={(e) => updateFilter(name, e.target.value)}
-                                className={CONTROL_CLASSES}
-                            />
-                        </div>
-                    ))}
-
-                    <div>
-                        <label htmlFor="filter-createdFrom" className="mb-1 block text-sm font-medium text-gray-700">Posted From</label>
-                        <input
-                            id="filter-createdFrom"
-                            type="date"
-                            value={filters.createdFrom}
-                            max={filters.createdTo || undefined}
-                            onChange={(e) => updateFilter('createdFrom', e.target.value)}
-                            className={CONTROL_CLASSES}
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="filter-createdTo" className="mb-1 block text-sm font-medium text-gray-700">Posted To</label>
-                        <input
-                            id="filter-createdTo"
-                            type="date"
-                            value={filters.createdTo}
-                            min={filters.createdFrom || undefined}
-                            onChange={(e) => updateFilter('createdTo', e.target.value)}
-                            className={CONTROL_CLASSES}
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="filter-sort" className="mb-1 block text-sm font-medium text-gray-700">Sort By</label>
-                        <select
-                            id="filter-sort"
-                            value={filters.sort}
-                            onChange={(e) => updateFilter('sort', e.target.value)}
-                            className={CONTROL_CLASSES}
-                        >
-                            {SORT_OPTIONS.map((option) => (
-                                <option key={option.value} value={option.value}>{option.label}</option>
-                            ))}
-                        </select>
-                    </div>
-                </div>
-            </div>
+            <FilterBar filters={filters} onChange={updateFilter} searchPlaceholder="Search title, company or city" selects={SELECT_FILTERS}>
+                <Button variant="secondary" onClick={openBulkUploadModal}>Bulk Upload</Button>
+                <Button onClick={openAddModal}>Add Job</Button>
+            </FilterBar>
 
             <Table
                 columns={columns}

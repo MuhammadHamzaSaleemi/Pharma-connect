@@ -9,7 +9,6 @@ const AuthContext = createContext(undefined);
 
 export function AuthProvider({ children }) {
   const queryClient = useQueryClient();
-  const [user, setUser] = useState(null);
   const [accessToken, setAccessToken] = useState(null);
   const [isTokenRestored, setIsTokenRestored] = useState(false);
 
@@ -19,6 +18,10 @@ export function AuthProvider({ children }) {
   // else — an expired access token here is refreshed silently and retried
   // just like on any other page, instead of forcing a re-login on load.
   const meQuery = useMeQuery(accessToken);
+  // Derived, not mirrored into state: a copy set in an effect lags one
+  // render behind the query, and in that render the dashboard guard (a
+  // child, so its effects run first) saw "no user" and bounced to /login.
+  const user = accessToken ? meQuery.data ?? null : null;
 
   const userRef = useRef(user);
   useEffect(() => {
@@ -36,19 +39,13 @@ export function AuthProvider({ children }) {
     return subscribeToSession(() => {
       const token = getAccessToken();
       setAccessToken(token);
-      if (!token) {
-        setUser(null);
-      } else if (userRef.current) {
+      if (token && userRef.current) {
         // Same user, just a rotated token — seed the cache under the new
         // key so `me` isn't re-fetched on every silent refresh.
         queryClient.setQueryData(authKeys.me(token), userRef.current);
       }
     });
   }, [queryClient]);
-
-  useEffect(() => {
-    if (meQuery.data) setUser(meQuery.data);
-  }, [meQuery.data]);
 
   useEffect(() => {
     // meQuery only ends up in an error state here once httpClient has
@@ -62,7 +59,6 @@ export function AuthProvider({ children }) {
     const data = await loginMutation.mutateAsync({ email, password });
     setSession({ accessToken: data.accessToken, refreshToken: data.refreshToken });
     queryClient.setQueryData(authKeys.me(data.accessToken), data);
-    setUser(data);
     setAccessToken(data.accessToken);
     return data;
   }, [loginMutation, queryClient]);

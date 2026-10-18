@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, type Scholarship } from '@prisma/client';
+import { Prisma, ScholarshipStatus, type Scholarship } from '@prisma/client';
 import { PrismaService } from '../../../database/prisma.service';
 
 interface FindManyParams {
@@ -28,6 +28,22 @@ export class ScholarshipsRepository {
 
   async count(where: Prisma.ScholarshipWhereInput): Promise<number> {
     return this.prisma.scholarship.count({ where });
+  }
+
+  async countByStatus() {
+    return this.prisma.scholarship.groupBy({ by: ['status'], _count: { _all: true } });
+  }
+
+  async findCountries(where: Prisma.ScholarshipWhereInput) {
+    return this.prisma.scholarship.findMany({ where, select: { country: true } });
+  }
+
+  async expirePastDeadline(now: Date): Promise<number> {
+    const result = await this.prisma.scholarship.updateMany({
+      where: { status: ScholarshipStatus.ACTIVE, endDate: { lt: now } },
+      data: { status: ScholarshipStatus.EXPIRED },
+    });
+    return result.count;
   }
 
   async update(id: string, data: Prisma.ScholarshipUpdateInput): Promise<Scholarship> {

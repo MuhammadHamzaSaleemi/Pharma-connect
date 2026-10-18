@@ -4,6 +4,10 @@
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
   "transform": {
+    "/node_modules/.+\\.js$": ["ts-jest", { "tsconfig": { "allowJs": true } }],
     "^.+\\.(t|j)s$": "ts-jest"
-  }
+  },
+  "transformIgnorePatterns": [
+    "/node_modules/(?!(@nestjs/schedule|htmlparser2|domhandler|domutils|dom-serializer|domelementtype|entities)/)"
+  ]
 }

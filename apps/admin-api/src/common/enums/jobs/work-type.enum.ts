@@ -1,6 +1,2 @@
-export enum WorkTypeEnum {
-  ON_SITE = 'ON_SITE',
-  HYBRID = 'HYBRID',
-  REMOTE = 'REMOTE',
-  FIELD_BASED = 'FIELD_BASED',
-}
+// Single source of truth is the Prisma schema; this alias keeps the existing import name.
+export { JobWorkType as WorkTypeEnum } from '@prisma/client';

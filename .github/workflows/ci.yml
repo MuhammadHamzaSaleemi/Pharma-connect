@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  admin-api:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/admin-api
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+        working-directory: .
+      - run: npx prisma generate
+      - run: npx tsc --noEmit
+      - run: npm run lint
+      - run: npm test
+      # Boots the real app with Prisma stubbed; no database needed.
+      - run: npm run test:e2e
+
+  website:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/website
+    env:
+      NEXT_PUBLIC_API_URL: http://localhost:5000/api/v1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+        working-directory: .
+      - run: npm run lint
+      # `next build` ignores lint (eslint.ignoreDuringBuilds), hence the separate step above.
+      - run: npm run build

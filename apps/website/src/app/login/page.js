@@ -4,9 +4,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../context/AuthContext";
-import { isAdminRole } from "../../lib/roles";
-import Button from "../componants/button";
-import Icon from "../componants/msIcon";
+import { canAccessDashboard } from "../../lib/roles";
+import Button from "../../componants/button";
+import Icon from "../../componants/msIcon";
 import "../assets/css/tailwind.css";
 
 // Icons must be in the Material Symbols subset in layout.js.
@@ -82,7 +82,7 @@ export default function Login(){
         try {
             const data = await login(values.email.trim(), values.password);
             setStatus('success');
-            router.push(isAdminRole(data.role) ? '/dashboard' : '/');
+            router.push(canAccessDashboard(data.role) ? '/dashboard' : '/');
         } catch (err) {
             setError(err.message || 'Unable to sign in');
             setStatus('idle');
@@ -97,7 +97,7 @@ export default function Login(){
                 <div aria-hidden="true" className="absolute -bottom-40 -left-24 h-96 w-96 rounded-full bg-cyan-bright/20 blur-3xl"></div>
 
                 <Link href="/" className="relative inline-flex w-fit rounded-lg bg-white px-3 py-2">
-                    <Image src="/images/logo.png" width={100} height={40} alt="PharmaConnect" priority />
+                    <Image src="/images/logo.webp" width={100} height={40} alt="PharmaConnect" priority />
                 </Link>
 
                 <div className="relative max-w-md">
@@ -128,7 +128,7 @@ export default function Login(){
             <section className="flex items-center justify-center px-gutter-mobile py-space-2xl sm:px-space-xl">
                 <div className="w-full max-w-md">
                     <Link href="/" className="mb-space-xl inline-flex lg:hidden">
-                        <Image src="/images/logo.png" width={100} height={40} alt="PharmaConnect" priority />
+                        <Image src="/images/logo.webp" width={100} height={40} alt="PharmaConnect" priority />
                     </Link>
 
                     <div className="rounded-2xl border border-border-subtle bg-surface-card p-space-lg shadow-sm sm:p-space-xl">

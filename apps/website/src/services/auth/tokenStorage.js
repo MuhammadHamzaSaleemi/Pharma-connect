@@ -43,9 +43,17 @@ export function clearSession() {
 }
 
 // Notifies on every setSession/clearSession, including ones triggered
-// outside of React (e.g. httpClient's background refresh-on-401). Returns
-// an unsubscribe function.
+// outside of React (e.g. httpClient's background refresh-on-401) and ones
+// made in another tab (the `storage` event), so a refresh or logout in one
+// tab is picked up by the others. Returns an unsubscribe function.
 export function subscribeToSession(listener) {
+    const onStorage = (event) => {
+        if (event.key === ACCESS_TOKEN_KEY || event.key === null) listener();
+    };
     listeners.add(listener);
-    return () => listeners.delete(listener);
+    window.addEventListener('storage', onStorage);
+    return () => {
+        listeners.delete(listener);
+        window.removeEventListener('storage', onStorage);
+    };
 }

@@ -62,8 +62,8 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       id: user.id,
       name: user.name,
       email: user.email,
-      role: user.role as unknown as UserRoleEnum,
-      status: user.status as unknown as UserStatusEnum,
+      role: user.role,
+      status: user.status,
     };
   }
 }

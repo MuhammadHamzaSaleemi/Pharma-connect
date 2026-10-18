@@ -10,6 +10,7 @@ import {
   IsString,
   MaxLength,
 } from 'class-validator';
+import { SanitizeHtml } from '../../../common/decorators/sanitize-html.decorator';
 import { BlogStatusEnum } from '../../../common/enums/blogs/blog-status.enum';
 
 function toBoolean({ value }: { value: unknown }): unknown {
@@ -44,6 +45,7 @@ export class CreateBlogDto {
   @ApiProperty({ example: '<p>Full article content...</p>' })
   @IsString()
   @IsNotEmpty()
+  @SanitizeHtml()
   content!: string;
 
   @ApiPropertyOptional({ example: 'A short summary of the article' })

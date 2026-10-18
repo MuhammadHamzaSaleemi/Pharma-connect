@@ -1,6 +1,2 @@
-export enum UserStatusEnum {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  SUSPENDED = 'SUSPENDED',
-  PENDING_VERIFICATION = 'PENDING_VERIFICATION',
-}
+// Single source of truth is the Prisma schema; this alias keeps the existing import name.
+export { UserStatus as UserStatusEnum } from '@prisma/client';

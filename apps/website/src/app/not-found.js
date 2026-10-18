@@ -1,18 +1,19 @@
 import React from "react";
-import SiteHeader from "./componants/siteHeader";
-import SiteFooter from "./componants/siteFooter";
-import ScrollTop from "./componants/scrollTop";
-import Breadcrumb from "./componants/breadcrumb";
-import Container from "./componants/container";
-import Badge from "./componants/badge";
-import Button from "./componants/button";
-import Card from "./componants/card";
-import GoBackButton from "./componants/goBackButton";
-import Icon from "./componants/msIcon";
+import SiteHeader from "../componants/siteHeader";
+import SiteFooter from "../componants/siteFooter";
+import ScrollTop from "../componants/scrollTop";
+import Breadcrumb from "../componants/breadcrumb";
+import Container from "../componants/container";
+import Badge from "../componants/badge";
+import Button from "../componants/button";
+import Card from "../componants/card";
+import GoBackButton from "../componants/goBackButton";
+import Icon from "../componants/msIcon";
 import "./assets/css/tailwind.css";
 
 export const metadata = {
-  title: "Page Not Found | PharmaConnect",
+  title: "Page Not Found",
+  robots: { index: false },
 };
 
 // Icons must be in the Material Symbols subset in layout.js.

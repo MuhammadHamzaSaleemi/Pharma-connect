@@ -1,27 +1,27 @@
 import React from "react";
 import { notFound } from "next/navigation";
 
-import SiteHeader from "../componants/siteHeader";
-import SiteFooter from "../componants/siteFooter";
-import ScrollTop from "../componants/scrollTop";
-import Breadcrumb from "../componants/breadcrumb";
-import ScholarshipsExplorer from "../componants/scholarshipsExplorer";
+import SiteHeader from "../../componants/siteHeader";
+import SiteFooter from "../../componants/siteFooter";
+import ScrollTop from "../../componants/scrollTop";
+import Breadcrumb from "../../componants/breadcrumb";
+import ScholarshipsExplorer from "../../componants/scholarshipsExplorer";
 
 import { scholarshipsApi } from "../../services/scholarships/scholarships.api";
+import { fetchAllPages } from "../../lib/fetchAllPages";
 
 // Same shape as /jobs: one server fetch, then all filtering/sorting/paging
 // happens client-side in <ScholarshipsExplorer>.
-const FETCH_LIMIT = 100; // backend caps `limit` at 100
 
 export default async function ScholarshipsPage() {
   notFound(); // hidden for now; delete this line to bring /scholarships back
 
   let scholarships = [];
   try {
-    const result = await scholarshipsApi.list(undefined, { status: "ACTIVE", page: 1, limit: FETCH_LIMIT });
+    const all = await fetchAllPages(scholarshipsApi, { status: "ACTIVE" });
     const now = Date.now();
-    // Nothing flips scholarships to EXPIRED automatically, so hide past deadlines here.
-    scholarships = (result?.data ?? []).filter((s) => new Date(s.endDate).getTime() >= now);
+    // The API's nightly job only marks scholarships EXPIRED at midnight; hide ones whose deadline passed today.
+    scholarships = all.filter((s) => new Date(s.endDate).getTime() >= now);
   } catch {
     scholarships = [];
   }

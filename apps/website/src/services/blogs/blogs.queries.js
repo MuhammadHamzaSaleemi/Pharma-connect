@@ -5,8 +5,8 @@ import { blogsKeys } from "./blogs.keys";
 
 export function useBlogsQuery(token, params) {
     return useQuery({
-        queryKey: blogsKeys.list(params),
-        queryFn: () => blogsApi.list(token, params),
+        queryKey: blogsKeys.manageList(params),
+        queryFn: () => blogsApi.listManage(token, params),
         enabled: !!token,
         placeholderData: (previousData) => previousData,
     });
@@ -19,6 +19,14 @@ export function usePublicBlogsQuery(params) {
         queryKey: blogsKeys.list(params),
         queryFn: () => blogsApi.list(undefined, params),
         placeholderData: (previousData) => previousData,
+    });
+}
+
+export function useBlogStatsQuery(token) {
+    return useQuery({
+        queryKey: blogsKeys.stats(),
+        queryFn: () => blogsApi.stats(token),
+        enabled: !!token,
     });
 }
 

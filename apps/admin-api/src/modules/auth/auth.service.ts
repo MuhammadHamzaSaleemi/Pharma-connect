@@ -10,26 +10,19 @@ import { TokenTypeEnum } from '../../common/enums/token-type.enum';
 import { UserRoleEnum } from '../../common/enums/user-role.enum';
 import { AuthRepository } from './repositories/auth.repository';
 import { AuthTransformer } from './transformers/auth.transformer';
-import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 import { AuthResponseDto } from './dto/auth-response.dto';
 import { CurrentUserDto } from './dto/current-user.dto';
 import type { JwtPayload } from './strategies/jwt.strategy';
 
 const BCRYPT_ROUNDS = 12;
 const RESET_TOKEN_EXPIRY_MS = 60 * 60 * 1000; // 1 hour
-
-const SELF_REGISTERABLE_ROLES: readonly UserRoleEnum[] = [
-  UserRoleEnum.ADMIN,
-  UserRoleEnum.PHARMACIST,
-  UserRoleEnum.MANAGER,
-  UserRoleEnum.VIEWER,
-];
-const DEFAULT_REGISTER_ROLE = UserRoleEnum.VIEWER;
+// There is no self-registration: every account is created by a super admin via /users.
 
 @Injectable()
 export class AuthService {
@@ -41,33 +34,6 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {}
-
-  async register(dto: RegisterDto): Promise<AuthResponseDto> {
-    const existing = await this.authRepository.findByEmail(dto.email);
-    if (existing) {
-      throw new BadRequestException('Email is already registered');
-    }
-
-    const role = this.resolveRegistrationRole(dto.role);
-
-    const hashedPassword = await this.hashPassword(dto.password);
-    const user = await this.authRepository.create({
-      name: dto.name,
-      email: dto.email,
-      password: hashedPassword,
-      role,
-    });
-
-    const tokens = await this.generateTokens(
-      user.id,
-      user.email,
-      user.role as unknown as UserRoleEnum,
-    );
-    await this.authRepository.updateRefreshToken(user.id, this.hashToken(tokens.refreshToken));
-
-    this.logger.log(`New user registered: ${user.email}`);
-    return this.authTransformer.toAuthResponse(user, tokens);
-  }
 
   async login(dto: LoginDto): Promise<AuthResponseDto> {
     const user = await this.authRepository.findByEmail(dto.email);
@@ -84,11 +50,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const tokens = await this.generateTokens(
-      user.id,
-      user.email,
-      user.role as unknown as UserRoleEnum,
-    );
+    const tokens = await this.generateTokens(user.id, user.email, user.role);
     await this.authRepository.updateRefreshToken(user.id, this.hashToken(tokens.refreshToken));
 
     this.logger.log(`User logged in: ${user.email}`);
@@ -126,11 +88,7 @@ export class AuthService {
       throw new UnauthorizedException('Refresh token reuse detected — all sessions revoked');
     }
 
-    const tokens = await this.generateTokens(
-      user.id,
-      user.email,
-      user.role as unknown as UserRoleEnum,
-    );
+    const tokens = await this.generateTokens(user.id, user.email, user.role);
     await this.authRepository.updateRefreshToken(user.id, this.hashToken(tokens.refreshToken));
 
     return this.authTransformer.toAuthResponse(user, tokens);
@@ -149,7 +107,39 @@ export class AuthService {
     return this.authTransformer.transform(user);
   }
 
-  async changePassword(userId: string, dto: ChangePasswordDto): Promise<void> {
+  async updateProfile(userId: string, dto: UpdateProfileDto): Promise<CurrentUserDto> {
+    const user = await this.authRepository.findById(userId);
+    if (!user) {
+      throw new EntityNotFoundException('User', userId);
+    }
+
+    const email = dto.email?.trim();
+    const emailChanged = !!email && email !== user.email;
+    if (emailChanged) {
+      // A stolen access token alone must not be enough to take over the account's login email.
+      if (
+        !dto.currentPassword ||
+        !(await this.verifyPassword(dto.currentPassword, user.password))
+      ) {
+        throw new BadRequestException('Current password is incorrect');
+      }
+      if (await this.authRepository.findByEmail(email)) {
+        throw new BadRequestException('Email is already registered');
+      }
+    }
+
+    const updated = await this.authRepository.update(userId, {
+      name: dto.name?.trim(),
+      email: emailChanged ? email : undefined,
+      avatar: dto.avatar === undefined ? undefined : dto.avatar || null,
+    });
+
+    this.logger.log(`Profile updated for user: ${userId}`);
+    return this.authTransformer.transform(updated);
+  }
+
+  // Revokes every other session, then hands the caller a fresh token pair so it stays signed in.
+  async changePassword(userId: string, dto: ChangePasswordDto): Promise<AuthResponseDto> {
     const user = await this.authRepository.findById(userId);
     if (!user) {
       throw new EntityNotFoundException('User', userId);
@@ -168,7 +158,11 @@ export class AuthService {
     const hashedPassword = await this.hashPassword(dto.newPassword);
     await this.authRepository.updatePassword(userId, hashedPassword);
 
+    const tokens = await this.generateTokens(user.id, user.email, user.role);
+    await this.authRepository.updateRefreshToken(user.id, this.hashToken(tokens.refreshToken));
+
     this.logger.log(`Password changed for user: ${userId}`);
+    return this.authTransformer.toAuthResponse(user, tokens);
   }
 
   async forgotPassword(dto: ForgotPasswordDto): Promise<void> {
@@ -186,7 +180,8 @@ export class AuthService {
     await this.authRepository.setResetPasswordToken(user.id, tokenHash, expiry);
 
     // TODO: Emit mail event → this.eventEmitter.emit('auth.password-reset', { user, resetToken })
-    this.logger.log(`Password reset token generated for: ${user.email} | Token: ${resetToken}`);
+    // Never log the token itself: anyone reading the logs could reset this account's password.
+    this.logger.log(`Password reset token generated for: ${user.email}`);
   }
 
   async resetPassword(dto: ResetPasswordDto): Promise<void> {
@@ -226,20 +221,6 @@ export class AuthService {
     ]);
 
     return { accessToken, refreshToken };
-  }
-
-  private resolveRegistrationRole(requestedRole?: UserRoleEnum): UserRoleEnum {
-    if (!requestedRole) {
-      return DEFAULT_REGISTER_ROLE;
-    }
-
-    if (!SELF_REGISTERABLE_ROLES.includes(requestedRole)) {
-      throw new BadRequestException(
-        `Role '${requestedRole}' cannot be self-assigned during registration`,
-      );
-    }
-
-    return requestedRole;
   }
 
   private async hashPassword(password: string): Promise<string> {

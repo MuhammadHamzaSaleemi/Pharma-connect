@@ -8,6 +8,11 @@ import { EntityNotFoundException } from '../../common/exceptions/entity-not-foun
 import type { PaginationMeta } from '../../common/dto/pagination.dto';
 import { buildPaginationMeta } from '../../common/dto/pagination.dto';
 import { SortDirectionEnum } from '../../common/enums/sort-direction.enum';
+import { JobStatusEnum } from '../../common/enums/jobs/job-status.enum';
+import { UserRoleEnum } from '../../common/enums/user-role.enum';
+import { toStatusCounts } from '../../common/utils/status-counts';
+import { tally } from '../../common/utils/tally';
+import type { AuthenticatedUser } from '../auth/strategies/jwt.strategy';
 import { JobsRepository } from './repositories/jobs.repository';
 import { JobTransformer } from './transformers/job.transformer';
 import { CreateJobDto } from './dto/create-job.dto';
@@ -15,6 +20,7 @@ import { UpdateJobDto } from './dto/update-job.dto';
 import { JobQueryDto } from './dto/job-query.dto';
 import { JobResponseDto } from './dto/job-response.dto';
 import { BulkUploadResultDto } from './dto/bulk-upload-result.dto';
+import { JobStatsDto } from './dto/job-stats.dto';
 
 function cellToString(value: ExcelJS.CellValue): string {
   if (value === null || value === undefined) return '';
@@ -53,6 +59,12 @@ const SORTABLE_COLUMNS = [
 ] as const;
 const DEFAULT_SORT_COLUMN = 'createdAt';
 const JOB_RETENTION_DAYS = 21;
+// Jobs this close to the retention cutoff count as "expiring soon" in the dashboard stats.
+const EXPIRY_WARNING_DAYS = 7;
+// Roles that manage every job, including unowned ones. Today the controller only admits these two
+// roles, so the own-jobs-only scoping below is a safety net for any role let in later (e.g. EXECUTIVE).
+const hasFullAccess = (actor: AuthenticatedUser) =>
+  actor.role === UserRoleEnum.SUPER_ADMIN || actor.role === UserRoleEnum.ADMIN;
 
 @Injectable()
 export class JobsService {
@@ -63,8 +75,9 @@ export class JobsService {
     private readonly jobTransformer: JobTransformer,
   ) {}
 
-  async create(dto: CreateJobDto): Promise<JobResponseDto> {
+  async create(actor: AuthenticatedUser, dto: CreateJobDto): Promise<JobResponseDto> {
     const job = await this.jobsRepository.create({
+      createdBy: { connect: { id: actor.id } },
       title: dto.title,
       company: dto.company,
       city: dto.city,
@@ -81,8 +94,18 @@ export class JobsService {
     return this.jobTransformer.transform(job);
   }
 
-  async findAll(query: JobQueryDto): Promise<{ data: JobResponseDto[]; meta: PaginationMeta }> {
+  /** Public listing when `actor` is omitted; otherwise the dashboard listing, scoped by role. */
+  async findAll(
+    query: JobQueryDto,
+    actor?: AuthenticatedUser,
+  ): Promise<{ data: JobResponseDto[]; meta: PaginationMeta }> {
     const where = this.buildWhere(query);
+    if (actor) {
+      Object.assign(where, this.ownerScope(actor));
+    } else {
+      // Public visitors only ever see published jobs, whatever `status` they ask for.
+      where.status = JobStatusEnum.ACTIVE;
+    }
     const orderBy = this.buildOrderBy(query);
     const skip = (query.page - 1) * query.limit;
 
@@ -97,19 +120,64 @@ export class JobsService {
     };
   }
 
+  /** Dashboard counters, scoped by role the same way as the dashboard listing. */
+  async getStats(actor: AuthenticatedUser): Promise<JobStatsDto> {
+    const where = this.ownerScope(actor);
+    const expiryCutoff = new Date(
+      Date.now() - (JOB_RETENTION_DAYS - EXPIRY_WARNING_DAYS) * 24 * 60 * 60 * 1000,
+    );
+    const expiringWhere = { ...where, createdAt: { lte: expiryCutoff } };
+    // ponytail: breakdowns are tallied in memory; fine while the 21-day retention keeps the
+    // table small. Switch to Prisma groupBy per column if it ever grows large.
+    const [groups, expiringSoon, expiring, rows, recent] = await Promise.all([
+      this.jobsRepository.countByStatus(where),
+      this.jobsRepository.count(expiringWhere),
+      this.jobsRepository.findMany({
+        skip: 0,
+        take: 5,
+        where: expiringWhere,
+        orderBy: { createdAt: 'asc' },
+      }),
+      this.jobsRepository.findForBreakdown(where),
+      this.jobsRepository.findMany({ skip: 0, take: 5, where, orderBy: { updatedAt: 'desc' } }),
+    ]);
+    const active = rows.filter((row) => row.status === JobStatusEnum.ACTIVE);
+
+    return {
+      ...toStatusCounts(Object.values(JobStatusEnum), groups),
+      expiringSoon,
+      expiringJobs: expiring.map(({ id, title, company, createdAt }) => ({
+        id,
+        title,
+        company,
+        deletesAt: new Date(createdAt.getTime() + JOB_RETENTION_DAYS * 24 * 60 * 60 * 1000),
+      })),
+      bySector: tally(active, (row) => row.sector),
+      byWorkType: tally(active, (row) => row.workType),
+      topCities: tally(active, (row) => row.city, 5),
+      ...(hasFullAccess(actor) && {
+        byOwner: tally(rows, (row) => row.createdBy?.name ?? 'Unassigned'),
+      }),
+      recent: recent.map(({ id, title, status, updatedAt }) => ({
+        id,
+        title,
+        status: status,
+        updatedAt,
+      })),
+    };
+  }
+
+  /** Public job detail: unpublished jobs are reported as not found. */
   async findOne(id: string): Promise<JobResponseDto> {
     const job = await this.jobsRepository.findById(id);
-    if (!job) {
+    if (!job || job.status !== JobStatusEnum.ACTIVE) {
       throw new EntityNotFoundException('Job', id);
     }
     return this.jobTransformer.transform(job);
   }
 
-  async update(id: string, dto: UpdateJobDto): Promise<JobResponseDto> {
-    const existing = await this.jobsRepository.findById(id);
-    if (!existing) {
-      throw new EntityNotFoundException('Job', id);
-    }
+  async update(actor: AuthenticatedUser, id: string, dto: UpdateJobDto): Promise<JobResponseDto> {
+    await this.getManageableJobOrThrow(actor, id);
 
     const job = await this.jobsRepository.update(id, {
       title: dto.title,
@@ -128,14 +196,26 @@ export class JobsService {
     return this.jobTransformer.transform(job);
   }
 
-  async remove(id: string): Promise<void> {
-    const existing = await this.jobsRepository.findById(id);
-    if (!existing) {
-      throw new EntityNotFoundException('Job', id);
-    }
+  async remove(actor: AuthenticatedUser, id: string): Promise<void> {
+    await this.getManageableJobOrThrow(actor, id);
 
     await this.jobsRepository.delete(id);
-    this.logger.log(`Job deleted: ${id}`);
+    this.logger.log(`Job deleted by ${actor.id}: ${id}`);
+  }
+
+  // SUPER_ADMIN and ADMIN see every job; any other role only the jobs they created.
+  private ownerScope(actor: AuthenticatedUser): Prisma.JobWhereInput {
+    return hasFullAccess(actor) ? {} : { createdById: actor.id };
+  }
+
+  // Roles without full access may only touch jobs they created. Someone else's job is reported as not found
+  // rather than forbidden, so its existence isn't leaked.
+  private async getManageableJobOrThrow(actor: AuthenticatedUser, id: string) {
+    const job = await this.jobsRepository.findById(id);
+    if (!job || (!hasFullAccess(actor) && job.createdById !== actor.id)) {
+      throw new EntityNotFoundException('Job', id);
+    }
+    return job;
   }
 
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
@@ -147,7 +227,7 @@ export class JobsService {
     }
   }
 
-  async bulkCreate(buffer: Buffer): Promise<BulkUploadResultDto> {
+  async bulkCreate(actor: AuthenticatedUser, buffer: Buffer): Promise<BulkUploadResultDto> {
     const workbook = new ExcelJS.Workbook();
     // exceljs ships Buffer typings that predate @types/node's generic Buffer<T> — safe cast, same runtime type.
     await workbook.xlsx.load(buffer as unknown as ExcelJS.Buffer);
@@ -207,6 +287,7 @@ export class JobsService {
       }
 
       validJobs.push({
+        createdById: actor.id,
         title: dto.title,
         company: dto.company,
         city: dto.city,

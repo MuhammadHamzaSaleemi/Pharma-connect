@@ -55,7 +55,12 @@ export default function Header() {
                 )}
                 <div className="relative">
                     <Button variant="ghost" size="sm" className="h-9 rounded-full bg-transparent" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen}>
-                        <Image src="/images/team/01.jpg" height={28} width={28} className="rounded-full" alt="" />
+                        {user?.avatar ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={user.avatar} className="h-7 w-7 rounded-full object-cover" alt="" />
+                        ) : (
+                            <Image src="/images/team/01.jpg" height={28} width={28} className="rounded-full" alt="" />
+                        )}
                         <span className="whitespace-nowrap text-sm font-semibold text-gray-900">{user?.name}</span>
                         <LuChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${menuOpen ? 'rotate-180' : ''}`} />
                     </Button>
@@ -64,6 +69,9 @@ export default function Header() {
                         <div className="absolute right-0 z-10 mt-2 w-48 rounded-md border border-gray-200 bg-white py-1 shadow-lg">
                             <span className="block px-4 py-2 text-xs text-gray-500">{user?.role}</span>
                             <div className="my-1 border-t border-gray-100" />
+                            <Button variant="menuitem" size="sm" onClick={() => { setMenuOpen(false); router.push('/dashboard/settings'); }}>
+                                Account Settings
+                            </Button>
                             <Button variant="menuitem" size="sm" onClick={handleLogout}>
                                 Logout
                             </Button>

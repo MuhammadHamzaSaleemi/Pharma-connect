@@ -1,17 +1,24 @@
 import React from "react";
+import { pageMetadata } from "../../lib/site";
 import Image from "next/image";
-import SiteHeader from "../componants/siteHeader";
-import SiteFooter from "../componants/siteFooter";
-import ScrollTop from "../componants/scrollTop";
-import Breadcrumb from "../componants/breadcrumb";
-import Container from "../componants/container";
-import Badge from "../componants/badge";
-import Button from "../componants/button";
-import Card from "../componants/card";
-import SectionHeading from "../componants/sectionHeading";
-import Faq from "../componants/faq";
-import Icon from "../componants/msIcon";
+import SiteHeader from "../../componants/siteHeader";
+import SiteFooter from "../../componants/siteFooter";
+import ScrollTop from "../../componants/scrollTop";
+import Breadcrumb from "../../componants/breadcrumb";
+import Container from "../../componants/container";
+import Badge from "../../componants/badge";
+import Button from "../../componants/button";
+import Card from "../../componants/card";
+import SectionHeading from "../../componants/sectionHeading";
+import Faq from "../../componants/faq";
+import Icon from "../../componants/msIcon";
 import "../assets/css/tailwind.css";
+
+export const metadata = pageMetadata({
+  title: "About Us: Pakistan's Pharmacy Career Network",
+  description: "PharmaConnect was founded in 2024 by a Pharm-D graduate to share verified pharmacy jobs, internships and scholarships with 10,000+ pharmacists and students.",
+  path: "/aboutus",
+});
 
 const PILLARS = [
   {
@@ -57,14 +64,14 @@ const VERIFY_STEPS = [
 
 const FOUNDERS = [
   {
-    image: "/images/team/burhan.jpeg",
+    image: "/images/team/burhan.webp",
     name: "Muhammad Burhan Khan",
     title: "Founder, Pharmacist",
     detail: "Pharm-D graduate of COMSATS University Islamabad, with experience in community pharmacy, industrial quality assurance, and pharmaceutical research.",
     linkedin: "https://www.linkedin.com/in/muhammadburhankhan/",
   },
   {
-    image: "/images/team/hamza.jpg",
+    image: "/images/team/hamza.webp",
     name: "Muhammad Hamza Saleemi",
     title: "Co-Founder, Software Engineer",
     detail: "Builds the platform behind PharmaConnect — search, verification tooling, and the infrastructure that keeps listings current.",
@@ -186,9 +193,12 @@ export default function AboutUsPage() {
                 <div className="relative rounded-3xl overflow-hidden shadow-xl border border-border-subtle">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src="/images/about/ab01.jpeg"
+                    src="/images/about/ab01.webp"
+                    width={600}
+                    height={700}
+                    fetchPriority="high"
                     className="w-full h-[420px] object-cover"
-                    alt="PharmaConnect pharmacy dispensary"
+                    alt="Pharmacy dispensary shelves stocked with medicines"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-navy-deep/80 via-transparent to-transparent" />
                   <div className="absolute top-5 left-5 bg-surface-card/95 backdrop-blur-md px-space-md py-space-sm rounded-2xl shadow-lg flex items-center gap-space-sm">

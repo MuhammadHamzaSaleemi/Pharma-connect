@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import type { Scholarship } from '@prisma/client';
 import { BaseTransformer } from '../../../common/transformers/base.transformer';
-import { ScholarshipStatusEnum } from '../../../common/enums/scholarships/scholarship-status.enum';
 import { ScholarshipResponseDto } from '../dto/scholarship-response.dto';
 
 @Injectable()
@@ -16,7 +15,7 @@ export class ScholarshipTransformer extends BaseTransformer<Scholarship, Scholar
       financialBenefits: scholarship.financialBenefits,
       eligibilityCriteria: scholarship.eligibilityCriteria,
       howToApply: scholarship.howToApply,
-      status: scholarship.status as unknown as ScholarshipStatusEnum,
+      status: scholarship.status,
       createdAt: scholarship.createdAt,
       updatedAt: scholarship.updatedAt,
     };

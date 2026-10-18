@@ -15,7 +15,14 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { memoryStorage } from 'multer';
 import { ApiPaginatedResponse } from '../../common/decorators/api-paginated-response.decorator';
 import { Public } from '../../common/decorators/public.decorator';
@@ -23,13 +30,16 @@ import { ResponseMessage } from '../../common/decorators/response-message.decora
 import { Roles } from '../../common/decorators/roles.decorator';
 import { UserRoleEnum } from '../../common/enums/user-role.enum';
 import { RolesGuard } from '../../common/guards/roles.guard';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import type { AuthenticatedUser } from '../auth/strategies/jwt.strategy';
 import { JobsService } from './jobs.service';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { JobQueryDto } from './dto/job-query.dto';
 import { JobResponseDto } from './dto/job-response.dto';
 import { BulkUploadResultDto } from './dto/bulk-upload-result.dto';
+import { JobStatsDto } from './dto/job-stats.dto';
 
 const EXCEL_MIME_TYPES = [
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -48,8 +58,8 @@ export class JobsController {
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create a new job posting' })
   @ResponseMessage('Job created successfully')
-  create(@Body() dto: CreateJobDto) {
-    return this.jobsService.create(dto);
+  create(@CurrentUser() actor: AuthenticatedUser, @Body() dto: CreateJobDto) {
+    return this.jobsService.create(actor, dto);
   }
 
   @Post('bulk-upload')
@@ -81,11 +91,35 @@ export class JobsController {
     }),
   )
   @ResponseMessage('Jobs bulk upload processed')
-  bulkUpload(@UploadedFile() file: Express.Multer.File): Promise<BulkUploadResultDto> {
+  bulkUpload(
+    @CurrentUser() actor: AuthenticatedUser,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<BulkUploadResultDto> {
     if (!file) {
       throw new BadRequestException('An Excel file is required');
     }
-    return this.jobsService.bulkCreate(file.buffer);
+    return this.jobsService.bulkCreate(actor, file.buffer);
+  }
+
+  @Get('manage/stats')
+  @Roles(UserRoleEnum.SUPER_ADMIN, UserRoleEnum.ADMIN)
+  @ApiOperation({ summary: 'Dashboard job counters, scoped like the dashboard job list' })
+  @ApiOkResponse({ type: JobStatsDto })
+  @ResponseMessage('Job stats retrieved successfully')
+  getStats(@CurrentUser() actor: AuthenticatedUser): Promise<JobStatsDto> {
+    return this.jobsService.getStats(actor);
+  }
+
+  // Declared before `:id` so "manage" isn't captured as a job id.
+  @Get('manage')
+  @Roles(UserRoleEnum.SUPER_ADMIN, UserRoleEnum.ADMIN)
+  @ApiOperation({
+    summary: 'Dashboard job list: every job, drafts and closed ones included',
+  })
+  @ApiPaginatedResponse(JobResponseDto)
+  @ResponseMessage('Jobs retrieved successfully')
+  findManageable(@CurrentUser() actor: AuthenticatedUser, @Query() query: JobQueryDto) {
+    return this.jobsService.findAll(query, actor);
   }
 
   @Get()
@@ -109,8 +143,12 @@ export class JobsController {
   @Roles(UserRoleEnum.SUPER_ADMIN, UserRoleEnum.ADMIN)
   @ApiOperation({ summary: 'Partially update a job' })
   @ResponseMessage('Job updated successfully')
-  update(@Param('id') id: string, @Body() dto: UpdateJobDto) {
-    return this.jobsService.update(id, dto);
+  update(
+    @CurrentUser() actor: AuthenticatedUser,
+    @Param('id') id: string,
+    @Body() dto: UpdateJobDto,
+  ) {
+    return this.jobsService.update(actor, id, dto);
   }
 
   @Delete(':id')
@@ -118,7 +156,7 @@ export class JobsController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Delete a job' })
   @ResponseMessage('Job deleted successfully')
-  remove(@Param('id') id: string) {
-    return this.jobsService.remove(id);
+  remove(@CurrentUser() actor: AuthenticatedUser, @Param('id') id: string) {
+    return this.jobsService.remove(actor, id);
   }
 }

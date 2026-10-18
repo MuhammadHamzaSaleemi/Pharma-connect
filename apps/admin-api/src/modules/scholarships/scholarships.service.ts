@@ -1,10 +1,15 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import type { Prisma } from '@prisma/client';
 import { EntityNotFoundException } from '../../common/exceptions/entity-not-found.exception';
 import type { PaginationMeta } from '../../common/dto/pagination.dto';
 import { buildPaginationMeta } from '../../common/dto/pagination.dto';
 import { SortDirectionEnum } from '../../common/enums/sort-direction.enum';
+import { ScholarshipStatusEnum } from '../../common/enums/scholarships/scholarship-status.enum';
+import { toStatusCounts } from '../../common/utils/status-counts';
+import { tally } from '../../common/utils/tally';
 import { ScholarshipsRepository } from './repositories/scholarships.repository';
+import { ScholarshipStatsDto } from './dto/scholarship-stats.dto';
 import { ScholarshipTransformer } from './transformers/scholarship.transformer';
 import { CreateScholarshipDto } from './dto/create-scholarship.dto';
 import { UpdateScholarshipDto } from './dto/update-scholarship.dto';
@@ -20,6 +25,8 @@ const SORTABLE_COLUMNS = [
   'updatedAt',
 ] as const;
 const DEFAULT_SORT_COLUMN = 'createdAt';
+// Same window the public scholarships page uses for its "closing soon" badge.
+const CLOSING_SOON_DAYS = 45;
 
 @Injectable()
 export class ScholarshipsService {
@@ -48,10 +55,16 @@ export class ScholarshipsService {
     return this.scholarshipTransformer.transform(scholarship);
   }
 
+  /** Public listing by default (active scholarships only); `manage` is the dashboard listing. */
   async findAll(
     query: ScholarshipQueryDto,
+    manage = false,
   ): Promise<{ data: ScholarshipResponseDto[]; meta: PaginationMeta }> {
     const where = this.buildWhere(query);
+    if (!manage) {
+      // Public visitors only ever see active scholarships, whatever `status` they ask for.
+      where.status = ScholarshipStatusEnum.ACTIVE;
+    }
     const orderBy = this.buildOrderBy(query);
     const skip = (query.page - 1) * query.limit;
 
@@ -66,9 +79,58 @@ export class ScholarshipsService {
     };
   }
 
+  /** Dashboard counters. */
+  async getStats(): Promise<ScholarshipStatsDto> {
+    const now = new Date();
+    const closingBy = new Date(now.getTime() + CLOSING_SOON_DAYS * 24 * 60 * 60 * 1000);
+    const closingWhere: Prisma.ScholarshipWhereInput = {
+      status: ScholarshipStatusEnum.ACTIVE,
+      endDate: { gte: now, lte: closingBy },
+    };
+    const [groups, closingSoon, closing, countries, recent] = await Promise.all([
+      this.scholarshipsRepository.countByStatus(),
+      this.scholarshipsRepository.count(closingWhere),
+      this.scholarshipsRepository.findMany({
+        skip: 0,
+        take: 5,
+        where: closingWhere,
+        orderBy: { endDate: 'asc' },
+      }),
+      this.scholarshipsRepository.findCountries({ status: ScholarshipStatusEnum.ACTIVE }),
+      this.scholarshipsRepository.findMany({
+        skip: 0,
+        take: 5,
+        where: {},
+        orderBy: { updatedAt: 'desc' },
+      }),
+    ]);
+    return {
+      ...toStatusCounts(Object.values(ScholarshipStatusEnum), groups),
+      closingSoon,
+      closingSoonItems: closing.map(({ id, country, endDate }) => ({ id, country, endDate })),
+      byCountry: tally(countries, (row) => row.country),
+      recent: recent.map(({ id, country, status, updatedAt }) => ({
+        id,
+        country,
+        status: status,
+        updatedAt,
+      })),
+    };
+  }
+
+  // Without this, an ACTIVE scholarship stays on the public site after its deadline.
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  async expirePastDeadline(): Promise<void> {
+    const count = await this.scholarshipsRepository.expirePastDeadline(new Date());
+    if (count > 0) {
+      this.logger.log(`Marked ${count} scholarship(s) past their deadline as EXPIRED`);
+    }
+  }
+
+  /** Public detail: scholarships that aren't active are reported as not found. */
   async findOne(id: string): Promise<ScholarshipResponseDto> {
     const scholarship = await this.scholarshipsRepository.findById(id);
-    if (!scholarship) {
+    if (!scholarship || scholarship.status !== ScholarshipStatusEnum.ACTIVE) {
       throw new EntityNotFoundException('Scholarship', id);
     }
     return this.scholarshipTransformer.transform(scholarship);

@@ -1,23 +1,30 @@
 import React from "react";
+import { pageMetadata } from "../../lib/site";
 
-import SiteHeader from "../componants/siteHeader";
-import SiteFooter from "../componants/siteFooter";
-import ScrollTop from "../componants/scrollTop";
-import Breadcrumb from "../componants/breadcrumb";
-import JobsExplorer from "../componants/jobsExplorer";
+import SiteHeader from "../../componants/siteHeader";
+import SiteFooter from "../../componants/siteFooter";
+import ScrollTop from "../../componants/scrollTop";
+import Breadcrumb from "../../componants/breadcrumb";
+import JobsExplorer from "../../componants/jobsExplorer";
 
 import { jobsApi } from "../../services/jobs/jobs.api";
+import { fetchAllPages } from "../../lib/fetchAllPages";
 
-// All filtering/sorting/pagination now happens client-side in <JobsExplorer>
-// against this one fetched batch, so this stays a plain server fetch with no
+export const metadata = pageMetadata({
+  title: "Pharmacy Jobs in Pakistan & Abroad",
+  description: "Browse verified pharmacy jobs in Pakistan and the Gulf: QA, QC, regulatory, medical affairs, sales, hospital and community pharmacy roles for Pharm-D graduates and pharmacists.",
+  path: "/jobs",
+});
+
+// All filtering/sorting/pagination happens client-side in <JobsExplorer>
+// against every active job, so this stays a plain server fetch with no
 // searchParams dependency (filters are React state, not URL params).
-const FETCH_LIMIT = 100; // backend caps `limit` at 100
-
 export default async function JobsPage() {
   let jobs = [];
   try {
-    const result = await jobsApi.list(undefined, { status: "ACTIVE", page: 1, limit: FETCH_LIMIT });
-    jobs = result?.data ?? [];
+    const all = await fetchAllPages(jobsApi, { status: "ACTIVE" });
+    // The cards never show the description; leave the HTML out of the page payload.
+    jobs = all.map(({ jobDescription, ...job }) => job);
   } catch {
     jobs = [];
   }

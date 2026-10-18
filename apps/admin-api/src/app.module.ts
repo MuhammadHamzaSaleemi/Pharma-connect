@@ -11,6 +11,8 @@ import { BlogsModule } from './modules/blogs/blogs.module';
 import { HealthModule } from './modules/health/health.module';
 import { JobsModule } from './modules/jobs/jobs.module';
 import { ScholarshipsModule } from './modules/scholarships/scholarships.module';
+import { UploadsModule } from './modules/uploads/uploads.module';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
@@ -21,8 +23,16 @@ import { ScholarshipsModule } from './modules/scholarships/scholarships.module';
       validationSchema: Joi.object({
         NODE_ENV: Joi.string().valid('development', 'production', 'test').default('development'),
         PORT: Joi.number().default(3000),
+        // 0.0.0.0 inside a container; the 127.0.0.1 default keeps a bare-metal API behind its proxy.
+        HOST: Joi.string().default('127.0.0.1'),
         APP_URL: Joi.string().uri().optional(),
-        CORS_ORIGIN: Joi.string().default('*'),
+        UPLOAD_DIR: Joi.string().optional(),
+        // `*` reflects any origin, so production must name the website origin(s) explicitly.
+        CORS_ORIGIN: Joi.when('NODE_ENV', {
+          is: 'production',
+          then: Joi.string().invalid('*').required(),
+          otherwise: Joi.string().default('*'),
+        }),
         CORS_ALLOW_CREDENTIALS: Joi.string().valid('true', 'false').default('true'),
         DATABASE_URL: Joi.string().required(),
         JWT_SECRET: Joi.string().min(32).required(),
@@ -49,6 +59,8 @@ import { ScholarshipsModule } from './modules/scholarships/scholarships.module';
     HealthModule,
     JobsModule,
     ScholarshipsModule,
+    UploadsModule,
+    UsersModule,
   ],
   providers: [
     {

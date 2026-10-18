@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsDateString, IsEnum, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import { SanitizeHtml } from '../../../common/decorators/sanitize-html.decorator';
 import { IsAfter } from '../../../common/validators/is-after.validator';
 import { ScholarshipStatusEnum } from '../../../common/enums/scholarships/scholarship-status.enum';
 
@@ -28,16 +29,19 @@ export class CreateScholarshipDto {
   @ApiProperty({ example: 'Full tuition waiver plus monthly stipend' })
   @IsString()
   @IsNotEmpty()
+  @SanitizeHtml()
   financialBenefits!: string;
 
   @ApiProperty({ example: 'Minimum GPA of 3.5, pharmacy or related discipline' })
   @IsString()
   @IsNotEmpty()
+  @SanitizeHtml()
   eligibilityCriteria!: string;
 
   @ApiProperty({ example: 'Apply online via the university portal before the deadline' })
   @IsString()
   @IsNotEmpty()
+  @SanitizeHtml()
   howToApply!: string;
 
   @ApiPropertyOptional({ enum: ScholarshipStatusEnum, default: ScholarshipStatusEnum.DRAFT })
