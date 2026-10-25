@@ -146,17 +146,17 @@ export default function BlogDetail({ post, related = [] }) {
                   <h2 className="text-lg font-bold text-navy-surface">Join the Community</h2>
                 </div>
                 <p className="text-sm text-on-surface-variant leading-relaxed">
-                  Connect with thousands of Pakistani pharmacists sharing career advice,
-                  licensing updates, and job leads.
+                  Follow our WhatsApp channel for new jobs, career advice,
+                  and licensing updates as soon as they are posted.
                 </p>
                 <Button
-                  href="https://wa.me/923244296468"
+                  href="https://whatsapp.com/channel/0029Vb9X4WK5PO0tmbiMBi11"
                   target="_blank"
                   variant="solidDark"
                   icon="chat"
                   fullWidth
                 >
-                  Join WhatsApp Community
+                  Follow WhatsApp Channel
                 </Button>
               </Card>
 

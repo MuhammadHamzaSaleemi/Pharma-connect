@@ -70,7 +70,7 @@ const FAQS = [
   },
   {
     q: "Is there any fee charged to Pharm-D candidates or job seekers?",
-    a: "No. PharmaConnect is free for applicants — neither our platform nor any listed employer should ever ask candidates for a recruitment or processing fee.",
+    a: "No. PharmaConnect is free for applicants — our platform does not charge any recruitment or processing fees.",
   },
   {
     q: "How can I get guidance on overseas licensing (Ireland PSI, UK GPhC, UAE DHA)?",
@@ -154,10 +154,6 @@ export default function ContactExplorer() {
               <span className="flex items-center gap-1.5 text-primary text-sm font-semibold">
                 <Icon name="chat" className="text-[18px]" />
                 WhatsApp for Fastest Response
-              </span>
-              <span className="flex items-center gap-1.5 text-secondary text-sm font-semibold">
-                <Icon name="local_pharmacy" className="text-[18px]" />
-                Pharmacy Council Compliant
               </span>
             </div>
           </div>
@@ -476,7 +472,7 @@ export default function ContactExplorer() {
                     Network Distribution
                   </span>
                   <div className="text-xl font-bold mt-0.5">
-                    15,000+ Healthcare Professionals
+                    10K+ Healthcare Professionals
                   </div>
                   <p className="text-sm text-white/60 mt-1">
                     LinkedIn community &amp; active job dispatch channels.

@@ -182,18 +182,14 @@ export default function BlogsExplorer({ blogs }) {
                   </h2>
                 </div>
                 <span className="text-sm text-on-surface-variant font-semibold">
-                  Updated weekly by clinical preceptors
+                  Updated weekly by our editorial team
                 </span>
               </div>
-              {featuredList.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg">
-                  {featuredList.map((post, index) => (
-                    <FeaturedBlogCard key={post.id} post={post} index={index} />
-                  ))}
-                </div>
-              ) : (
-                <StateMessage icon="search_off">No blog posts found.</StateMessage>
-              )}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg">
+                {featuredList.map((post, index) => (
+                  <FeaturedBlogCard key={post.id} post={post} index={index} />
+                ))}
+              </div>
             </div>
           </Container>
         </section>
@@ -202,6 +198,16 @@ export default function BlogsExplorer({ blogs }) {
       {/* Grid */}
       <section className="w-full py-space-xl">
         <Container>
+          {filtered.length === 0 && (
+            <StateMessage icon="search_off">No blog posts found.</StateMessage>
+          )}
+          {pageItems.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg">
+              {pageItems.map((post) => (
+                <BlogCard key={post.id} post={post} />
+              ))}
+            </div>
+          )}
           {totalPages > 1 && (
             <div className="flex items-center justify-center gap-space-xs mt-space-xl">
               <button
@@ -237,7 +243,7 @@ export default function BlogsExplorer({ blogs }) {
       </section>
 
       {/* Document library / suggest a topic CTA */}
-      <section className="w-full py-space-lg">
+      <section className="w-full pt-space-lg pb-space-3xl">
         <Container>
           <Card
             padding="lg"
@@ -269,71 +275,6 @@ export default function BlogsExplorer({ blogs }) {
               </Button>
             </Link>
           </Card>
-        </Container>
-      </section>
-
-      {/* Newsletter band */}
-      <section className="w-full pb-space-3xl">
-        <Container>
-          <div className="rounded-3xl bg-navy-deep text-on-primary p-space-2xl grid grid-cols-1 lg:grid-cols-2 gap-space-xl items-center">
-            <div>
-              <Badge tone="dark" pulse>
-                Weekly Pharmacist Intelligence Brief
-              </Badge>
-              <h3 className="text-2xl sm:text-3xl font-bold mt-space-xs">
-                Get Weekly Verified Clinical &amp; Career Briefings Directly in
-                Your Inbox
-              </h3>
-              <p className="text-sm text-white/70 mt-space-sm max-w-md">
-                Over 10,000+ pharmacists and students receive our weekly
-                breakdown of licensing alerts, new hospital openings, and DRAP
-                regulatory circulars.
-              </p>
-              <div className="flex flex-wrap gap-space-sm mt-space-md">
-                <Button
-                  href="https://wa.me/923244296468"
-                  target="_blank"
-                  variant="solidDark"
-                  icon="chat"
-                >
-                  Join WhatsApp Community
-                </Button>
-              </div>
-            </div>
-
-            <form
-              action="/contactus"
-              className="rounded-2xl bg-white/[0.04] border border-white/10 p-space-xl"
-            >
-              <h4 className="text-lg font-bold text-white">
-                Subscribe to Weekly Digest
-              </h4>
-              <p className="text-xs text-white/60 mt-space-2xs">
-                No spam. Instant unsubscribe, anytime.
-              </p>
-              <div className="relative mt-space-md">
-                <Icon
-                  name="mail"
-                  className="text-[18px] text-white/40 absolute left-3 top-1/2 -translate-y-1/2"
-                />
-                <input
-                  type="email"
-                  name="email"
-                  required
-                  placeholder="Enter your professional email..."
-                  className="w-full rounded-xl bg-white/[0.06] border border-white/10 text-sm text-white placeholder:text-white/40 pl-10 pr-3 py-space-sm focus:outline-none focus:ring-2 focus:ring-primary-fixed-dim/40 focus:border-primary-fixed-dim transition-shadow"
-                />
-              </div>
-              <Button
-                type="submit"
-                icon="notifications_active"
-                fullWidth
-                className="mt-space-sm"
-              >
-                Subscribe
-              </Button>
-            </form>
-          </div>
         </Container>
       </section>
     </div>

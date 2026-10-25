@@ -15,12 +15,13 @@ import ScrollTop from "../componants/scrollTop";
 import JsonLd from "../componants/jsonLd";
 import { jobsApi } from "../services/jobs/jobs.api";
 import { blogsApi } from "../services/blogs/blogs.api";
+import { scholarshipsApi } from "../services/scholarships/scholarships.api";
 import { SITE_URL, SITE_NAME, SITE_LOGO, SITE_DESCRIPTION, SOCIAL_LINKS, pageMetadata } from "../lib/site";
 import "./assets/css/tailwind.css";
 
 const QUICK_LINKS = [
   { label: "Jobs", icon: "work", href: "/jobs" },
-  { label: "Scholarships", icon: "school", href: "/jobs" },
+  { label: "Scholarships", icon: "school", href: "/scholarships" },
   { label: "Internships", icon: "clinical_notes", href: "/jobs" },
   { label: "Blogs", icon: "article", href: "/blogs" },
 ];
@@ -107,17 +108,20 @@ const STRUCTURED_DATA = {
 async function fetchList(api, params) {
   try {
     const result = await api.list(undefined, { page: 1, ...params });
-    return result?.data ?? [];
+    return { items: result?.data ?? [], total: result?.meta?.total ?? 0 };
   } catch {
-    return [];
+    return { items: [], total: 0 };
   }
 }
 
 export default async function Home() {
-  const [jobs, blogs] = await Promise.all([
+  const [jobsResult, blogsResult, scholarshipsResult] = await Promise.all([
     fetchList(jobsApi, { limit: 6, status: "ACTIVE" }),
     fetchList(blogsApi, { limit: 3, status: "PUBLISHED" }),
+    fetchList(scholarshipsApi, { limit: 1 }),
   ]);
+  const jobs = jobsResult.items;
+  const blogs = blogsResult.items;
 
   return (
     <div className="bg-surface font-sans text-on-surface antialiased">
@@ -194,23 +198,23 @@ export default async function Home() {
                     </div>
                     <div>
                       <span className="block text-sm font-bold text-navy-surface">
-                        600+ Roles
+                        {jobsResult.total.toLocaleString("en-US")} Active Jobs
                       </span>
                       <span className="block text-[11px] text-on-surface-variant">
-                        Curated Pharma Careers
+                        Verified Pharma Careers
                       </span>
                     </div>
                   </div>
                   <div className="absolute -bottom-4 -right-2 z-20 bg-surface-card/95 backdrop-blur-md px-space-md py-space-xs rounded-xl shadow-md border border-border-subtle flex items-center gap-space-xs">
                     <div className="w-8 h-8 rounded-lg bg-primary/15 text-primary flex items-center justify-center">
-                      <Icon name="visibility" className="text-[20px]" />
+                      <Icon name="school" className="text-[20px]" />
                     </div>
                     <div>
                       <span className="block text-sm font-bold text-navy-surface">
-                        800,000+
+                        {scholarshipsResult.total.toLocaleString("en-US")} Scholarships
                       </span>
                       <span className="block text-[11px] text-on-surface-variant">
-                        Verified Impressions
+                        Open for Applications
                       </span>
                     </div>
                   </div>
@@ -360,7 +364,7 @@ export default async function Home() {
                     {
                       tone: "bg-berry-accent/15 text-berry-deep",
                       strong: "Unrivaled Reach:",
-                      rest: " 600+ curated pharma careers, 800,000+ impressions, making it Pakistan's most active and trusted pharmacy community.",
+                      rest: " 1K+ curated pharma jobs, 2M+ impressions on linkedin, making it Pakistan's most active and trusted pharmacy community.",
                     },
                   ].map((p) => (
                     <div key={p.strong} className="flex items-start gap-space-sm">
@@ -415,7 +419,7 @@ export default async function Home() {
           <Container>
             <div className="rounded-3xl bg-navy-deep text-on-primary p-space-2xl grid grid-cols-1 lg:grid-cols-2 gap-space-xl items-center">
               <div>
-                <Badge tone="dark">Join 15,000+ Healthcare Professionals</Badge>
+                <Badge tone="dark">Join 10,000+ Healthcare Professionals</Badge>
                 <h3 className="text-2xl sm:text-3xl font-bold mt-space-xs">
                   Instant Pharmacy Job Alerts Directly to Your Phone
                 </h3>
@@ -426,12 +430,12 @@ export default async function Home() {
                 </p>
                 <div className="flex flex-wrap gap-space-sm mt-space-md">
                   <Button
-                    href="https://wa.me/923244296468"
+                    href="https://whatsapp.com/channel/0029Vb9X4WK5PO0tmbiMBi11"
                     target="_blank"
                     variant="solidDark"
                     icon="chat"
                   >
-                    Join WhatsApp Community
+                    Follow WhatsApp Channel
                   </Button>
                   <Button
                     href="https://www.linkedin.com/company/pharmaconnect-pakistan/"
@@ -443,42 +447,35 @@ export default async function Home() {
                 </div>
               </div>
 
-              <form
-                action="/contactus"
-                className="rounded-2xl bg-white/[0.04] border border-white/10 p-space-xl"
-              >
+              <div className="rounded-2xl bg-white/[0.04] border border-white/10 p-space-xl">
                 <h4 className="text-lg font-bold text-white">
-                  Subscribe to Weekly Digest
+                  Hiring Pharmacy Talent?
                 </h4>
                 <p className="text-xs text-white/60 mt-space-2xs">
-                  A single email every Monday morning with top clinical, QC, and
-                  sales positions.
+                  Share your opening with pharmacists, technicians, and students
+                  across Pakistan.
                 </p>
-                <div className="relative mt-space-md">
-                  <Icon
-                    name="mail"
-                    className="text-[18px] text-white/40 absolute left-3 top-1/2 -translate-y-1/2"
-                  />
-                  <input
-                    type="email"
-                    name="email"
-                    required
-                    placeholder="Enter your work email (e.g. name@pharmacy.com)"
-                    className="w-full rounded-xl bg-white/[0.06] border border-white/10 text-sm text-white placeholder:text-white/40 pl-10 pr-3 py-space-sm focus:outline-none focus:ring-2 focus:ring-primary-fixed-dim/40 focus:border-primary-fixed-dim transition-shadow"
-                  />
-                </div>
+                <ul className="flex flex-col gap-space-xs mt-space-md text-sm text-white/80">
+                  {[
+                    "Reviewed and published by our team",
+                    "Listed alongside verified pharma careers",
+                    "Removed automatically once it expires",
+                  ].map((point) => (
+                    <li key={point} className="flex items-center gap-space-xs">
+                      <Icon name="check_circle" className="text-[18px] text-verified-green" />
+                      {point}
+                    </li>
+                  ))}
+                </ul>
                 <Button
-                  type="submit"
-                  icon="notifications_active"
+                  href="/contactus"
+                  icon="add_circle"
                   fullWidth
-                  className="mt-space-sm"
+                  className="mt-space-md"
                 >
-                  Subscribe for Alerts
+                  Post an Opportunity
                 </Button>
-                <p className="text-[11px] text-white/40 text-center mt-space-sm">
-                  Zero spam. Unsubscribe in one click anytime.
-                </p>
-              </form>
+              </div>
             </div>
           </Container>
         </section>

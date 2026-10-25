@@ -13,6 +13,7 @@ import "../app/assets/css/tailwind.css";
 const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "Find Jobs", href: "/jobs" },
+  { label: "Scholarships", href: "/scholarships" },
   { label: "About", href: "/aboutus" },
   { label: "Blogs", href: "/blogs" },
   { label: "Contact Us", href: "/contactus" },

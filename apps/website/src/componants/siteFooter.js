@@ -8,19 +8,17 @@ import Container from "./container";
 
 const FOOTER_COLUMNS = [
   {
-    title: "Explore Careers",
+    title: "Explore",
     links: [
       { label: "Find Jobs", href: "/jobs" },
-      { label: "Internships", href: "/jobs" },
-      { label: "Top Employers", href: "/jobs" },
+      { label: "Blogs", href: "/blogs" },
+      { label: "Scholarships", href: "/scholarships" },
     ],
   },
   {
     title: "Company",
     links: [
       { label: "About Us", href: "/aboutus" },
-      { label: "Editorial Team", href: "/aboutus" },
-      { label: "DRAP Guidelines", href: "/blogs" },
       { label: "Contact Us", href: "/contactus" },
     ],
   },
@@ -60,7 +58,7 @@ export default function SiteFooter() {
             <div className="flex items-center gap-space-sm mt-space-md">
               <SocialLinks />
               <Link
-                href="https://wa.me/923244296468"
+                href="https://whatsapp.com/channel/0029Vb9X4WK5PO0tmbiMBi11"
                 target="_blank"
                 className="w-9 h-9 rounded-full bg-surface-container-low text-primary hover:bg-primary hover:text-on-primary flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
                 aria-label="WhatsApp"

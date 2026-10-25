@@ -1,5 +1,4 @@
 import React from "react";
-import { notFound } from "next/navigation";
 
 import SiteHeader from "../../componants/siteHeader";
 import SiteFooter from "../../componants/siteFooter";
@@ -9,13 +8,18 @@ import ScholarshipsExplorer from "../../componants/scholarshipsExplorer";
 
 import { scholarshipsApi } from "../../services/scholarships/scholarships.api";
 import { fetchAllPages } from "../../lib/fetchAllPages";
+import { pageMetadata } from "../../lib/site";
+
+export const metadata = pageMetadata({
+  title: "Pharmacy Scholarships: Pakistan & Abroad",
+  description: "Active scholarships for pharmacy students, Pharm-D graduates and pharmacists in Pakistan and abroad, with deadlines and eligibility.",
+  path: "/scholarships",
+});
 
 // Same shape as /jobs: one server fetch, then all filtering/sorting/paging
 // happens client-side in <ScholarshipsExplorer>.
 
 export default async function ScholarshipsPage() {
-  notFound(); // hidden for now; delete this line to bring /scholarships back
-
   let scholarships = [];
   try {
     const all = await fetchAllPages(scholarshipsApi, { status: "ACTIVE" });

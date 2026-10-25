@@ -208,7 +208,7 @@ export default function ScholarshipsExplorer({ scholarships }) {
               Global &amp; Domestic Academic Opportunities
             </Badge>
             <h1 className="text-4xl sm:text-5xl font-extrabold text-navy-deep tracking-tight mb-space-xs">
-              Verified <span className="text-primary">Scholarships</span> &amp; Grants for Pharmacists
+              Verified <span className="text-primary">Scholarships</span> &amp; Grants
             </h1>
             <p className="text-base text-on-surface-variant leading-relaxed">
               Postgraduate scholarships, fellowships, and tuition funding for
@@ -421,18 +421,19 @@ export default function ScholarshipsExplorer({ scholarships }) {
                   </div>
                   <div>
                     <Badge tone="dark" dot={false} className="mb-1">
-                      Mentorship &amp; Peer SOP Review
+                      Scholarship Alerts &amp; Community
                     </Badge>
-                    <p className="font-bold m-0">Need guidance on your application or SOP?</p>
+                    <p className="font-bold m-0">Never miss a scholarship deadline</p>
                     <p className="text-sm text-white/60 m-0">
-                      Connect with Pharm-D alumni who have been through
-                      Commonwealth, Fulbright, and Erasmus applications.
+                      Follow our WhatsApp channel to get new scholarships and
+                      deadline reminders. Questions about eligibility or documents?
+                      Message us anytime.
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-space-sm shrink-0">
-                  <Button href="https://wa.me/923244296468" target="_blank" variant="solidDark" icon="chat">
-                    Join WhatsApp Group
+                  <Button href="https://whatsapp.com/channel/0029Vb9X4WK5PO0tmbiMBi11" target="_blank" variant="solidDark" icon="chat">
+                    Follow WhatsApp Channel
                   </Button>
                   <Button href="/contactus" variant="dark">
                     Contact Us

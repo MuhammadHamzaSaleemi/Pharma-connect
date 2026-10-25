@@ -182,7 +182,7 @@ export default function AboutUsPage() {
                         Reach
                       </span>
                       <span className="text-sm font-bold text-navy-surface">
-                        Pakistan &amp; Gulf
+                        Worldwide Community
                       </span>
                     </div>
                   </div>
@@ -407,12 +407,12 @@ export default function AboutUsPage() {
                   Contact Us
                 </Button>
                 <Button
-                  href="https://wa.me/923244296468"
+                  href="https://whatsapp.com/channel/0029Vb9X4WK5PO0tmbiMBi11"
                   target="_blank"
                   variant="solidDark"
                   icon="chat"
                 >
-                  WhatsApp Community
+                  Follow WhatsApp Channel
                 </Button>
               </div>
             </div>

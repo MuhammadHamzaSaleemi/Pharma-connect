@@ -178,11 +178,11 @@ export default function JobDetail({ job, related = [] }) {
                   </h2>
                 </div>
                 <p className="text-sm text-on-surface-variant">
-                  Join 18,500+ Pharm-D graduates receiving verified job circulars on
-                  WhatsApp as soon as hospitals and employers publish them.
+                  Join 10k+ professionals receiving verified job alerts on
+                  WhatsApp as soon as they&apos;re posted.
                 </p>
-                <Button href="https://wa.me/923244296468" target="_blank" variant="solidDark" icon="chat" fullWidth>
-                  Join WhatsApp Alerts
+                <Button href="https://whatsapp.com/channel/0029Vb9X4WK5PO0tmbiMBi11" target="_blank" variant="solidDark" icon="chat" fullWidth>
+                  Follow WhatsApp Channel
                 </Button>
               </Card>
 
@@ -225,7 +225,7 @@ export default function JobDetail({ job, related = [] }) {
       <section className="w-full pb-space-3xl">
         <Container>
           <div className="rounded-3xl bg-navy-surface text-on-primary p-space-xl sm:p-space-2xl flex flex-col lg:flex-row items-center justify-between gap-space-xl">
-            <div className="flex flex-col gap-space-xs max-w-2xl text-center lg:text-left">
+            <div className="flex flex-col gap-space-xs max-w-2xl lg:text-left">
               <span className="text-xs font-bold uppercase tracking-widest text-cyan-bright">
                 Institutional Recruitment Network
               </span>

@@ -18,7 +18,14 @@ const SECTOR_OPTIONS = enumToOptions(SECTOR_VALUES);
 const WORK_TYPE_OPTIONS = enumToOptions(WORK_TYPE_VALUES);
 // Free-text field — matched by substring rather than an exact enum, same way
 // the city filter already handles Job.city.
-const QUALIFICATION_KEYWORDS = ["Pharm-D", "MBA", "M.Phil", "MSc", "B.Sc", "BS"];
+const QUALIFICATION_KEYWORDS = [
+  "Pharm-D",
+  "MBA",
+  "M.Phil",
+  "MSc",
+  "B.Sc",
+  "BS",
+];
 // Curated real sectors/work types for the one-tap quick pills under the
 // search bar. Every count here comes from the actual dataset — no invented
 // numbers for facets the schema doesn't have (employment type, salary bands).
@@ -30,7 +37,9 @@ const QUICK_TAGS = [
 ];
 
 export function toggleValue(list, value) {
-  return list.includes(value) ? list.filter((v) => v !== value) : [...list, value];
+  return list.includes(value)
+    ? list.filter((v) => v !== value)
+    : [...list, value];
 }
 
 export function FacetCheckbox({ label, count, checked, onChange }) {
@@ -93,29 +102,54 @@ export default function JobsExplorer({ jobs }) {
       }
       if (qualifications.length) {
         const q = (job.qualification ?? "").toLowerCase();
-        if (!qualifications.some((k) => q.includes(k.toLowerCase()))) return false;
+        if (!qualifications.some((k) => q.includes(k.toLowerCase())))
+          return false;
       }
       return true;
     });
-  }, [jobs, search, city, cityOptions, sector, workTypes, experienceBands, qualifications]);
+  }, [
+    jobs,
+    search,
+    city,
+    cityOptions,
+    sector,
+    workTypes,
+    experienceBands,
+    qualifications,
+  ]);
 
   const sorted = useMemo(() => {
     const arr = [...filtered];
     if (sort === "company") {
       arr.sort((a, b) => a.company.localeCompare(b.company));
     } else {
-      arr.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      arr.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      );
     }
     return arr;
   }, [filtered, sort]);
 
   useEffect(() => {
     setPage(1);
-  }, [search, country, city, sector, workTypes, experienceBands, qualifications, sort]);
+  }, [
+    search,
+    country,
+    city,
+    sector,
+    workTypes,
+    experienceBands,
+    qualifications,
+    sort,
+  ]);
 
   const totalPages = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
-  const pageJobs = sorted.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const pageJobs = sorted.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE,
+  );
 
   const workTypeCounts = useMemo(() => {
     const counts = {};
@@ -128,7 +162,9 @@ export default function JobsExplorer({ jobs }) {
   const experienceCounts = useMemo(() => {
     const counts = {};
     EXPERIENCE_OPTIONS.forEach((o) => {
-      counts[o.value] = jobs.filter((j) => experienceMatches(j.experience, o.value)).length;
+      counts[o.value] = jobs.filter((j) =>
+        experienceMatches(j.experience, o.value),
+      ).length;
     });
     return counts;
   }, [jobs]);
@@ -136,8 +172,9 @@ export default function JobsExplorer({ jobs }) {
   const qualificationCounts = useMemo(() => {
     const counts = {};
     QUALIFICATION_KEYWORDS.forEach((k) => {
-      counts[k] = jobs.filter((j) => (j.qualification ?? "").toLowerCase().includes(k.toLowerCase()))
-        .length;
+      counts[k] = jobs.filter((j) =>
+        (j.qualification ?? "").toLowerCase().includes(k.toLowerCase()),
+      ).length;
     });
     return counts;
   }, [jobs]);
@@ -170,7 +207,13 @@ export default function JobsExplorer({ jobs }) {
   }
 
   const hasActiveFilters =
-    search || country || city || sector || workTypes.length || experienceBands.length || qualifications.length;
+    search ||
+    country ||
+    city ||
+    sector ||
+    workTypes.length ||
+    experienceBands.length ||
+    qualifications.length;
 
   return (
     <>
@@ -179,7 +222,7 @@ export default function JobsExplorer({ jobs }) {
         <Container>
           <div className="max-w-3xl mb-space-lg">
             <Badge tone="primary" pulse className="mb-space-sm">
-              Live Healthcare Registry · Pakistan &amp; Gulf
+              Live Healthcare Registry · worldwide
             </Badge>
             <h1 className="text-4xl sm:text-5xl font-extrabold text-navy-surface tracking-tight mb-space-xs">
               Find Verified <span className="text-primary">Pharmacy</span> Jobs
@@ -223,7 +266,7 @@ export default function JobsExplorer({ jobs }) {
                   }}
                   className="w-full pl-11 pr-space-md py-3 bg-surface-card rounded-lg border-0 text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer"
                 >
-                  <option value="">All Pakistan &amp; Gulf (Any)</option>
+                  <option value="">Location</option>
                   {COUNTRY_OPTIONS.map((o) => (
                     <option key={o.value} value={o.value}>
                       {o.label}
@@ -260,7 +303,12 @@ export default function JobsExplorer({ jobs }) {
               </div>
 
               <div className="lg:col-span-2">
-                <Button type="submit" icon="filter_list" fullWidth className="border-0">
+                <Button
+                  type="submit"
+                  icon="filter_list"
+                  fullWidth
+                  className="border-0"
+                >
                   Search Jobs
                 </Button>
               </div>
@@ -302,7 +350,10 @@ export default function JobsExplorer({ jobs }) {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
             {/* FILTER SIDEBAR */}
             <aside className="lg:col-span-4 xl:col-span-3">
-              <Card hoverLift={false} className="space-y-space-lg lg:sticky lg:top-24">
+              <Card
+                hoverLift={false}
+                className="space-y-space-lg lg:sticky lg:top-24"
+              >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1">
                     <Icon name="tune" className="text-primary text-[20px]" />
@@ -343,7 +394,9 @@ export default function JobsExplorer({ jobs }) {
                         label={o.label}
                         count={workTypeCounts[o.value]}
                         checked={workTypes.includes(o.value)}
-                        onChange={() => setWorkTypes((prev) => toggleValue(prev, o.value))}
+                        onChange={() =>
+                          setWorkTypes((prev) => toggleValue(prev, o.value))
+                        }
                       />
                     ))}
                   </div>
@@ -361,7 +414,9 @@ export default function JobsExplorer({ jobs }) {
                         count={experienceCounts[o.value]}
                         checked={experienceBands.includes(o.value)}
                         onChange={() =>
-                          setExperienceBands((prev) => toggleValue(prev, o.value))
+                          setExperienceBands((prev) =>
+                            toggleValue(prev, o.value),
+                          )
                         }
                       />
                     ))}
@@ -389,25 +444,40 @@ export default function JobsExplorer({ jobs }) {
 
                 <div className="rounded-xl bg-navy-deep text-white p-space-md">
                   <span className="text-[11px] uppercase tracking-wider text-cyan-bright font-bold">
-                    Authentic Directory
+                    For Employers
                   </span>
                   <p className="font-bold leading-snug mt-1">
-                    Paperless DRAP &amp; Hospital Sourcing
+                    Hiring Pharmacy Talent?
                   </p>
                   <p className="text-xs text-white/60 mt-1">
-                    Every vacancy is manually cross-checked with hospital
-                    boards and manufacturing directories.
+                    Every listing is reviewed before it goes live and removed
+                    automatically once it expires.
                   </p>
+                  <Button
+                    href="/contactus"
+                    variant="solidDark"
+                    size="sm"
+                    icon="add_circle"
+                    fullWidth
+                    className="mt-space-sm"
+                  >
+                    Post a Job
+                  </Button>
                 </div>
               </Card>
             </aside>
 
             {/* RESULTS STREAM */}
             <div className="lg:col-span-8 xl:col-span-9 space-y-space-md">
-              <Card padding="md" hoverLift={false} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-sm">
+              <Card
+                padding="md"
+                hoverLift={false}
+                className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-sm"
+              >
                 <div>
                   <h2 className="font-extrabold text-navy-surface">
-                    Showing <span className="text-primary">{sorted.length}</span>{" "}
+                    Showing{" "}
+                    <span className="text-primary">{sorted.length}</span>{" "}
                     verified pharmacy vacancies
                   </h2>
                   <p className="text-xs text-on-surface-variant mt-0.5">
@@ -455,22 +525,23 @@ export default function JobsExplorer({ jobs }) {
                     <Badge tone="dark" dot={false} className="mb-1">
                       Fast Community Dispatch
                     </Badge>
-                    <p className="font-bold">Don&apos;t see your desired vacancy?</p>
+                    <p className="font-bold">
+                      Don&apos;t see your desired vacancy?
+                    </p>
                     <p className="text-sm text-white/60">
-                      Join 18,500+ Pharm-D graduates receiving verified job
-                      circulars directly on WhatsApp as soon as hospital HR
-                      departments publish them.
+                      Join 10k+ professionals receiving verified job alerts on
+                      WhatsApp as soon as they&apos;re posted.
                     </p>
                   </div>
                 </div>
                 <div className="flex flex-wrap items-center justify-center gap-space-sm shrink-0">
                   <Button
-                    href="https://wa.me/923244296468"
+                    href="https://whatsapp.com/channel/0029Vb9X4WK5PO0tmbiMBi11"
                     target="_blank"
                     variant="solidDark"
                     icon="chat"
                   >
-                    Join Free WhatsApp Alerts
+                    Follow WhatsApp Channel
                   </Button>
                   <Button href="/contactus" variant="dark">
                     Employer? Post a Role
