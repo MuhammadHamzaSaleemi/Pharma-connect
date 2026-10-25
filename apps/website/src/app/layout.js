@@ -28,6 +28,7 @@ export const metadata = {
     locale: "en_PK",
   },
   twitter: { card: "summary_large_image" },
+  verification: { google: "wMFBBJ3EGb5qwYLRESecdXTvX3zIl4jouhJiTRWJmBw" },
   robots: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
   formatDetection: { telephone: false },
 };
