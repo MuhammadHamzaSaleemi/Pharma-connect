@@ -19,6 +19,12 @@ function toBoolean({ value }: { value: unknown }): unknown {
   return value;
 }
 
+// Trims, and turns a blank string into null so the field is stored as NULL.
+function blankToNull({ value }: { value: unknown }): unknown {
+  if (typeof value === 'string') return value.trim() || null;
+  return value;
+}
+
 function toStringArray({ value }: { value: unknown }): unknown {
   if (Array.isArray(value)) return value;
   if (typeof value !== 'string') return value;
@@ -99,39 +105,45 @@ export class CreateBlogDto {
   @IsDateString()
   publishedAt?: string;
 
-  // Byline. Omitted fields take the database defaults on create and stay unchanged on update.
+  // Byline, all optional with no defaults. Omitted = left unset on create, unchanged on update;
+  // blank = cleared (NULL).
   @ApiPropertyOptional({ example: 'Muhammad Burhan Khan' })
+  @Transform(blankToNull)
   @IsOptional()
   @IsString()
   @MaxLength(100)
-  authorName?: string;
+  authorName?: string | null;
 
   @ApiPropertyOptional({ example: 'Founder, Pharmacist (Pharm-D)' })
+  @Transform(blankToNull)
   @IsOptional()
   @IsString()
   @MaxLength(120)
-  authorTitle?: string;
+  authorTitle?: string | null;
 
   @ApiPropertyOptional()
+  @Transform(blankToNull)
   @IsOptional()
   @IsString()
   @MaxLength(1000)
-  authorBio?: string;
+  authorBio?: string | null;
 
   // URL returned by POST /uploads/image, or a site path.
   @ApiPropertyOptional({ example: '/images/team/burhan.webp' })
+  @Transform(blankToNull)
   @IsOptional()
   @IsString()
   @MaxLength(500)
   @Matches(/^(https?:\/\/\S+|\/(?!\/)\S*)$/, {
     message: 'authorImage must be an http(s) URL or a site path',
   })
-  authorImage?: string;
+  authorImage?: string | null;
 
   @ApiPropertyOptional({ example: 'https://www.linkedin.com/in/muhammadburhankhan/' })
+  @Transform(blankToNull)
   @IsOptional()
   @IsString()
   @MaxLength(500)
   @Matches(/^https:\/\/\S+$/, { message: 'authorLinkedin must be an https URL' })
-  authorLinkedin?: string;
+  authorLinkedin?: string | null;
 }

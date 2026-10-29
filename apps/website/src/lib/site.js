@@ -15,22 +15,13 @@ export const SOCIAL_LINKS = [
     'https://www.facebook.com/pharmaconnectpakistan/',
 ];
 
-// Default blog byline: pre-filled in the dashboard blog form, and the fallback for a
-// post the API returns without author details. Keep in sync with the Blog column
-// defaults in apps/admin-api/prisma/schema.prisma.
-export const BLOG_AUTHOR = {
-    name: 'Muhammad Burhan Khan',
-    jobTitle: 'Founder, Pharmacist (Pharm-D)',
-    bio: 'Pharm-D graduate of COMSATS University Islamabad, with experience in community pharmacy, industrial quality assurance, and pharmaceutical research.',
-    image: '/images/team/burhan.webp',
-    linkedin: 'https://www.linkedin.com/in/muhammadburhankhan/',
-};
-
-/** The post's byline as saved in the blog form, else the default. */
+/**
+ * The post's byline as saved in the blog form. Every field is optional and stored as NULL when
+ * blank: a missing name credits the site, and a missing image renders the default avatar.
+ */
 export function blogAuthor(post) {
-    if (!post?.authorName) return BLOG_AUTHOR;
     return {
-        name: post.authorName,
+        name: post?.authorName || SITE_NAME,
         jobTitle: post.authorTitle,
         bio: post.authorBio,
         image: post.authorImage,

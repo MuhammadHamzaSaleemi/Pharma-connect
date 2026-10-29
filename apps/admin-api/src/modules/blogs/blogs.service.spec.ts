@@ -1,7 +1,9 @@
 import { NotFoundException } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 import type { ConfigService } from '@nestjs/config';
 import { BlogStatusEnum } from '../../common/enums/blogs/blog-status.enum';
 import { BlogsService } from './blogs.service';
+import { UpdateBlogDto } from './dto/update-blog.dto';
 import type { BlogsRepository } from './repositories/blogs.repository';
 import { BlogTransformer } from './transformers/blog.transformer';
 
@@ -60,7 +62,7 @@ describe('BlogsService slugs', () => {
 });
 
 describe('BlogsService author', () => {
-  it('never clears the saved byline with blank author fields on update', async () => {
+  it('clears blank author fields, keeps omitted ones and fills in nothing', async () => {
     const repo = {
       findById: jest.fn().mockResolvedValue({ id: 'b1', title: 'T', tags: [] }),
       update: jest.fn((_id: string, data: object) =>
@@ -72,13 +74,20 @@ describe('BlogsService author', () => {
       new BlogTransformer(),
       {} as ConfigService,
     );
-    await service.update('b1', { authorName: '  ', authorTitle: '', authorBio: ' New bio ' });
+    const dto = plainToInstance(UpdateBlogDto, {
+      authorName: '  ',
+      authorImage: '',
+      authorBio: ' New bio ',
+    });
+    await service.update('b1', dto);
     expect(repo.update).toHaveBeenCalledWith(
       'b1',
       expect.objectContaining({
-        authorName: undefined,
-        authorTitle: undefined,
+        authorName: null,
+        authorImage: null,
         authorBio: 'New bio',
+        authorTitle: undefined,
+        authorLinkedin: undefined,
       }),
     );
   });

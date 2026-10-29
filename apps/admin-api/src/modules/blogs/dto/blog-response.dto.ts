@@ -41,8 +41,8 @@ export class BlogResponseDto {
   @ApiPropertyOptional()
   publishedAt?: Date | null;
 
-  @ApiProperty()
-  authorName!: string;
+  @ApiPropertyOptional()
+  authorName?: string | null;
 
   @ApiPropertyOptional()
   authorTitle?: string | null;

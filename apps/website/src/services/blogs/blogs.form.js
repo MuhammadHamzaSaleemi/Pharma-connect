@@ -1,5 +1,4 @@
 import { enumToOptions } from "../../lib/enumOptions";
-import { BLOG_AUTHOR } from "../../lib/site";
 import { BLOG_STATUS_VALUES } from "./blogs.types";
 
 export const blogFormFields = [
@@ -16,27 +15,22 @@ export const blogFormFields = [
     { name: 'seoDescription', label: 'SEO Description', type: 'textarea', colSpan: 'half', rows: 3, placeholder: 'Learn the fundamentals of pharmacovigilance in this guide.' },
     // Byline shown on the post ("Written by").
     { name: 'authorImage', label: 'Author Photo', type: 'image', colSpan: 'full' },
-    { name: 'authorName', label: 'Author Name', type: 'text', required: true, colSpan: 'half', placeholder: BLOG_AUTHOR.name },
-    { name: 'authorTitle', label: 'Author Title', type: 'text', colSpan: 'half', placeholder: BLOG_AUTHOR.jobTitle },
+    { name: 'authorName', label: 'Author Name', type: 'text', colSpan: 'half', placeholder: 'Leave blank to credit PharmaConnect' },
+    { name: 'authorTitle', label: 'Author Title', type: 'text', colSpan: 'half', placeholder: 'Pharmacist (Pharm-D)' },
     {
         name: 'authorLinkedin',
         label: 'Author LinkedIn URL',
         type: 'text',
         colSpan: 'full',
-        placeholder: BLOG_AUTHOR.linkedin,
+        placeholder: 'https://www.linkedin.com/in/...',
         validate: (value) => (value && !/^https:\/\/\S+$/.test(value.trim()) ? 'Enter a full https:// URL' : ''),
     },
-    { name: 'authorBio', label: 'Author Bio', type: 'textarea', colSpan: 'full', rows: 3, placeholder: BLOG_AUTHOR.bio },
+    { name: 'authorBio', label: 'Author Bio', type: 'textarea', colSpan: 'full', rows: 3, placeholder: 'A line or two about the author' },
 ];
 
 export const blogFormInitialValues = {
     status: 'DRAFT',
     isFeatured: false,
-    authorName: BLOG_AUTHOR.name,
-    authorTitle: BLOG_AUTHOR.jobTitle,
-    authorBio: BLOG_AUTHOR.bio,
-    authorImage: BLOG_AUTHOR.image,
-    authorLinkedin: BLOG_AUTHOR.linkedin,
 };
 
 const AUTHOR_FIELDS = ['authorName', 'authorTitle', 'authorBio', 'authorImage', 'authorLinkedin'];
@@ -64,11 +58,9 @@ export function buildBlogFormData(values) {
     if (values.seoDescription) formData.append('seoDescription', values.seoDescription);
     if (values.publishedAt) formData.append('publishedAt', values.publishedAt);
     if (values.featuredImage instanceof File) formData.append('featuredImage', values.featuredImage);
-    // Blank author fields are left out, so the API keeps the saved byline (or its default).
-    AUTHOR_FIELDS.forEach((name) => {
-        const value = values[name]?.trim();
-        if (value) formData.append(name, value);
-    });
+    // Author fields are always sent: the API stores a blank one as NULL, so clearing a field
+    // in the form clears it on the post. Nothing is filled in by default.
+    AUTHOR_FIELDS.forEach((name) => formData.append(name, values[name]?.trim() ?? ''));
 
     return formData;
 }

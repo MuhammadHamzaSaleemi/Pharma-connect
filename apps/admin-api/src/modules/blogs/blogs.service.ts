@@ -197,16 +197,15 @@ export class BlogsService {
     this.logger.log(`Blog deleted: ${id}`);
   }
 
-  // Blank fields are dropped rather than saved, so a create falls back to the column defaults
-  // and an update never wipes the existing byline.
+  // The DTO turns blank fields into null, so a blank clears the field (stored as NULL) and an
+  // omitted one stays unchanged on update. Nothing is ever filled in for the author.
   private authorFields(dto: UpdateBlogDto) {
-    const value = (field?: string) => field?.trim() || undefined;
     return {
-      authorName: value(dto.authorName),
-      authorTitle: value(dto.authorTitle),
-      authorBio: value(dto.authorBio),
-      authorImage: value(dto.authorImage),
-      authorLinkedin: value(dto.authorLinkedin),
+      authorName: dto.authorName,
+      authorTitle: dto.authorTitle,
+      authorBio: dto.authorBio,
+      authorImage: dto.authorImage,
+      authorLinkedin: dto.authorLinkedin,
     };
   }
 

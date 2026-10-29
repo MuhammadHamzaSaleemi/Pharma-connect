@@ -151,13 +151,13 @@ model Blog {
   seoTitle       String?
   seoDescription String?
   publishedAt    DateTime?
-  // Byline shown on the post, edited in the blog form. The defaults fill posts created
-  // without author details (and backfilled every post that existed before these columns).
-  authorName     String     @default("Muhammad Burhan Khan")
-  authorTitle    String?    @default("Founder, Pharmacist (Pharm-D)")
-  authorBio      String?    @default("Pharm-D graduate of COMSATS University Islamabad, with experience in community pharmacy, industrial quality assurance, and pharmaceutical research.") @db.Text
-  authorImage    String?    @default("/images/team/burhan.webp")
-  authorLinkedin String?    @default("https://www.linkedin.com/in/muhammadburhankhan/")
+  // Byline shown on the post, edited in the blog form. No defaults: a post stores only the
+  // author details it was given, and the website renders fallbacks for missing ones.
+  authorName     String?
+  authorTitle    String?
+  authorBio      String?    @db.Text
+  authorImage    String?
+  authorLinkedin String?
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
 

@@ -16,7 +16,7 @@ export const BLOG_STATUS_VALUES = ['DRAFT', 'PUBLISHED'];
  * @property {string} [seoTitle]
  * @property {string} [seoDescription]
  * @property {string} [publishedAt]
- * @property {string} authorName
+ * @property {string|null} [authorName]
  * @property {string} [authorTitle]
  * @property {string} [authorBio]
  * @property {string} [authorImage]

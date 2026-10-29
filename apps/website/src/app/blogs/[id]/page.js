@@ -53,13 +53,16 @@ function articleSchema(post) {
         ...(post.featuredImage && { image: [absoluteUrl(post.featuredImage)] }),
         datePublished: post.publishedAt || post.createdAt,
         dateModified: post.updatedAt || post.publishedAt || post.createdAt,
-        author: {
-            "@type": "Person",
-            name: author.name,
-            ...(author.jobTitle && { jobTitle: author.jobTitle }),
-            url: `${SITE_URL}/aboutus`,
-            ...(author.linkedin && { sameAs: [author.linkedin] }),
-        },
+        // No author name saved = the post is credited to the site itself.
+        author: post.authorName
+            ? {
+                  "@type": "Person",
+                  name: author.name,
+                  ...(author.jobTitle && { jobTitle: author.jobTitle }),
+                  url: `${SITE_URL}/aboutus`,
+                  ...(author.linkedin && { sameAs: [author.linkedin] }),
+              }
+            : publisher,
         publisher,
         mainEntityOfPage: { "@type": "WebPage", "@id": url },
         url,
