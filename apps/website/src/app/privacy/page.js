@@ -17,8 +17,7 @@ const SECTIONS = [
         <LegalList
           items={[
             <>Contact submissions — when you click the Contact Us button, your device&apos;s own email or WhatsApp app opens with our address pre-filled. Any name, email, message, or subject details you send are transmitted directly from your device to our inbox (info@pharmaconnect-pakistan.com) or WhatsApp Business number. We do not use a third-party form-processing service to collect or relay this information — it goes straight from you to us.</>,
-            "Newsletter subscription details (email address), if you choose to subscribe",
-            "Any information you submit when reporting a job listing as suspicious or unverified",
+            "Any information you send us (through the Contact page or by email) when reporting a job listing as suspicious or unverified",
           ]}
         />
         <LegalSub>Information collected automatically</LegalSub>
@@ -41,16 +40,16 @@ const SECTIONS = [
         <LegalP>A cookie is a small text file stored on your device that helps a website remember information about your visit. We use three categories:</LegalP>
         <LegalList
           items={[
-            <><strong className="text-navy-surface">Essential</strong> — required for the Site to function (e.g. remembering your search filters). These don&apos;t require consent and can&apos;t be switched off through our Site (though you can block them in your browser, which may break some features).</>,
+            <><strong className="text-navy-surface">Essential</strong> — required for the Site to function and stay secure. These don&apos;t require consent and can&apos;t be switched off through our Site (though you can block them in your browser, which may break some features).</>,
             <><strong className="text-navy-surface">Analytics</strong> — help us understand how visitors use the Site so we can improve it.</>,
             <><strong className="text-navy-surface">Advertising</strong> — used to serve and measure ads, including through Google AdSense.</>,
           ]}
         />
         <LegalSub>Consent</LegalSub>
-        <LegalP>Analytics and advertising cookies may be set when you visit the Site, and you can opt out at any time using the controls described below (your browser settings, or the Google Ads Settings link). We do not currently operate a cookie consent banner. For visitors from the EEA, UK, and Switzerland, if you&apos;d prefer not to receive personalized ads, you can opt out via Google Ads Settings or your browser settings — we recommend doing so, as our current setup relies on this opt-out rather than an upfront consent prompt or automatic non-personalized serving for these regions.</LegalP>
+        <LegalP>Analytics and advertising cookies may be set when you visit the Site, and you can opt out at any time using the controls described below (your browser settings, or <LegalLink href="https://adssettings.google.com">Google Ads Settings</LegalLink>). We do not currently operate a cookie consent banner. For visitors from the EEA, UK, and Switzerland, if you&apos;d prefer not to receive personalized ads, you can opt out via <LegalLink href="https://adssettings.google.com">Google Ads Settings</LegalLink> or your browser settings — we recommend doing so, as our current setup relies on this opt-out rather than an upfront consent prompt or automatic non-personalized serving for these regions.</LegalP>
         <LegalSub>Google AdSense and Advertising Cookies</LegalSub>
         <LegalP>This Site may display advertisements served by Google AdSense. Third-party vendors, including Google, use cookies to serve ads based on a user&apos;s prior visits to this website or other websites. Google&apos;s use of advertising cookies enables it and its partners to serve ads to you based on your visit to this Site and other sites on the internet.</LegalP>
-        <LegalP>You may opt out of personalized advertising by visiting Google Ads Settings. You can also learn more about how Google uses data at Google&apos;s &quot;How Google uses data&quot; page.</LegalP>
+        <LegalP>You may opt out of personalized advertising by visiting <LegalLink href="https://adssettings.google.com">Google Ads Settings</LegalLink>. You can also opt out of some third-party vendors&apos; use of cookies for personalized advertising at <LegalLink href="https://www.aboutads.info/choices/">www.aboutads.info</LegalLink>. To learn more, see <LegalLink href="https://policies.google.com/technologies/partner-sites">How Google uses information from sites or apps that use its services</LegalLink>.</LegalP>
         <LegalP>You can control or disable cookies generally through your browser settings. Disabling cookies may affect how parts of the Site function.</LegalP>
       </>
     ),
@@ -64,7 +63,6 @@ const SECTIONS = [
           items={[
             "Respond to messages sent through the Contact form",
             "Investigate and act on reports of suspicious or unverified job listings",
-            <>Send newsletter updates, if you&apos;ve subscribed (you can unsubscribe at any time)</>,
             "Understand Site usage and improve content, navigation, and performance",
             "Serve and measure the performance of advertising, including through Google AdSense",
             "Maintain the security and proper functioning of the Site",
@@ -93,7 +91,6 @@ const SECTIONS = [
           items={[
             "Google AdSense — for displaying advertisements (see Section 2)",
             "Analytics providers (e.g. Google Analytics) — to understand Site traffic and usage patterns",
-            "Email/newsletter platforms — to manage newsletter subscriptions",
           ]}
         />
         <LegalP>These providers may process information outside Pakistan, including in the United States, under their own privacy policies and safeguards, in addition to this one.</LegalP>
@@ -110,8 +107,7 @@ const SECTIONS = [
             "Request access to the personal information we hold about you",
             "Request correction of inaccurate information",
             "Request deletion of your personal information",
-            "Unsubscribe from our newsletter at any time via the link in any newsletter email",
-            "Opt out of personalized advertising via Google Ads Settings",
+            <>Opt out of personalized advertising via <LegalLink href="https://adssettings.google.com">Google Ads Settings</LegalLink></>,
           ]}
         />
         <LegalP>To exercise any of these rights, email <EmailLink />. We will ask for enough information to verify it&apos;s really you making the request, and we aim to respond within 30 days.</LegalP>
@@ -126,9 +122,9 @@ const SECTIONS = [
             "Lodge a complaint with your local data protection authority",
           ]}
         />
-        <LegalP>Our lawful basis for non-essential cookies is our legitimate interest in operating and funding the Site, subject to your right to object and opt out at any time. For the newsletter, our basis is your consent when you subscribe; for contact form messages, our basis is our legitimate interest in responding to you. Where your data is transferred to service providers outside the EEA (e.g. Google, based in the US), we rely on the safeguards those providers offer, such as Standard Contractual Clauses.</LegalP>
+        <LegalP>Our lawful basis for non-essential cookies is our legitimate interest in operating and funding the Site, subject to your right to object and opt out at any time. For contact form messages, our basis is our legitimate interest in responding to you. Where your data is transferred to service providers outside the EEA (e.g. Google, based in the US), we rely on the safeguards those providers offer, such as Standard Contractual Clauses.</LegalP>
         <LegalSub>California residents (CCPA/CPRA)</LegalSub>
-        <LegalP>If you are a California resident, you additionally have rights under the CCPA/CPRA, including the right to know what personal information is collected, the right to request deletion, and the right to opt out of the &quot;sharing&quot; of personal information for cross-context behavioral advertising. If AdSense on this Site is configured for personalized ads, that may constitute &quot;sharing&quot; under CPRA; you can opt out via Google Ads Settings or by emailing us at the address above.</LegalP>
+        <LegalP>If you are a California resident, you additionally have rights under the CCPA/CPRA, including the right to know what personal information is collected, the right to request deletion, and the right to opt out of the &quot;sharing&quot; of personal information for cross-context behavioral advertising. If AdSense on this Site is configured for personalized ads, that may constitute &quot;sharing&quot; under CPRA; you can opt out via <LegalLink href="https://adssettings.google.com">Google Ads Settings</LegalLink> or by emailing us at the address above.</LegalP>
       </>
     ),
   },
@@ -146,7 +142,6 @@ const SECTIONS = [
         <LegalList
           items={[
             "Contact form submissions and listing reports: up to 12 months from submission, unless an investigation is ongoing",
-            "Newsletter subscriber emails: for as long as you remain subscribed, plus a short period after unsubscribing to process the request",
             "Technical/analytics data: as retained by our analytics provider under its own retention settings",
           ]}
         />
@@ -176,7 +171,7 @@ export default function Privacy() {
       title="Privacy"
       accent="Policy"
       description="How PharmaConnect Pakistan collects, uses, and protects your information when you browse jobs, read our guides, or get in touch."
-      updated="July 17, 2026"
+      updated="October 27, 2026"
       intro={
         <>
           <LegalP>PharmaConnect Pakistan (&quot;PharmaConnect,&quot; &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) operates pharmaconnect-pakistan.com (the &quot;Site&quot;), a platform sharing pharmacy job listings, scholarships, internships, and career guidance.</LegalP>

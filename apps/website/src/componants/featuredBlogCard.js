@@ -18,13 +18,13 @@ export default function FeaturedBlogCard({ post, index = 0 }) {
 
   return (
     <article className="flex flex-col bg-surface-card rounded-2xl border border-border-subtle shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden group">
-      <div className="relative h-48 w-full overflow-hidden bg-surface-container-high">
+      <div className="relative aspect-[1200/630] w-full overflow-hidden bg-surface-container-high">
         {post.featuredImage ? (
           <Image
             src={post.featuredImage}
             alt={post.title}
-            height={192}
-            width={384}
+            height={630}
+            width={1200}
             loading="lazy"
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
           />

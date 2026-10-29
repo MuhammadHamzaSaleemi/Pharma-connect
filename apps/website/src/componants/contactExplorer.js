@@ -472,7 +472,7 @@ export default function ContactExplorer() {
                     Network Distribution
                   </span>
                   <div className="text-xl font-bold mt-0.5">
-                    10K+ Healthcare Professionals
+                    Pharmacists &amp; Students
                   </div>
                   <p className="text-sm text-white/60 mt-1">
                     LinkedIn community &amp; active job dispatch channels.

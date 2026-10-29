@@ -9,7 +9,7 @@ import BlogDetail from "../../../componants/blogDetail";
 import JsonLd from "../../../componants/jsonLd";
 
 import { blogsApi } from "../../../services/blogs/blogs.api";
-import { SITE_NAME, SITE_URL, SITE_LOGO, absoluteUrl, blogPath, excerpt, pageMetadata, safeDecode } from "../../../lib/site";
+import { SITE_NAME, SITE_URL, SITE_LOGO, absoluteUrl, blogAuthor, blogPath, excerpt, pageMetadata, safeDecode } from "../../../lib/site";
 
 // Shared by generateMetadata and the page (one API call per request). The
 // [id] segment accepts a slug or a legacy id. Drafts 404 so they never get indexed.
@@ -43,6 +43,7 @@ export async function generateMetadata({ params }) {
 
 function articleSchema(post) {
     const url = absoluteUrl(blogPath(post));
+    const author = blogAuthor(post);
     const publisher = { "@type": "Organization", name: SITE_NAME, url: SITE_URL, logo: { "@type": "ImageObject", url: SITE_LOGO } };
     return {
         "@context": "https://schema.org",
@@ -52,7 +53,13 @@ function articleSchema(post) {
         ...(post.featuredImage && { image: [absoluteUrl(post.featuredImage)] }),
         datePublished: post.publishedAt || post.createdAt,
         dateModified: post.updatedAt || post.publishedAt || post.createdAt,
-        author: { "@type": "Organization", name: "PharmaConnect Editorial Board", url: `${SITE_URL}/aboutus` },
+        author: {
+            "@type": "Person",
+            name: author.name,
+            ...(author.jobTitle && { jobTitle: author.jobTitle }),
+            url: `${SITE_URL}/aboutus`,
+            ...(author.linkedin && { sameAs: [author.linkedin] }),
+        },
         publisher,
         mainEntityOfPage: { "@type": "WebPage", "@id": url },
         url,

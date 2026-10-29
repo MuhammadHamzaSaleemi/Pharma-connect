@@ -178,8 +178,8 @@ export default function JobDetail({ job, related = [] }) {
                   </h2>
                 </div>
                 <p className="text-sm text-on-surface-variant">
-                  Join 10k+ professionals receiving verified job alerts on
-                  WhatsApp as soon as they&apos;re posted.
+                  Follow our WhatsApp channel to get new job alerts as soon as
+                  they&apos;re posted.
                 </p>
                 <Button href="https://whatsapp.com/channel/0029Vb9X4WK5PO0tmbiMBi11" target="_blank" variant="solidDark" icon="chat" fullWidth>
                   Follow WhatsApp Channel

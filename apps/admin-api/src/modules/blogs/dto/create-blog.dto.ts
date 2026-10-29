@@ -8,6 +8,7 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  Matches,
   MaxLength,
 } from 'class-validator';
 import { SanitizeHtml } from '../../../common/decorators/sanitize-html.decorator';
@@ -97,4 +98,40 @@ export class CreateBlogDto {
   @IsOptional()
   @IsDateString()
   publishedAt?: string;
+
+  // Byline. Omitted fields take the database defaults on create and stay unchanged on update.
+  @ApiPropertyOptional({ example: 'Muhammad Burhan Khan' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  authorName?: string;
+
+  @ApiPropertyOptional({ example: 'Founder, Pharmacist (Pharm-D)' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  authorTitle?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  @MaxLength(1000)
+  authorBio?: string;
+
+  // URL returned by POST /uploads/image, or a site path.
+  @ApiPropertyOptional({ example: '/images/team/burhan.webp' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(500)
+  @Matches(/^(https?:\/\/\S+|\/(?!\/)\S*)$/, {
+    message: 'authorImage must be an http(s) URL or a site path',
+  })
+  authorImage?: string;
+
+  @ApiPropertyOptional({ example: 'https://www.linkedin.com/in/muhammadburhankhan/' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(500)
+  @Matches(/^https:\/\/\S+$/, { message: 'authorLinkedin must be an https URL' })
+  authorLinkedin?: string;
 }

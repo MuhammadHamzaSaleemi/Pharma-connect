@@ -138,21 +138,28 @@ enum ScholarshipStatus {
 }
 
 model Blog {
-  id              String     @id @default(cuid())
-  title           String
-  slug            String     @unique
-  content         String     @db.Text
-  excerpt         String?
-  featuredImage   String?
-  category        String?
-  tags            String[]   @default([])
-  status          BlogStatus @default(DRAFT)
-  isFeatured      Boolean    @default(false)
-  seoTitle        String?
-  seoDescription  String?
-  publishedAt     DateTime?
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
+  id             String     @id @default(cuid())
+  title          String
+  slug           String     @unique
+  content        String     @db.Text
+  excerpt        String?
+  featuredImage  String?
+  category       String?
+  tags           String[]   @default([])
+  status         BlogStatus @default(DRAFT)
+  isFeatured     Boolean    @default(false)
+  seoTitle       String?
+  seoDescription String?
+  publishedAt    DateTime?
+  // Byline shown on the post, edited in the blog form. The defaults fill posts created
+  // without author details (and backfilled every post that existed before these columns).
+  authorName     String     @default("Muhammad Burhan Khan")
+  authorTitle    String?    @default("Founder, Pharmacist (Pharm-D)")
+  authorBio      String?    @default("Pharm-D graduate of COMSATS University Islamabad, with experience in community pharmacy, industrial quality assurance, and pharmaceutical research.") @db.Text
+  authorImage    String?    @default("/images/team/burhan.webp")
+  authorLinkedin String?    @default("https://www.linkedin.com/in/muhammadburhankhan/")
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
 
   @@index([status])
   @@index([category])

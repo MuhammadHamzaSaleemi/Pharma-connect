@@ -58,3 +58,28 @@ describe('BlogsService slugs', () => {
     expect(blog.slug).toBe('post-2');
   });
 });
+
+describe('BlogsService author', () => {
+  it('never clears the saved byline with blank author fields on update', async () => {
+    const repo = {
+      findById: jest.fn().mockResolvedValue({ id: 'b1', title: 'T', tags: [] }),
+      update: jest.fn((_id: string, data: object) =>
+        Promise.resolve({ id: 'b1', tags: [], ...data }),
+      ),
+    };
+    const service = new BlogsService(
+      repo as unknown as BlogsRepository,
+      new BlogTransformer(),
+      {} as ConfigService,
+    );
+    await service.update('b1', { authorName: '  ', authorTitle: '', authorBio: ' New bio ' });
+    expect(repo.update).toHaveBeenCalledWith(
+      'b1',
+      expect.objectContaining({
+        authorName: undefined,
+        authorTitle: undefined,
+        authorBio: 'New bio',
+      }),
+    );
+  });
+});

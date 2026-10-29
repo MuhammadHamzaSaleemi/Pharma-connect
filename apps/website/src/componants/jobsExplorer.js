@@ -63,11 +63,11 @@ export function FacetCheckbox({ label, count, checked, onChange }) {
   );
 }
 
-export default function JobsExplorer({ jobs }) {
+export default function JobsExplorer({ jobs, initialSector = "" }) {
   const [search, setSearch] = useState("");
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
-  const [sector, setSector] = useState("");
+  const [sector, setSector] = useState(initialSector);
   const [workTypes, setWorkTypes] = useState([]);
   const [experienceBands, setExperienceBands] = useState([]);
   const [qualifications, setQualifications] = useState([]);
@@ -228,7 +228,7 @@ export default function JobsExplorer({ jobs }) {
               Find Verified <span className="text-primary">Pharmacy</span> Jobs
             </h1>
             <p className="text-base text-on-surface-variant leading-relaxed">
-              Browse {jobs.length}+ authenticated roles across pharmaceutical
+              Browse {jobs.length} hand-reviewed roles across pharmaceutical
               manufacturing, tertiary hospitals, clinical trials, community
               chains, and regulatory bodies in Pakistan and abroad.
             </p>
@@ -375,10 +375,10 @@ export default function JobsExplorer({ jobs }) {
                   </div>
                   <div className="flex flex-col">
                     <span className="text-sm font-bold text-navy-surface">
-                      Pharm-D Verified
+                      Pharm-D Reviewed
                     </span>
                     <span className="text-xs text-on-surface-variant">
-                      Every listing shown is authenticated
+                      Every listing is checked by hand before it&apos;s published
                     </span>
                   </div>
                 </div>
@@ -478,11 +478,11 @@ export default function JobsExplorer({ jobs }) {
                   <h2 className="font-extrabold text-navy-surface">
                     Showing{" "}
                     <span className="text-primary">{sorted.length}</span>{" "}
-                    verified pharmacy vacancies
+                    pharmacy vacancies
                   </h2>
                   <p className="text-xs text-on-surface-variant mt-0.5">
-                    Sourced directly from hospital boards, manufacturers, and
-                    verified recruiters
+                    Curated from hospitals, manufacturers, recruiters, and
+                    official company postings
                   </p>
                 </div>
                 <div className="flex items-center gap-space-xs shrink-0">
@@ -529,8 +529,8 @@ export default function JobsExplorer({ jobs }) {
                       Don&apos;t see your desired vacancy?
                     </p>
                     <p className="text-sm text-white/60">
-                      Join 10k+ professionals receiving verified job alerts on
-                      WhatsApp as soon as they&apos;re posted.
+                      Follow our WhatsApp channel to get new job alerts as soon
+                      as they&apos;re posted.
                     </p>
                   </div>
                 </div>

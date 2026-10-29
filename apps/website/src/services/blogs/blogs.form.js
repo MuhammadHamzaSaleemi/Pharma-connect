@@ -1,4 +1,5 @@
 import { enumToOptions } from "../../lib/enumOptions";
+import { BLOG_AUTHOR } from "../../lib/site";
 import { BLOG_STATUS_VALUES } from "./blogs.types";
 
 export const blogFormFields = [
@@ -13,12 +14,32 @@ export const blogFormFields = [
     { name: 'content', label: 'Content', type: 'richtext', required: true, colSpan: 'full', placeholder: 'Write the full article...' },
     { name: 'seoTitle', label: 'SEO Title', type: 'text', colSpan: 'half', placeholder: 'Understanding Pharmacovigilance | PharmaConnect' },
     { name: 'seoDescription', label: 'SEO Description', type: 'textarea', colSpan: 'half', rows: 3, placeholder: 'Learn the fundamentals of pharmacovigilance in this guide.' },
+    // Byline shown on the post ("Written by").
+    { name: 'authorImage', label: 'Author Photo', type: 'image', colSpan: 'full' },
+    { name: 'authorName', label: 'Author Name', type: 'text', required: true, colSpan: 'half', placeholder: BLOG_AUTHOR.name },
+    { name: 'authorTitle', label: 'Author Title', type: 'text', colSpan: 'half', placeholder: BLOG_AUTHOR.jobTitle },
+    {
+        name: 'authorLinkedin',
+        label: 'Author LinkedIn URL',
+        type: 'text',
+        colSpan: 'full',
+        placeholder: BLOG_AUTHOR.linkedin,
+        validate: (value) => (value && !/^https:\/\/\S+$/.test(value.trim()) ? 'Enter a full https:// URL' : ''),
+    },
+    { name: 'authorBio', label: 'Author Bio', type: 'textarea', colSpan: 'full', rows: 3, placeholder: BLOG_AUTHOR.bio },
 ];
 
 export const blogFormInitialValues = {
     status: 'DRAFT',
     isFeatured: false,
+    authorName: BLOG_AUTHOR.name,
+    authorTitle: BLOG_AUTHOR.jobTitle,
+    authorBio: BLOG_AUTHOR.bio,
+    authorImage: BLOG_AUTHOR.image,
+    authorLinkedin: BLOG_AUTHOR.linkedin,
 };
+
+const AUTHOR_FIELDS = ['authorName', 'authorTitle', 'authorBio', 'authorImage', 'authorLinkedin'];
 
 // Builds the multipart/form-data payload the admin-api blogs endpoint expects.
 // featuredImage is only appended when the user picked a new file — leaving it
@@ -43,6 +64,11 @@ export function buildBlogFormData(values) {
     if (values.seoDescription) formData.append('seoDescription', values.seoDescription);
     if (values.publishedAt) formData.append('publishedAt', values.publishedAt);
     if (values.featuredImage instanceof File) formData.append('featuredImage', values.featuredImage);
+    // Blank author fields are left out, so the API keeps the saved byline (or its default).
+    AUTHOR_FIELDS.forEach((name) => {
+        const value = values[name]?.trim();
+        if (value) formData.append(name, value);
+    });
 
     return formData;
 }

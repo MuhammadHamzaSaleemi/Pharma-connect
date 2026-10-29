@@ -42,6 +42,21 @@ export class BlogResponseDto {
   publishedAt?: Date | null;
 
   @ApiProperty()
+  authorName!: string;
+
+  @ApiPropertyOptional()
+  authorTitle?: string | null;
+
+  @ApiPropertyOptional()
+  authorBio?: string | null;
+
+  @ApiPropertyOptional()
+  authorImage?: string | null;
+
+  @ApiPropertyOptional()
+  authorLinkedin?: string | null;
+
+  @ApiProperty()
   createdAt!: Date;
 
   @ApiProperty()

@@ -39,7 +39,7 @@ const SECTIONS = [
           ]}
         />
         <LegalP>A Verified label means we could confirm the source of the listing &mdash; it is not a guarantee that the job, scholarship, or internship itself is legitimate, still open, accurately described, or free of scams run by an otherwise real company. Fraud can occur even through real companies or real contact channels. Always use your own judgment, and treat the Verified/Unverified label as a starting point for your own research, not a substitute for it.</LegalP>
-        <LegalP>If something looks wrong, use our reporting feature (see Section 6) &mdash; please don&apos;t rely solely on the badge shown.</LegalP>
+        <LegalP>If something looks wrong, report it to us (see Section 6) &mdash; please don&apos;t rely solely on the badge shown.</LegalP>
       </>
     ),
   },
@@ -86,7 +86,7 @@ const SECTIONS = [
         <LegalList
           items={[
             "Submit a fake, misleading, or fraudulent job, scholarship, or internship listing, or impersonate a real company or person",
-            "Use the Contact form, reporting feature, or newsletter signup to send spam, harassment, or unlawful content",
+            "Use the Contact form or listing reports to send spam, harassment, or unlawful content",
             <>Scrape, copy, or republish substantial parts of the Site&apos;s content or listing database without our permission</>,
             "Attempt to interfere with, disrupt, or gain unauthorized access to the Site or its underlying systems",
             "Use the Site for any unlawful purpose, or in a way that could harm PharmaConnect, other users, or third parties named in listings",
@@ -169,7 +169,7 @@ export default function Terms() {
       title="Terms of"
       accent="Service"
       description="The rules for using PharmaConnect Pakistan, including how we label listings, what we can and can't guarantee, and how to report a suspicious posting."
-      updated="July 17, 2026"
+      updated="October 27, 2026"
       intro={
         <>
           <LegalP>These Terms of Service (&quot;Terms&quot;) govern your use of pharmaconnect-pakistan.com (the &quot;Site&quot;), operated by PharmaConnect Pakistan (&quot;PharmaConnect,&quot; &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;), an independently run platform sharing pharmacy job listings, scholarships, internships, and career guidance. PharmaConnect is not currently operated through a registered company entity.</LegalP>

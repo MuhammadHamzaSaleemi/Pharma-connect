@@ -2,6 +2,10 @@
 // NEXT_PUBLIC_SITE_URL overrides the production origin (e.g. for staging).
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://pharmaconnect-pakistan.com').replace(/\/+$/, '');
 export const SITE_NAME = 'PharmaConnect';
+// AdSense publisher id ("ca-pub-" + 16 digits). Unset or malformed = no AdSense
+// snippet and a 404 /ads.txt. NEXT_PUBLIC_ vars are inlined, so changing it needs a rebuild.
+const adsenseClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || '';
+export const ADSENSE_CLIENT = /^ca-pub-\d{16}$/.test(adsenseClient) ? adsenseClient : '';
 export const SITE_LOGO = `${SITE_URL}/images/logo.png`;
 export const SITE_DESCRIPTION =
     'Verified pharmacy jobs, internships, scholarships and career guides for pharmacists, Pharm-D graduates and students across Pakistan and abroad.';
@@ -10,6 +14,29 @@ export const SOCIAL_LINKS = [
     'https://www.instagram.com/pharmaconnect_pakistan/',
     'https://www.facebook.com/pharmaconnectpakistan/',
 ];
+
+// Default blog byline: pre-filled in the dashboard blog form, and the fallback for a
+// post the API returns without author details. Keep in sync with the Blog column
+// defaults in apps/admin-api/prisma/schema.prisma.
+export const BLOG_AUTHOR = {
+    name: 'Muhammad Burhan Khan',
+    jobTitle: 'Founder, Pharmacist (Pharm-D)',
+    bio: 'Pharm-D graduate of COMSATS University Islamabad, with experience in community pharmacy, industrial quality assurance, and pharmaceutical research.',
+    image: '/images/team/burhan.webp',
+    linkedin: 'https://www.linkedin.com/in/muhammadburhankhan/',
+};
+
+/** The post's byline as saved in the blog form, else the default. */
+export function blogAuthor(post) {
+    if (!post?.authorName) return BLOG_AUTHOR;
+    return {
+        name: post.authorName,
+        jobTitle: post.authorTitle,
+        bio: post.authorBio,
+        image: post.authorImage,
+        linkedin: post.authorLinkedin,
+    };
+}
 
 export function absoluteUrl(path = '/') {
     return path.startsWith('http') ? path : `${SITE_URL}${path.startsWith('/') ? '' : '/'}${path}`;

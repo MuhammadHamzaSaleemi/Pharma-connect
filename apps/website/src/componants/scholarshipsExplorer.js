@@ -401,7 +401,11 @@ export default function ScholarshipsExplorer({ scholarships }) {
               </Card>
 
               {pageItems.length === 0 ? (
-                <StateMessage icon="search_off">No scholarships match your filters.</StateMessage>
+                <StateMessage icon="search_off">
+                  {scholarships.length === 0
+                    ? "No scholarships are open right now. Follow our WhatsApp channel to hear about new ones as soon as they're posted."
+                    : "No scholarships match your filters."}
+                </StateMessage>
               ) : (
                 pageItems.map((s) => <ScholarshipCard key={s.id} scholarship={s} />)
               )}

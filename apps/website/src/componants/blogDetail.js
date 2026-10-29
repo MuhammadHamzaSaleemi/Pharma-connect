@@ -7,7 +7,7 @@ import Button from "./button";
 import Card from "./card";
 import Container from "./container";
 import { formatDate, estimateReadTime } from "./blogCard";
-import { absoluteUrl, blogPath } from "../lib/site";
+import { absoluteUrl, blogAuthor, blogPath } from "../lib/site";
 
 export const PROSE_CLASSES = [
   "[&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-navy-surface [&_h2]:mt-space-xl [&_h2]:mb-space-sm",
@@ -26,6 +26,7 @@ export const PROSE_CLASSES = [
 
 export default function BlogDetail({ post, related = [] }) {
   const shareUrl = absoluteUrl(blogPath(post));
+  const author = blogAuthor(post);
   return (
     <div className="flex flex-col w-full">
       {/* Header */}
@@ -83,34 +84,30 @@ export default function BlogDetail({ post, related = [] }) {
         </Container>
       </section>
 
-      {/* Featured image */}
-      {post.featuredImage && (
-        <section className="w-full pt-space-xl">
-          <Container>
-            <div className="w-full flex flex-col gap-space-xs">
-              <div className="relative w-full h-[280px] sm:h-[420px] rounded-2xl overflow-hidden shadow-sm bg-surface-dim">
-                <Image
-                  src={post.featuredImage}
-                  alt={post.title}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              {post.excerpt && (
-                <p className="text-sm text-on-surface-variant italic">{post.excerpt}</p>
-              )}
-            </div>
-          </Container>
-        </section>
-      )}
-
       {/* Content & sidebar */}
       <section className="w-full py-space-xl">
         <Container>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-space-2xl items-start">
             <article className="lg:col-span-8 flex flex-col gap-space-xl min-w-0">
+              {/* Featured image, same width as the article text */}
+              {post.featuredImage && (
+                <div className="flex flex-col gap-space-xs">
+                  <div className="relative w-full aspect-[1200/630] rounded-2xl overflow-hidden shadow-sm bg-surface-dim">
+                    <Image
+                      src={post.featuredImage}
+                      alt={post.title}
+                      fill
+                      priority
+                      className="object-cover"
+                    />
+                  </div>
+                  {post.excerpt && (
+                    <p className="text-sm text-on-surface-variant italic">{post.excerpt}</p>
+                  )}
+                </div>
+              )}
               <div
-                className={PROSE_CLASSES}
+                className={`${PROSE_CLASSES} [&_img]:h-auto [&_img]:aspect-[1200/630] [&_img]:object-cover`}
                 dangerouslySetInnerHTML={{ __html: post.content ?? "" }}
               />
 
@@ -125,16 +122,41 @@ export default function BlogDetail({ post, related = [] }) {
               )}
 
               <div className="p-space-lg rounded-2xl bg-surface-container-low flex flex-col sm:flex-row items-start sm:items-center gap-space-md">
-                <div className="w-14 h-14 rounded-full bg-primary text-on-primary flex items-center justify-center shrink-0">
-                  <Icon name="verified_user" className="text-[24px]" />
-                </div>
+                {author.image ? (
+                  <Image
+                    src={author.image}
+                    alt={author.name}
+                    width={56}
+                    height={56}
+                    className="w-14 h-14 rounded-full object-cover shrink-0"
+                  />
+                ) : (
+                  <div className="w-14 h-14 rounded-full bg-primary text-on-primary flex items-center justify-center shrink-0 text-xl font-bold">
+                    {author.name.charAt(0).toUpperCase()}
+                  </div>
+                )}
                 <div>
-                  <span className="block text-base font-bold text-navy-surface">
-                    PharmaConnect Editorial Board
+                  <span className="block text-xs uppercase tracking-wider text-on-surface-variant">
+                    Written by
                   </span>
-                  <span className="block text-sm text-on-surface-variant">
-                    Verified content, reviewed for accuracy by clinical and career leads.
-                  </span>
+                  {author.linkedin ? (
+                    <a
+                      href={author.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block text-base font-bold text-navy-surface no-underline hover:text-primary"
+                    >
+                      {author.name}
+                    </a>
+                  ) : (
+                    <span className="block text-base font-bold text-navy-surface">{author.name}</span>
+                  )}
+                  {author.jobTitle && (
+                    <span className="block text-sm font-semibold text-primary">{author.jobTitle}</span>
+                  )}
+                  {author.bio && (
+                    <span className="block text-sm text-on-surface-variant mt-1">{author.bio}</span>
+                  )}
                 </div>
               </div>
             </article>

@@ -51,7 +51,7 @@ export default function SiteFooter() {
               </span>
             </div>
             <p className="text-sm text-on-surface-variant mt-space-md max-w-xs">
-              The premier dedicated network connecting pharmacists, clinical
+              A pharmacist-led network connecting pharmacists, clinical
               researchers, and healthcare professionals with verified career
               opportunities across Pakistan and abroad.
             </p>

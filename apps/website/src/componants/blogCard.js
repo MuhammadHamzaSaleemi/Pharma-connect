@@ -26,10 +26,10 @@ export function estimateReadTime(html) {
 export default function BlogCard({ post }) {
   return (
     <article className="bg-surface-card rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col border border-border-subtle">
-      <div className="relative aspect-[16/10] overflow-hidden">
+      <div className="relative aspect-[1200/630] overflow-hidden">
         <Image
-          height={200}
-          width={320}
+          height={630}
+          width={1200}
           src={post.featuredImage || "/images/blog/01.webp"}
           className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
           alt={post.title}

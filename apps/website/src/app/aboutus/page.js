@@ -16,7 +16,7 @@ import "../assets/css/tailwind.css";
 
 export const metadata = pageMetadata({
   title: "About Us: Pakistan's Pharmacy Career Network",
-  description: "PharmaConnect was founded in 2024 by a Pharm-D graduate to share verified pharmacy jobs, internships and scholarships with 10,000+ pharmacists and students.",
+  description: "PharmaConnect was founded in 2024 by a Pharm-D graduate to share verified pharmacy jobs, internships and scholarships with pharmacists and students across Pakistan.",
   path: "/aboutus",
 });
 
@@ -89,8 +89,8 @@ const FAQS = [
     a: "PharmaConnect was founded in 2024 by Muhammad Burhan Khan, a Pharm-D graduate of COMSATS University Islamabad, with experience in community pharmacy, industrial quality assurance, and pharmaceutical research.",
   },
   {
-    q: "How big is the PharmaConnect community?",
-    a: "PharmaConnect reaches 10,000+ pharmacy professionals and students on LinkedIn across Karachi, Lahore, Islamabad, and beyond, with 1,000+ career opportunities curated and shared in the past year — growing entirely organically with no paid promotion.",
+    q: "Where can I follow PharmaConnect?",
+    a: "PharmaConnect started as a LinkedIn page and now shares opportunities with pharmacy professionals and students across Karachi, Lahore, Islamabad, and beyond, through LinkedIn and our WhatsApp channel. It has grown entirely organically, with no paid promotion.",
   },
   {
     q: "Are the opportunities on PharmaConnect verified?",
@@ -111,7 +111,7 @@ export default function AboutUsPage() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-center">
               <div className="lg:col-span-7 flex flex-col gap-space-md">
                 <Badge tone="primary" pulse className="w-fit">
-                  About PharmaConnect · Pakistan&apos;s Premier Pharmacy Network
+                  About PharmaConnect · Pakistan&apos;s Pharmacy Career Network
                 </Badge>
                 <h1 className="text-4xl sm:text-5xl font-extrabold text-navy-surface tracking-tight leading-[1.15]">
                   Pharmacists helping pharmacists{" "}
@@ -131,11 +131,8 @@ export default function AboutUsPage() {
                   </strong>{" "}
                   (a Pharm-D graduate of COMSATS University Islamabad),
                   PharmaConnect began as a LinkedIn page and has grown into a
-                  community of{" "}
-                  <strong className="text-primary font-semibold">
-                    10,000+ pharmacists
-                  </strong>{" "}
-                  worldwide, most based in Pakistan.
+                  community of pharmacists and students, most based in
+                  Pakistan.
                 </p>
 
                 <div className="flex flex-wrap items-center gap-space-sm pt-space-xs">
@@ -208,10 +205,10 @@ export default function AboutUsPage() {
                     </span>
                     <div className="flex flex-col">
                       <span className="font-bold text-navy-surface leading-none">
-                        10,000+
+                        Active Community
                       </span>
                       <span className="text-[11px] text-on-surface-variant">
-                        Verified Pharmacists
+                        Pharmacists &amp; Students
                       </span>
                     </div>
                   </div>
@@ -242,10 +239,10 @@ export default function AboutUsPage() {
           <Container>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
               {[
-                { icon: "groups", value: "10,000+", label: "LinkedIn Community" },
-                { icon: "work", value: "1,000+", label: "Opportunities Curated" },
+                { icon: "groups", value: "LinkedIn + WhatsApp", label: "Community Channels" },
+                { icon: "work", value: "Hand-Picked", label: "Every Opportunity Curated" },
                 { icon: "calendar_today", value: "2024", label: "Founded" },
-                { icon: "verified", value: "Verified Only", label: "Every Listing Traceable" },
+                { icon: "verified", value: "Source Labeled", label: "Verified or Clearly Flagged" },
               ].map((stat) => (
                 <div
                   key={stat.label}

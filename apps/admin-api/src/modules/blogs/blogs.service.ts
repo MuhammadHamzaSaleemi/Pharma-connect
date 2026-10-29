@@ -46,6 +46,7 @@ export class BlogsService {
     const slug = await this.generateUniqueSlug(dto.title);
 
     const blog = await this.blogsRepository.create({
+      ...this.authorFields(dto),
       title: dto.title,
       slug,
       content: dto.content,
@@ -158,6 +159,7 @@ export class BlogsService {
         : undefined;
 
     const blog = await this.blogsRepository.update(id, {
+      ...this.authorFields(dto),
       title: dto.title,
       slug,
       content: dto.content,
@@ -193,6 +195,19 @@ export class BlogsService {
     }
 
     this.logger.log(`Blog deleted: ${id}`);
+  }
+
+  // Blank fields are dropped rather than saved, so a create falls back to the column defaults
+  // and an update never wipes the existing byline.
+  private authorFields(dto: UpdateBlogDto) {
+    const value = (field?: string) => field?.trim() || undefined;
+    return {
+      authorName: value(dto.authorName),
+      authorTitle: value(dto.authorTitle),
+      authorBio: value(dto.authorBio),
+      authorImage: value(dto.authorImage),
+      authorLinkedin: value(dto.authorLinkedin),
+    };
   }
 
   private buildFeaturedImageUrl(file: Express.Multer.File): string {

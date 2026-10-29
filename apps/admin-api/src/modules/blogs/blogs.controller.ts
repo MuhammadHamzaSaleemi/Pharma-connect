@@ -51,6 +51,11 @@ const BLOG_FORM_DATA_SCHEMA = {
     seoTitle: { type: 'string' },
     seoDescription: { type: 'string' },
     publishedAt: { type: 'string', format: 'date' },
+    authorName: { type: 'string' },
+    authorTitle: { type: 'string' },
+    authorBio: { type: 'string' },
+    authorImage: { type: 'string' },
+    authorLinkedin: { type: 'string' },
   },
 };
 

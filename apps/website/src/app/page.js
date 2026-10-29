@@ -16,25 +16,26 @@ import JsonLd from "../componants/jsonLd";
 import { jobsApi } from "../services/jobs/jobs.api";
 import { blogsApi } from "../services/blogs/blogs.api";
 import { scholarshipsApi } from "../services/scholarships/scholarships.api";
+import { fetchAllPages } from "../lib/fetchAllPages";
 import { SITE_URL, SITE_NAME, SITE_LOGO, SITE_DESCRIPTION, SOCIAL_LINKS, pageMetadata } from "../lib/site";
 import "./assets/css/tailwind.css";
 
 const QUICK_LINKS = [
   { label: "Jobs", icon: "work", href: "/jobs" },
   { label: "Scholarships", icon: "school", href: "/scholarships" },
-  { label: "Internships", icon: "clinical_notes", href: "/jobs" },
   { label: "Blogs", icon: "article", href: "/blogs" },
 ];
 
+// Each card is one JobSector; its count is computed from the live active jobs.
 const CATEGORIES = [
-  { title: "Medical Affairs", count: 38, icon: "medical_services", tone: "cyan" },
-  { title: "Sales & Marketing", count: 85, icon: "trending_up", tone: "berry" },
-  { title: "Quality Control & QA", count: 42, icon: "biotech", tone: "teal" },
-  { title: "Hospital Pharmacy", count: 64, icon: "local_hospital", tone: "primary" },
-  { title: "Warehouse & Logistics", count: 29, icon: "inventory_2", tone: "warning" },
-  { title: "Community Pharmacy", count: 51, icon: "local_pharmacy", tone: "cyan" },
-  { title: "DRAP & Regulatory", count: 19, icon: "policy", tone: "teal" },
-  { title: "R&D & Formulations", count: 22, icon: "science", tone: "berry" },
+  { title: "Medical Affairs", sector: "MEDICAL_AFFAIRS", icon: "medical_services", tone: "cyan" },
+  { title: "Sales & Marketing", sector: "SALES_MARKETING", icon: "trending_up", tone: "berry" },
+  { title: "Quality Assurance", sector: "QUALITY_ASSURANCE", icon: "verified", tone: "teal" },
+  { title: "Quality Control", sector: "QUALITY_CONTROL", icon: "biotech", tone: "primary" },
+  { title: "Hospital Pharmacy", sector: "HOSPITAL_PHARMACY", icon: "local_hospital", tone: "warning" },
+  { title: "Community Pharmacy", sector: "COMMUNITY_PHARMACY", icon: "local_pharmacy", tone: "cyan" },
+  { title: "DRAP & Regulatory", sector: "REGULATORY_AFFAIRS", icon: "policy", tone: "teal" },
+  { title: "R&D & Formulations", sector: "FORMULATION_DEVELOPMENT", icon: "science", tone: "berry" },
 ];
 
 const CATEGORY_TONES = {
@@ -48,7 +49,7 @@ const CATEGORY_TONES = {
 const WHY_FEATURES = [
   {
     title: "Curated, Not Scraped",
-    desc: "Every listing is reviewed for relevance and verified against accredited institutional sources.",
+    desc: "Every listing is reviewed by hand and checked for a traceable company source before it is published.",
     icon: "verified",
     tone: "bg-cyan-bright/10 text-cyan-bright",
   },
@@ -115,12 +116,19 @@ async function fetchList(api, params) {
 }
 
 export default async function Home() {
-  const [jobsResult, blogsResult, scholarshipsResult] = await Promise.all([
-    fetchList(jobsApi, { limit: 6, status: "ACTIVE" }),
+  const [allJobs, blogsResult, scholarshipsResult] = await Promise.all([
+    // Every active job, so the category counts are real (fetchAllPages explains the ceiling).
+    fetchAllPages(jobsApi, { status: "ACTIVE" }).catch(() => []),
     fetchList(blogsApi, { limit: 3, status: "PUBLISHED" }),
     fetchList(scholarshipsApi, { limit: 1 }),
   ]);
-  const jobs = jobsResult.items;
+  const jobs = [...allJobs]
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 6);
+  const sectorCounts = {};
+  allJobs.forEach((job) => {
+    sectorCounts[job.sector] = (sectorCounts[job.sector] ?? 0) + 1;
+  });
   const blogs = blogsResult.items;
 
   return (
@@ -137,7 +145,7 @@ export default async function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-center">
               <div className="lg:col-span-7 flex flex-col gap-space-md z-10">
                 <Badge tone="primary" pulse className="w-fit shadow-sm">
-                  Pakistan&apos;s Premier Pharmacy Career Network
+                  Pakistan&apos;s Pharmacy Career Network
                 </Badge>
                 <h1 className="text-4xl sm:text-5xl font-extrabold text-navy-surface tracking-tight leading-[1.15]">
                   Discover Pharmacy{" "}
@@ -198,26 +206,29 @@ export default async function Home() {
                     </div>
                     <div>
                       <span className="block text-sm font-bold text-navy-surface">
-                        {jobsResult.total.toLocaleString("en-US")} Active Jobs
+                        {allJobs.length.toLocaleString("en-US")} Active Jobs
                       </span>
                       <span className="block text-[11px] text-on-surface-variant">
                         Verified Pharma Careers
                       </span>
                     </div>
                   </div>
-                  <div className="absolute -bottom-4 -right-2 z-20 bg-surface-card/95 backdrop-blur-md px-space-md py-space-xs rounded-xl shadow-md border border-border-subtle flex items-center gap-space-xs">
-                    <div className="w-8 h-8 rounded-lg bg-primary/15 text-primary flex items-center justify-center">
-                      <Icon name="school" className="text-[20px]" />
+                  {/* Hidden at zero: a "0 Scholarships" badge reads as an empty site. */}
+                  {scholarshipsResult.total > 0 && (
+                    <div className="absolute -bottom-4 -right-2 z-20 bg-surface-card/95 backdrop-blur-md px-space-md py-space-xs rounded-xl shadow-md border border-border-subtle flex items-center gap-space-xs">
+                      <div className="w-8 h-8 rounded-lg bg-primary/15 text-primary flex items-center justify-center">
+                        <Icon name="school" className="text-[20px]" />
+                      </div>
+                      <div>
+                        <span className="block text-sm font-bold text-navy-surface">
+                          {scholarshipsResult.total.toLocaleString("en-US")} Scholarships
+                        </span>
+                        <span className="block text-[11px] text-on-surface-variant">
+                          Open for Applications
+                        </span>
+                      </div>
                     </div>
-                    <div>
-                      <span className="block text-sm font-bold text-navy-surface">
-                        {scholarshipsResult.total.toLocaleString("en-US")} Scholarships
-                      </span>
-                      <span className="block text-[11px] text-on-surface-variant">
-                        Open for Applications
-                      </span>
-                    </div>
-                  </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -230,14 +241,14 @@ export default async function Home() {
             <SectionHeading
               eyebrow="Career Clusters"
               title="Popular Categories"
-              description="These are the most sought after categories across pharmaceutical manufacturing, clinical research, and hospital networks."
+              description="Open roles by career area across pharmaceutical manufacturing, regulatory, hospital, and community pharmacy."
               className="mb-space-2xl"
             />
             <div className="grid grid-cols-2 md:grid-cols-4 gap-space-xs sm:gap-space-md">
               {CATEGORIES.map((c) => (
                 <Card
                   key={c.title}
-                  href="/jobs"
+                  href={`/jobs?sector=${c.sector}`}
                   padding="sm"
                   className="sm:p-space-lg text-left group flex flex-col items-start"
                 >
@@ -250,7 +261,7 @@ export default async function Home() {
                     {c.title}
                   </h3>
                   <span className="text-xs text-on-surface-variant mt-1">
-                    {c.count} open positions
+                    {sectorCounts[c.sector] ?? 0} open {sectorCounts[c.sector] === 1 ? "position" : "positions"}
                   </span>
                 </Card>
               ))}
@@ -363,8 +374,8 @@ export default async function Home() {
                     },
                     {
                       tone: "bg-berry-accent/15 text-berry-deep",
-                      strong: "Unrivaled Reach:",
-                      rest: " 1K+ curated pharma jobs, 2M+ impressions on linkedin, making it Pakistan's most active and trusted pharmacy community.",
+                      strong: "Community First:",
+                      rest: " Started as a LinkedIn page and grown organically, with opportunities shared every week across LinkedIn and our WhatsApp channel.",
                     },
                   ].map((p) => (
                     <div key={p.strong} className="flex items-start gap-space-sm">
@@ -397,7 +408,7 @@ export default async function Home() {
               <SectionHeading
                 eyebrow="Knowledge Base & Guides"
                 title="Latest Blog or News"
-                description="Verified pharmacy blogs and news for Pakistani and global professionals. Every article sourced from authentic international and local channels."
+                description="Original career guides and industry explainers written by a pharmacist, for pharmacy students and professionals in Pakistan and abroad."
               />
               <Link
                 href="/blogs"
@@ -419,14 +430,14 @@ export default async function Home() {
           <Container>
             <div className="rounded-3xl bg-navy-deep text-on-primary p-space-2xl grid grid-cols-1 lg:grid-cols-2 gap-space-xl items-center">
               <div>
-                <Badge tone="dark">Join 10,000+ Healthcare Professionals</Badge>
+                <Badge tone="dark">Join the PharmaConnect Community</Badge>
                 <h3 className="text-2xl sm:text-3xl font-bold mt-space-xs">
                   Instant Pharmacy Job Alerts Directly to Your Phone
                 </h3>
                 <p className="text-sm text-white/70 mt-space-sm max-w-md">
-                  Receive verified opportunities before they go live on major job
-                  boards. Connect directly with hiring managers across Pakistan
-                  and the Middle East.
+                  Get new jobs, scholarships, and internships on WhatsApp as soon
+                  as we publish them, for roles across Pakistan and the Middle
+                  East.
                 </p>
                 <div className="flex flex-wrap gap-space-sm mt-space-md">
                   <Button

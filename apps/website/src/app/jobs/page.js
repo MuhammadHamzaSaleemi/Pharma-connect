@@ -9,6 +9,7 @@ import JobsExplorer from "../../componants/jobsExplorer";
 
 import { jobsApi } from "../../services/jobs/jobs.api";
 import { fetchAllPages } from "../../lib/fetchAllPages";
+import { SECTOR_VALUES } from "../../services/jobs/jobs.types";
 
 export const metadata = pageMetadata({
   title: "Pharmacy Jobs in Pakistan & Abroad",
@@ -17,9 +18,10 @@ export const metadata = pageMetadata({
 });
 
 // All filtering/sorting/pagination happens client-side in <JobsExplorer>
-// against every active job, so this stays a plain server fetch with no
-// searchParams dependency (filters are React state, not URL params).
-export default async function JobsPage() {
+// against every active job (filters are React state). The one URL param,
+// ?sector=, only seeds the sector filter so homepage category cards can link here.
+export default async function JobsPage({ searchParams }) {
+  const initialSector = SECTOR_VALUES.includes(searchParams?.sector) ? searchParams.sector : "";
   let jobs = [];
   try {
     const all = await fetchAllPages(jobsApi, { status: "ACTIVE" });
@@ -34,7 +36,7 @@ export default async function JobsPage() {
       <SiteHeader />
       <main className="w-full pt-20 bg-surface">
         <Breadcrumb />
-        <JobsExplorer jobs={jobs} />
+        <JobsExplorer jobs={jobs} initialSector={initialSector} />
       </main>
       <SiteFooter />
       <ScrollTop />

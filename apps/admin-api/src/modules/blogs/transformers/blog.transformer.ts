@@ -20,6 +20,11 @@ export class BlogTransformer extends BaseTransformer<Blog, BlogResponseDto> {
       seoTitle: blog.seoTitle,
       seoDescription: blog.seoDescription,
       publishedAt: blog.publishedAt,
+      authorName: blog.authorName,
+      authorTitle: blog.authorTitle,
+      authorBio: blog.authorBio,
+      authorImage: blog.authorImage,
+      authorLinkedin: blog.authorLinkedin,
       createdAt: blog.createdAt,
       updatedAt: blog.updatedAt,
     };
