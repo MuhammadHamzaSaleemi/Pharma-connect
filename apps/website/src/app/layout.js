@@ -48,14 +48,12 @@ export default function RootLayout({ children }) {
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=add_circle,arrow_forward,arrow_outward,article,biotech,bolt,bookmark,bookmark_border,calendar_today,chat,check,check_circle,chevron_left,chevron_right,clinical_notes,close,expand_less,expand_more,favorite,filter_alt_off,filter_list,flag,groups,home,info,inventory_2,local_hospital,local_pharmacy,location_on,lock,mail,medical_services,menu,notifications_active,policy,progress_activity,public,schedule,school,science,search,search_off,share,sort,timer,trending_up,tune,verified,verified_user,visibility,visibility_off,work&display=swap"
         />
         {/* A plain server-rendered tag, not next/script: AdSense's site check reads the raw HTML <head>. */}
-        {ADSENSE_CLIENT && (
-          // eslint-disable-next-line @next/next/no-sync-scripts
-          <script
-            async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
-            crossOrigin="anonymous"
-          />
-        )}
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6729757931362363"
+          crossOrigin="anonymous"
+        ></script>
       </head>
       <body className={sans.variable}>
         {/* Google tag (gtag.js) */}

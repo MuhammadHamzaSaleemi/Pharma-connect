@@ -2,10 +2,8 @@
 // NEXT_PUBLIC_SITE_URL overrides the production origin (e.g. for staging).
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://pharmaconnect-pakistan.com').replace(/\/+$/, '');
 export const SITE_NAME = 'PharmaConnect';
-// AdSense publisher id ("ca-pub-" + 16 digits). Unset or malformed = no AdSense
-// snippet and a 404 /ads.txt. NEXT_PUBLIC_ vars are inlined, so changing it needs a rebuild.
-const adsenseClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || '';
-export const ADSENSE_CLIENT = /^ca-pub-\d{16}$/.test(adsenseClient) ? adsenseClient : '';
+// AdSense publisher id: drives the head snippet, the verification meta tag and /ads.txt.
+export const ADSENSE_CLIENT = 'ca-pub-6729757931362363';
 export const SITE_LOGO = `${SITE_URL}/images/logo.png`;
 export const SITE_DESCRIPTION =
     'Verified pharmacy jobs, internships, scholarships and career guides for pharmacists, Pharm-D graduates and students across Pakistan and abroad.';
